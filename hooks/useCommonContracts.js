@@ -4,7 +4,7 @@ import { useWeb3React } from "@web3-react/core";
 import {
   getBUSDAddress,
   getMMProAddress, getPancakeRouterAddress,
-} from "../utils/getAddress";
+} from "../utils/getCommonAdress";
 import MMPRO from "../contracts/MMPRO.json";
 import BUSD from "../contracts/Busd.json";
 import PancakeRouter from '../contracts/PancakeRouter.json'
