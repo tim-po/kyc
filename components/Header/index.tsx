@@ -7,8 +7,10 @@ import './index.css'
 import {HidingText} from "../HidingText";
 import logo from '../../images/MMProLogo.svg'
 import arrowUp from '../../images/arrowUpWhite.svg'
+import {LocaleSelector} from "../LocaleSelector";
 
-export const Header = () => {
+export const Header = (props: {showLocalisationControl?: boolean}) => {
+  const {showLocalisationControl} = props
   const {account, deactivate, active, connector} = useWeb3React();
   const [isOpen, setIsOpen] = useState(false);
   const [disconnectIsPossible, setDisconnectIsPossible] = useState(false)
@@ -44,7 +46,7 @@ export const Header = () => {
       <header className="px-4 mx-auto py-4" style={{minWidth: 340}}>
         <div className="flex flex-row justify-between items-center w-full">
           <div>
-            <a href="/#">
+            <a href="https://marketmaking.pro/">
               <img
                 src={logo}
                 width="180"
@@ -53,6 +55,9 @@ export const Header = () => {
               />
             </a>
           </div>
+          {showLocalisationControl &&
+              <LocaleSelector/>
+          }
           {isDisplayingMetamaskDisconnectTip &&
           <div className={'flex items-center'}> <img src={arrowUp} className={'mr-2'} alt={'up arrow'}/> Please disconnect using MetaMask</div>
           }

@@ -6,10 +6,14 @@ import {Header} from "./components/Header";
 import {useConnectionCheck} from "./hooks/useConnectionCheck";
 import {injected} from "./wallet";
 import {useWeb3React} from "@web3-react/core";
+import {useLocale} from "./hooks/useLocale";
+import LocaleContext from "./LocaleContext";
 
-const StandardAppContainer = (props: any) => {
+const StandardAppContainer = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean }) => {
+  const {forcedLocale, showLocalisationControl} = props
   // @ts-ignore
   const {active, activate, networkError} = useWeb3React();
+  const {setLocale, locale} = useLocale(forcedLocale)
   useConnectionCheck()
 
   useEffect(() => {
@@ -21,14 +25,16 @@ const StandardAppContainer = (props: any) => {
   }, [activate, networkError]);
 
   return (
-    <div className="w-full overflow-hidden main-gradient"
-         style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
-      <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
-        <Header/>
-        {props.children}
+    <LocaleContext.Provider value={{setLocale, locale}}>
+      <div className="w-full overflow-hidden main-gradient"
+           style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
+        <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
+          <Header showLocalisationControl={showLocalisationControl}/>
+          {props.children}
+        </div>
+        <Footer/>
       </div>
-      <Footer/>
-    </div>
+    </LocaleContext.Provider>
   );
 };
 
