@@ -9,8 +9,8 @@ import {useWeb3React} from "@web3-react/core";
 import {useLocale} from "./hooks/useLocale";
 import LocaleContext from "./LocaleContext";
 
-const StandardAppContainer = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean }) => {
-  const {forcedLocale, showLocalisationControl} = props
+const StandardAppContainer = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean, isDarkBG?: boolean }) => {
+  const {forcedLocale, showLocalisationControl, isDarkBG} = props
   // @ts-ignore
   const {active, activate, networkError} = useWeb3React();
   const {setLocale, locale} = useLocale(forcedLocale)
@@ -25,16 +25,16 @@ const StandardAppContainer = (props: {children: any, forcedLocale?: string, show
   }, [activate, networkError]);
 
   return (
-    <LocaleContext.Provider value={{setLocale, locale}}>
-      <div className="w-full overflow-hidden main-gradient"
-           style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
-        <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
-          <Header showLocalisationControl={showLocalisationControl}/>
-          {props.children}
+      <LocaleContext.Provider value={{setLocale, locale}}>
+        <div className={`w-full overflow-hidden ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}
+             style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
+          <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
+            <Header showLocalisationControl={showLocalisationControl}/>
+            {props.children}
+          </div>
+          <Footer/>
         </div>
-        <Footer/>
-      </div>
-    </LocaleContext.Provider>
+      </LocaleContext.Provider>
   );
 };
 
