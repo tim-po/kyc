@@ -25,6 +25,19 @@
     background: black;
     overflow: hidden;
     border: 1px solid white;
+    color: white;
+}
+
+.locale-selector.light .locale-button.selector{
+    background: white;
+    border: 1px solid white;
+    color: black;
+}
+
+.locale-selector.light .locale-button{
+    background: white;
+    border: 1px solid white;
+    color: black;
 }
 
 .locale-button.opened{

@@ -9,8 +9,8 @@ import logo from '../../images/MMProLogo.svg'
 import arrowUp from '../../images/arrowUpWhite.svg'
 import {LocaleSelector} from "../LocaleSelector";
 
-export const Header = (props: {showLocalisationControl?: boolean}) => {
-  const {showLocalisationControl} = props
+export const Header = (props: {isDark?: boolean, showLocalisationControl?: boolean}) => {
+  const {showLocalisationControl, isDark} = props
   const {account, deactivate, active, connector} = useWeb3React();
   const [isOpen, setIsOpen] = useState(false);
   const [disconnectIsPossible, setDisconnectIsPossible] = useState(false)
@@ -56,10 +56,10 @@ export const Header = (props: {showLocalisationControl?: boolean}) => {
             </a>
           </div>
           {showLocalisationControl &&
-              <LocaleSelector/>
+              <LocaleSelector isDark={isDark}/>
           }
           {isDisplayingMetamaskDisconnectTip &&
-          <div className={'flex items-center'}> <img src={arrowUp} className={'mr-2'} alt={'up arrow'}/> Please disconnect using MetaMask</div>
+            <div className={'flex items-center'}> <img src={arrowUp} className={'mr-2'} alt={'up arrow'}/> Please disconnect using MetaMask</div>
           }
           {!isDisplayingMetamaskDisconnectTip &&
             <>

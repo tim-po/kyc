@@ -29,7 +29,7 @@ const StandardAppContainer = (props: {children: any, forcedLocale?: string, show
         <div className={`w-full overflow-hidden ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}
              style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
           <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
-            <Header showLocalisationControl={showLocalisationControl}/>
+            <Header showLocalisationControl={showLocalisationControl} isDark={isDarkBG}/>
             {props.children}
           </div>
           <Footer/>
