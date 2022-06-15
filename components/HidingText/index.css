@@ -5,6 +5,11 @@
     overflow: hidden;
 }
 
+.hiding-text-container{
+    display: flex;
+    flex-direction: column;
+}
+
 .hiding-text.custom-hidden {
     transition: all 0.2s;
     /*opacity: 0;*/

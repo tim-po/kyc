@@ -1,39 +1,32 @@
-import React, {useContext} from "react";
-import texts from './localization'
-import LocaleContext from "../../Standard/LocaleContext";
-import {localized} from "../../Standard/utils/localized";
+import React, {useContext, useEffect, useRef} from "react";
 import './index.css'
+import {useWeb3React} from "@web3-react/core";
+// @ts-ignore
+import jazzicon from 'jazzicon';
+
 
 // CONSTANTS
 
 // DEFAULT FUNCTIONS
 
-// TODO: copy this components directory and add your content to make your page
 
-type SnippetComponentPropType = {
-    // You should declare props like this, delete this if you don't need props
-    someProp: any
-    somePropWithDefaultOption?: string
-}
+const MetamaskJazzicon = () => {
+    const {account} = useWeb3React()
+    const avatarRef = React.createRef<HTMLDivElement>()
+    useEffect(() => {
+        const element = avatarRef.current;
+        if (element && account) {
+            const addr = account.slice(2, 10);
+            const seed = parseInt(addr, 16);
+            const icon = jazzicon(30, seed);
+            if (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+            element.appendChild(icon);
+        }
+    }, [account, avatarRef]);
 
-const SnippetComponentDefaultProps = {
-    // You should declare default props like this, delete this if you don't need props
-    somePropWithDefaultOption: 'default value'
-}
-
-const SnippetComponent = (props: SnippetComponentPropType) => {
-    const {locale} = useContext(LocaleContext)
-
-    return (
-        <div className={'some-classname'}>
-            {/* example of localisation usage */}
-            <div>
-                {localized(texts, locale)}
-            </div>
-        </div>
-    )
+    return <div style={{height: 30, width: 30}} ref={avatarRef} />;
 };
 
-SnippetComponent.defaultProps = SnippetComponentDefaultProps
-
-export default SnippetComponent
+export default MetamaskJazzicon

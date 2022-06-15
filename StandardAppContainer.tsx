@@ -9,8 +9,8 @@ import {useWeb3React} from "@web3-react/core";
 import {useLocale} from "./hooks/useLocale";
 import LocaleContext from "./LocaleContext";
 
-const StandardAppContainer = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean, isDarkBG?: boolean, version: string }) => {
-  const {forcedLocale, showLocalisationControl, isDarkBG, version} = props
+const StandardAppContainer = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean, isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
+  const {forcedLocale, showLocalisationControl, isDarkBG, version, pages} = props
   // @ts-ignore
   const {active, activate, networkError} = useWeb3React();
   const {setLocale, locale} = useLocale(forcedLocale)
@@ -29,7 +29,7 @@ const StandardAppContainer = (props: {children: any, forcedLocale?: string, show
         <div className={`w-full overflow-hidden ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}
              style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
           <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
-            <Header showLocalisationControl={showLocalisationControl} isDark={isDarkBG}/>
+            <Header pages={pages} showLocalisationControl={showLocalisationControl} isDark={isDarkBG}/>
             {props.children}
           </div>
           <Footer version={version}/>
