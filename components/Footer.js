@@ -1,6 +1,6 @@
 import React from "react";
 
-export default () => {
+export default (props) => {
   return (
     <div className="py-8" style={{minWidth: 340}}>
       <footer className="mx-auto px-4 flex flex-row justify-center text-center">
@@ -26,7 +26,7 @@ export default () => {
           rel="noopener noreferrer"
           className="mr-4"
         >
-          <span>v 1.0.0</span>
+          <span>v {props.version || "1.0.0"}</span>
         </a>
       </footer>
     </div>
