@@ -1,15 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-undef */
 import React, {useEffect} from "react";
-import Footer from "./components/Footer";
-import {Header} from "./components/Header";
-import {useConnectionCheck} from "./hooks/useConnectionCheck";
-import {injected} from "./wallet";
+import Footer from "../components/Footer";
+import {Header} from "../components/Header";
+import {useConnectionCheck} from "../hooks/useConnectionCheck";
+import {injected} from "../wallet";
 import {useWeb3React} from "@web3-react/core";
-import {useLocale} from "./hooks/useLocale";
-import LocaleContext from "./LocaleContext";
+import {useLocale} from "../hooks/useLocale";
+import LocaleContext from "../LocaleContext";
+import './index.css'
 
-const StandardAppContainer = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean, isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
+const Index = (props: {children: any, forcedLocale?: string, showLocalisationControl?: boolean, isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
   const {forcedLocale, showLocalisationControl, isDarkBG, version, pages} = props
   // @ts-ignore
   const {active, activate, networkError} = useWeb3React();
@@ -26,10 +27,9 @@ const StandardAppContainer = (props: {children: any, forcedLocale?: string, show
 
   return (
       <LocaleContext.Provider value={{setLocale, locale}}>
-        <div className={`w-full overflow-hidden ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}
-             style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
+        <div className={`main-content-container ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}>
           <Header pages={pages} showLocalisationControl={showLocalisationControl} isDark={isDarkBG}/>
-          <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start", height: "auto"}}>
+          <div className={'children-container'}>
             {props.children}
           </div>
           <Footer version={version}/>
@@ -38,4 +38,4 @@ const StandardAppContainer = (props: {children: any, forcedLocale?: string, show
   );
 };
 
-export default StandardAppContainer;
+export default Index;
