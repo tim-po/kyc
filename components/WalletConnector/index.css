@@ -1,0 +1,111 @@
+.disconnect-button-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 190px;
+    height: 46px;
+}
+
+.wallet-button{
+    background: rgba(255, 255, 255, 0.3);
+    width: 100%;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 25px !important;
+    padding: 8px !important;
+    padding-right: 16px !important;
+    overflow: hidden;
+    min-height: 46px;
+}
+
+.wallet-button.connected:hover{
+    background: rgba(199, 0, 0, 0.6);
+}
+
+.wallet-button.not-connected{
+    padding: 10px !important;
+    font-weight: bolder;
+    background: rgba(31, 189, 122, 0.8);
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+.wallet-button.not-connected.open:hover{
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
+}
+
+.wallet-button.open{
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
+    padding-bottom: 0 !important;
+    padding-top: 2px !important;
+    border-radius: 10px !important;
+}
+
+.connect-title{
+    width: 150px;
+}
+
+.connect-title.open{
+    /*width: 150px;*/
+    /*border-bottom: 1px solid #8D8DA3;*/
+    /*padding-bottom: 8px;*/
+    /*margin-bottom: 4px;*/
+}
+
+.connect-wallet-flex{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: flex-start;
+}
+
+.connector-options{
+    transition: all 0.3s;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-items: flex-start;
+    overflow: hidden;
+    height: 0;
+}
+
+.connector-options.open{
+    height: 100px;
+}
+
+.wallet-button.not-connected:hover{
+    background: rgba(31, 189, 122, 1);
+}
+
+.connection-button{
+    outline: none !important;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: white;
+    margin: 0;
+    padding-right: 18px;
+    padding-left: 18px;
+    width: 100%;
+    /*font-size: 16px;*/
+}
+
+.connection-button:hover{
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.account-address{
+    font-size: 14px;
+}

@@ -1,10 +1,3 @@
-.disconnect-button-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 .logo-and-tabs{
     display: flex;
     align-items: center;
@@ -49,49 +42,9 @@
     opacity: 1;
 }
 
-.wallet-button{
-    transition: background-color 0.2s, border-radius 0.2s;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    border-radius: 20px !important;
-    padding: 8px !important;
-    padding-right: 16px !important;
-    width: 145px;
-    height: 41px;
-}
-
-.wallet-button.not-connected{
-    padding: 10px !important;
-    font-weight: bolder;
-    background: rgb(31, 189, 122);
-    border-radius: 5px !important;
-}
-
 .control-strip{
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 12px
-}
-
-.disconnect-prompt {
-    transition: all 0.3s;
-    background: #ff1d5e;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 10px;
-    width: 100%;
-    text-align: center;
-
-    position: absolute;
-    top: 20px;
-    z-index: 0;
-}
-
-.account-adress{
-    font-size: 14px;
 }

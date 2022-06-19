@@ -13,3 +13,19 @@
     position: relative;
     flex-grow: 2;
 }
+
+.notification{
+    transition: all 0.5s;
+    border-radius: 20px;
+    z-index: 1000;
+    position: absolute;
+    top: 115px;
+    right: -400px;
+    padding: 24px;
+    background: rgba(177, 177, 177, 0.3);
+    backdrop-filter: blur(30px);
+}
+
+.notification.shown{
+    right: 20px;
+}

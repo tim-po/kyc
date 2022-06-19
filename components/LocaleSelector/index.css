@@ -1,7 +1,7 @@
 .locale-selector{
-    height: 41px;
-    width: 41px;
-    border-radius: 20px;
+    height: 46px;
+    width: 46px;
+    border-radius: 23px;
     /*border: 1px solid white;*/
     display: flex;
     align-items: center;
@@ -14,30 +14,19 @@
     transition: all 0.3s 0.1s;
     position: absolute;
     top: 0;
-    border-radius: 20px;
+    border-radius: 23px;
     left: 0;
-    height: 41px;
-    width: 41px;
+    height: 46px;
+    width: 46px;
     display: flex;
     align-items: center;
     justify-content: center;
     outline: none !important;
-    background: black;
     overflow: hidden;
-    border: 1px solid white;
+
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
     color: white;
-}
-
-.locale-selector.light .locale-button.selector{
-    background: white;
-    border: 1px solid white;
-    color: black;
-}
-
-.locale-selector.light .locale-button{
-    background: white;
-    border: 1px solid white;
-    color: black;
 }
 
 .locale-button.opened{
@@ -47,15 +36,10 @@
 
 .locale-button.selected{
     z-index: 3;
+    top: 0
 }
 
 .inner-text{
     transition: all 0.3s;
     transform: translateY(0);
-}
-.locale-button.selected.opened .inner-text{
-    transform: translateY(0);
-}
-.locale-button.selected .inner-text{
-    transform: translateY(-4px);
 }
