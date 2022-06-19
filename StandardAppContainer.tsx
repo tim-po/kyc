@@ -27,9 +27,9 @@ const StandardAppContainer = (props: {children: any, forcedLocale?: string, show
   return (
       <LocaleContext.Provider value={{setLocale, locale}}>
         <div className={`w-full overflow-hidden ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}
-             style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "space-between"}}>
-          <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
-            <Header pages={pages} showLocalisationControl={showLocalisationControl} isDark={isDarkBG}/>
+             style={{minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: "flex-start"}}>
+          <Header pages={pages} showLocalisationControl={showLocalisationControl} isDark={isDarkBG}/>
+          <div style={{display: 'flex', flexDirection: 'column', justifyContent: "flex-start", height: "auto"}}>
             {props.children}
           </div>
           <Footer version={version}/>
