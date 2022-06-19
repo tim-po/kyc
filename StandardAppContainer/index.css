@@ -1,0 +1,15 @@
+.main-content-container{
+    position: relative;
+    overflow: hidden;
+    width: 100vw;
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+}
+
+.children-container{
+    position: relative;
+    flex-grow: 2;
+}
