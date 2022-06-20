@@ -6,14 +6,19 @@ import './index.css'
 // @ts-ignore
 import {HidingText} from "../HidingText";
 import logo from '../../images/MMProLogo.svg'
+import logoSmall from '../../images/MMProLogoSmall.svg'
 import arrowUp from '../../images/arrowUpWhite.svg'
 import {LocaleSelector} from "../LocaleSelector";
 import MetamaskJazzicon from "../MetamaskJazzicon";
 import {Link} from "react-router-dom";
 import WalletConnector from "../WalletConnector";
 
-export const Header = (props: {displayNotification: ()=>void, locales: string[], pages?: {title: string, url: string}[]}) => {
-  const {locales, pages, displayNotification} = props
+const HeaderDefaultProps = {
+  logoHref: 'https://marketmaking.pro/'
+}
+
+const Header = (props: {logoHref?: string, displayNotification: ()=>void, locales: string[], pages?: {title: string, url: string}[]}) => {
+  const {locales, pages, displayNotification, logoHref} = props
   const [selectedPage, setSelectedPage] = useState(pages ? pages[0].url: '')
 
   useEffect(()=>{
@@ -25,11 +30,17 @@ export const Header = (props: {displayNotification: ()=>void, locales: string[],
       <header className="px-4 mx-auto py-4" style={{minWidth: 340, zIndex: 5}}>
         <div className="flex flex-row justify-between items-center w-full">
           <div className={'logo-and-tabs'}>
-            <a href="https://marketmaking.pro/">
+            <a href={logoHref}>
               <img
                 src={logo}
                 width="180"
-                className="cursor-pointer"
+                className="cursor-pointer logo-large"
+                alt="mmpro logo"
+              />
+              <img
+                src={logoSmall}
+                width="180"
+                className="cursor-pointer logo-small"
                 alt="mmpro logo"
               />
             </a>
@@ -65,3 +76,7 @@ export const Header = (props: {displayNotification: ()=>void, locales: string[],
     </>
   );
 };
+
+Header.defaultProps = HeaderDefaultProps
+
+export default Header

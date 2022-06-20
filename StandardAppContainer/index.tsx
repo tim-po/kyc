@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import React, {useEffect, useState} from "react";
 import Footer from "../components/Footer";
-import {Header} from "../components/Header";
+import Header from "../components/Header";
 import {useConnectionCheck} from "../hooks/useConnectionCheck";
 import {injected} from "../wallet";
 import {useWeb3React} from "@web3-react/core";
@@ -14,8 +14,8 @@ const defaultProps = {
   locales: ['en']
 }
 
-const StandardAppContainer = (props: {children: any, locales: string[], isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
-  const {locales, isDarkBG, version, pages} = props
+const StandardAppContainer = (props: {logoHref?: string, children: any, locales: string[], isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
+  const {locales, isDarkBG, version, pages, logoHref} = props
 
   let forcedLocale
   if(locales.length === 1){
@@ -58,11 +58,11 @@ const StandardAppContainer = (props: {children: any, locales: string[], isDarkBG
               Please use Metamask to disconnect
             </div>
           </div>
-          <Header displayNotification={displayNotification} pages={pages} locales={locales}/>
+          <Header logoHref={logoHref} displayNotification={displayNotification} pages={pages} locales={locales}/>
           <div className={'children-container'}>
             {props.children}
+            <Footer version={version}/>
           </div>
-          <Footer version={version}/>
         </div>
       </LocaleContext.Provider>
   );

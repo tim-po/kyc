@@ -48,7 +48,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
 
     function truncate(str: string) {
         return str.length > 0
-            ? str.substr(2, 5) + "..." + str.substr(str.length - 3, str.length - 1)
+            ? str.substr(2, 3) + "..." + str.substr(str.length - 3, str.length - 1)
             : str;
     }
 
