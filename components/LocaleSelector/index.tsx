@@ -9,12 +9,11 @@ export const LocaleSelector = (props: {locales: string[]}) => {
   const {setLocale, locale} = useContext(LocaleContext)
   const [selected, setSelected] = useState(locale)
 
-  console.log(locales)
-
   return (
     <div className={`locale-selector`}>
       {locales.map((loc, index) => (
         <button
+          key={loc}
           className={`
           locale-button selector
            ${isOpened ? 'opened': ''}

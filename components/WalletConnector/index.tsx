@@ -85,7 +85,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                         <div className={'connect-wallet-flex'}>
                             <span className={`connect-title ${isConnectorOpen ? 'open': ''}`}>Connect Wallet</span>
                             <div className={`connector-options ${isConnectorOpen ? 'open': ''}`}>
-                                <button
+                                <div
                                     className="connection-button"
                                     onClick={() => {
                                         activate(injected);
@@ -99,8 +99,8 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                                         style={{marginRight: 10}}
                                     />
                                     <p>MetaMask</p>
-                                </button>
-                                <button
+                                </div>
+                                <div
                                     className="connection-button"
                                     onClick={() => {
                                         activate(walletconnect).then(()=>{
@@ -116,7 +116,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                                         style={{marginRight: 10}}
                                     />
                                     <p>Wallet connect</p>
-                                </button>
+                                </div>
                             </div>
                         </div>
                     }
