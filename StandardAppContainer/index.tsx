@@ -44,7 +44,7 @@ const StandardAppContainer = (props: {logoHref?: string, children: any, locales:
 
   return (
       <LocaleContext.Provider value={{setLocale, locale}}>
-        <div className={`main-content-container ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`}>
+        <div className={`main-content-container ${isDarkBG ? 'main-gradient': 'main-gradient-light'}`} style={{height: "-webkit-fill-available"}}>
           <div className={`notification ${shouldDysplayNotification ? 'shown': ''}`}>
             <div className={'flex flex-row'}>
               <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
