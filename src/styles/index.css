@@ -65,6 +65,12 @@ header {
     min-height: 100vh;
 }
 
+.main-gradient-light {
+    background: linear-gradient(0deg, #437D9F 0%, #191932 100%);
+    color: white;
+    min-height: 100vh;
+}
+
 .card-bg {
     background-color: rgba(0, 0, 0, 0.3);
 }
