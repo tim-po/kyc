@@ -1,14 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-undef */
 import React from "react";
-
 import StandardAppContainer from "./Standard/StandardAppContainer";
+import AppRouter from "./components/AppRouter";
 
 export const App = () => {
   return (
-      <StandardAppContainer forcedLocale={'ru'}>
-          Put your content here
-          {/* TODO: add your application content here*/}
-      </StandardAppContainer>
+    <StandardAppContainer forcedLocale={'ru'}>
+        <AppRouter />
+    </StandardAppContainer>
   );
 };
