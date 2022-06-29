@@ -3,11 +3,13 @@ import texts from './localization'
 import LocaleContext from "../../Standard/LocaleContext";
 import {localized} from "../../Standard/utils/localized";
 import styled from "styled-components";
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
 import {RouteName} from '../../router';
 import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
 import Text from "../../components/Text";
+import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
+import useValidatedState from "../../Standard/hooks/useValidatedState";
 
 interface ButtonProps {
   background: string
@@ -81,8 +83,8 @@ const Button = styled.button<ButtonProps>`
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [email, setEmail] = useState<string>('danilitmo@gmail.com')
-  const [password, setPassword] = useState<string>('Vfhecz_123')
+  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
+  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
 
   async function login() {
     const registrationUrl = `${API_URL}/api/login`
@@ -105,9 +107,9 @@ const Login = (props: LoginPropType) => {
     <LoginPageContainer>
       <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
       <Form>
-        // here email input
-        // here password input
-        <Button textColor={'#fff'} background={'#33CC66'} onClick={login}>Sign in</Button>
+        <SimpleValidatedInput onValidationChange={setEmailValid}/>
+        <span>Here password input</span>
+        <Button textColor={'#fff'} background={'#33CC66'}>Sign in</Button>
         <FlexLinksWrapper>
           <TextLink to={''}>Forgot password?</TextLink>
           <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>
