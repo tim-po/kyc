@@ -3,10 +3,11 @@ import texts from './localization'
 import LocaleContext from "../../Standard/LocaleContext";
 import {localized} from "../../Standard/utils/localized";
 import styled from "styled-components";
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
 import {RouteName} from '../../router';
 import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
+import Text from "../../components/Text";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
 
@@ -37,13 +38,6 @@ const Form = styled.div`
   padding: 32px 40px;
   background: #fff;
   border-radius: 20px;
-`
-
-const Text = styled.div`
-  font-weight: 700;
-  font-size: 36px;
-  color: #fff;
-  margin-bottom: 40px;
 `
 
 const TextLink = styled(Link)`
@@ -93,7 +87,7 @@ const Login = (props: LoginPropType) => {
   const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
 
   async function login() {
-    const registrationUrl = `${API_URL}/api/registration`
+    const registrationUrl = `${API_URL}/api/login`
     const requestOptions = {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -103,15 +97,15 @@ const Login = (props: LoginPropType) => {
       })
     }
 
-    return fetch(registrationUrl, requestOptions)
-      .then(response => response.json())
+    const response = await fetch(registrationUrl, requestOptions)
+    console.log(response)
   }
 
   const isValid = email && password
 
   return (
     <LoginPageContainer>
-      <Text>Sign in to your account</Text>
+      <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
       <Form>
         <SimpleValidatedInput onValidationChange={setEmailValid}/>
         <span>Here password input</span>

@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 import {RouteName} from "../../router";
 import sha256 from 'crypto-js/sha256';
 import {API_URL} from "../../api/constants";
-import login from "../Login";
+import Text from "../../components/Text";
 
 interface ButtonProps {
   background: string
@@ -42,12 +42,12 @@ const Form = styled.div`
   border-radius: 20px;
 `
 
-const Text = styled.div`
-  font-weight: 700;
-  font-size: 36px;
-  color: #fff;
-  margin-bottom: 40px;
-`
+// const Text = styled.div`
+//   font-weight: 700;
+//   font-size: 36px;
+//   color: #fff;
+//   margin-bottom: 40px;
+// `
 
 const GrayText = styled.div`
   color: #8D929C;
@@ -118,11 +118,11 @@ const Registration = (props: RegistrationPropType) => {
 
   return (
     <LoginPageContainer>
-      <Text>Sign up to your account</Text>
+      <Text fontSize={36} marginBottom={40}>Sign up to your account</Text>
       <Form>
-        <span>Here email input</span>
-        <span>Here password input</span>
-        <span>Here repeat password input</span>
+        // here email input
+        // here password input
+        // here repeated password input
         <Button textColor={'#fff'} background={'#33CC66'}>Sign up</Button>
         <FlexLinksWrapper>
           <GrayText>Already registered?</GrayText>
