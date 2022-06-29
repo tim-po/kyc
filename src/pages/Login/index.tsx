@@ -7,6 +7,8 @@ import {Link} from 'react-router-dom'
 import {RouteName} from '../../router';
 import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
+import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
+import useValidatedState from "../../Standard/hooks/useValidatedState";
 
 interface ButtonProps {
   background: string
@@ -87,8 +89,8 @@ const Button = styled.button<ButtonProps>`
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
+  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
 
   async function login() {
     const registrationUrl = `${API_URL}/api/registration`
@@ -111,7 +113,7 @@ const Login = (props: LoginPropType) => {
     <LoginPageContainer>
       <Text>Sign in to your account</Text>
       <Form>
-        <span>Here email input</span>
+        <SimpleValidatedInput onValidationChange={setEmailValid}/>
         <span>Here password input</span>
         <Button textColor={'#fff'} background={'#33CC66'}>Sign in</Button>
         <FlexLinksWrapper>
