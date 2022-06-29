@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom'
 import {RouteName} from '../../router';
 import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
+import Text from "../../components/Text";
 
 interface ButtonProps {
   background: string
@@ -35,13 +36,6 @@ const Form = styled.div`
   padding: 32px 40px;
   background: #fff;
   border-radius: 20px;
-`
-
-const Text = styled.div`
-  font-weight: 700;
-  font-size: 36px;
-  color: #fff;
-  margin-bottom: 40px;
 `
 
 const TextLink = styled(Link)`
@@ -87,11 +81,11 @@ const Button = styled.button<ButtonProps>`
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [email, setEmail] = useState<string>('danilitmo@gmail.com')
+  const [password, setPassword] = useState<string>('Vfhecz_123')
 
   async function login() {
-    const registrationUrl = `${API_URL}/api/registration`
+    const registrationUrl = `${API_URL}/api/login`
     const requestOptions = {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -101,19 +95,19 @@ const Login = (props: LoginPropType) => {
       })
     }
 
-    return fetch(registrationUrl, requestOptions)
-      .then(response => response.json())
+    const response = await fetch(registrationUrl, requestOptions)
+    console.log(response)
   }
 
   const isValid = email && password
 
   return (
     <LoginPageContainer>
-      <Text>Sign in to your account</Text>
+      <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
       <Form>
-        <span>Here email input</span>
-        <span>Here password input</span>
-        <Button textColor={'#fff'} background={'#33CC66'}>Sign in</Button>
+        // here email input
+        // here password input
+        <Button textColor={'#fff'} background={'#33CC66'} onClick={login}>Sign in</Button>
         <FlexLinksWrapper>
           <TextLink to={''}>Forgot password?</TextLink>
           <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>

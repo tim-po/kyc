@@ -1,6 +1,7 @@
 import React from "react";
 import Login from '../pages/Login';
 import Registration from "../pages/Registration";
+import Verification from "../pages/Verification";
 
 export interface IRoute {
   path: string
@@ -20,5 +21,5 @@ export const publicRoutes: IRoute[] = [
 ]
 
 export const privateRoutes: IRoute[] = [
-
+  {path: RouteName.VERIFICATION, component: Verification, exact: true},
 ]
