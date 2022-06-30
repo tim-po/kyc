@@ -8,6 +8,7 @@ import {RouteName} from "../../router";
 import sha256 from 'crypto-js/sha256';
 import {API_URL} from "../../api/constants";
 import Text from "../../components/Text";
+import {useHistory} from "react-router-dom";
 
 interface ButtonProps {
   background: string
@@ -97,12 +98,14 @@ const Button = styled.button<ButtonProps>`
 const Registration = (props: RegistrationPropType) => {
   const {locale} = useContext(LocaleContext)
 
+  const history = useHistory()
+
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [repeatedPassword, setRepeatedPassword] = useState<string>('')
 
-  async function setUser() {
-    const registrationUrl = `${API_URL}/api/registration`
+  async function registration() {
+    const registrationUrl = `${API_URL}/api/auth/registration`
     const requestOptions = {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -114,6 +117,7 @@ const Registration = (props: RegistrationPropType) => {
     }
     return fetch(registrationUrl, requestOptions)
       .then(response => response.json())
+      .then(() => history.push(RouteName.LOGIN))
   }
 
   return (
@@ -123,7 +127,7 @@ const Registration = (props: RegistrationPropType) => {
         // here email input
         // here password input
         // here repeated password input
-        <Button textColor={'#fff'} background={'#33CC66'}>Sign up</Button>
+        <Button textColor={'#fff'} background={'#33CC66'} onClick={registration}>Sign up</Button>
         <FlexLinksWrapper>
           <GrayText>Already registered?</GrayText>
           <TextLink to={RouteName.LOGIN}>Sign in</TextLink>

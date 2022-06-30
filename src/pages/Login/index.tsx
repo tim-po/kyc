@@ -10,6 +10,7 @@ import sha256 from "crypto-js/sha256";
 import Text from "../../components/Text";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
+import {useCookies} from "react-cookie";
 
 interface ButtonProps {
   background: string
@@ -45,7 +46,7 @@ const TextLink = styled(Link)`
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 12px;
-  
+
   &:hover {
     cursor: pointer;
   }
@@ -83,22 +84,28 @@ const Button = styled.button<ButtonProps>`
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
-  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
+  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('danilitmo@gmail.com')
+  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('Vfhecz_123')
 
-  async function login() {
-    const registrationUrl = `${API_URL}/api/login`
+  const [cookies, setCookie] = useCookies(['auth']);
+
+  async function setUser(): Promise<{ data: { token: string } }> {
+    const registrationUrl = `${API_URL}/api/auth/login`
     const requestOptions = {
-      method: 'PUT',
+      method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         login: email,
         password: sha256(password).toString(),
       })
     }
+    return fetch(registrationUrl, requestOptions)
+      .then(res => res.json())
+  }
 
-    const response = await fetch(registrationUrl, requestOptions)
-    console.log(response)
+  async function login() {
+    const {data: {token}} = await setUser()
+    setCookie('auth', token, { path: window.location.pathname })
   }
 
   const isValid = email && password
@@ -109,7 +116,7 @@ const Login = (props: LoginPropType) => {
       <Form>
         <SimpleValidatedInput onValidationChange={setEmailValid}/>
         <span>Here password input</span>
-        <Button textColor={'#fff'} background={'#33CC66'}>Sign in</Button>
+        <Button textColor={'#fff'} background={'#33CC66'} onClick={login}>Sign in</Button>
         <FlexLinksWrapper>
           <TextLink to={''}>Forgot password?</TextLink>
           <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>

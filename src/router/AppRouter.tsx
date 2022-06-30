@@ -1,9 +1,18 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom'
-import {privateRoutes, publicRoutes, RouteName} from '../router';
+import {privateRoutes, publicRoutes, RouteName} from './index';
+import {useCookies} from "react-cookie";
 
 const AppRouter = () => {
-  const isAuth = true
+  const [cookies] = useCookies(['auth']);
+  const [isAuth, setIsAuth] = useState(false)
+
+  useEffect(() => {
+    if (cookies.auth) {
+      setIsAuth(true)
+    }
+  }, [cookies])
+
   return (
     isAuth ?
       <Switch>

@@ -8,6 +8,7 @@ import Text from "../../components/Text";
 import Wallet from "../../components/Wallet";
 import IdentityInformation from "../../components/IdentityInformation";
 import Documents from "../../components/Documents";
+import VerificationIcon from '../../icons/Verified'
 
 type VerificationPropType = {}
 
@@ -29,6 +30,11 @@ const FlexWrapper = styled.div`
   flex-direction: column;
 `
 
+const RowFlexWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+`
+
 const Verification = (props: VerificationPropType) => {
   const {locale} = useContext(LocaleContext)
 
@@ -44,6 +50,13 @@ const Verification = (props: VerificationPropType) => {
         <Wallet/>
         <IdentityInformation/>
         <Documents />
+        <RowFlexWrapper>
+          <VerificationIcon />
+          <Text fontSize={16} fontWeight={400}>
+            This information is used for personal verification only,
+            and is kept private and confidential by MMPro
+          </Text>
+        </RowFlexWrapper>
       </FlexWrapper>
     </VerificationPageContainer>
   )
