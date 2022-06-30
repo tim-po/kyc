@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import texts from './localization'
 import LocaleContext from "../../Standard/LocaleContext";
 import {localized} from "../../Standard/utils/localized";
@@ -8,6 +8,10 @@ import {RouteName} from "../../router";
 import sha256 from 'crypto-js/sha256';
 import {API_URL} from "../../api/constants";
 import Text from "../../components/Text";
+import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
+import useValidatedState from "../../Standard/hooks/useValidatedState";
+
+const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
 
 interface ButtonProps {
   background: string
@@ -31,7 +35,7 @@ const LoginPageContainer = styled.div`
   height: 100%;
 `
 
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -97,9 +101,10 @@ const Button = styled.button<ButtonProps>`
 const Registration = (props: RegistrationPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [repeatedPassword, setRepeatedPassword] = useState<string>('')
+  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
+  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
+  const [[repeatedPassword, setRepeatPassword], [repeatedPasswordValid, setRepeatedPasswordValid]] = useValidatedState<string>('')
+
 
   async function setUser() {
     const registrationUrl = `${API_URL}/api/registration`
@@ -116,13 +121,46 @@ const Registration = (props: RegistrationPropType) => {
       .then(response => response.json())
   }
 
+  useEffect(()=>{
+    console.log(password, repeatedPassword)
+    setRepeatedPasswordValid(password === repeatedPassword)
+  }, [password, repeatedPassword])
+
   return (
     <LoginPageContainer>
       <Text fontSize={36} marginBottom={40}>Sign up to your account</Text>
       <Form>
-        // here email input
-        // here password input
-        // here repeated password input
+        <SimpleValidatedInput
+          onValidationChange={setEmailValid}
+          onChange={setEmail}
+          validationFunction={(text) => testEmailRegex.test(text)}
+          errorTooltipText={'Please enter a correct email'}
+          placeholder="Email"
+          type={'email'}
+          label={"Email address"}
+        />
+        <SimpleValidatedInput
+          label={"Password"}
+          errorTooltipText={'Password should be longer than 8 characters'}
+          placeholder="Password"
+          type={'password'}
+          autocomplete={'new-password'}
+          id="new-password-text-field"
+          onValidationChange={setPasswordValid}
+          onChange={setPassword}
+          validationFunction={(text) => text.length>8}
+        />
+        <SimpleValidatedInput
+          id="confirm-password-text-field"
+          label={"Confirm password"}
+          errorTooltipText={'Passwords should match'}
+          placeholder="Password"
+          type={'password'}
+          autocomplete={'new-password'}
+          onValidationChange={()=>{}}
+          onChange={setPassword}
+          isForceValid={repeatedPasswordValid}
+        />
         <Button textColor={'#fff'} background={'#33CC66'}>Sign up</Button>
         <FlexLinksWrapper>
           <GrayText>Already registered?</GrayText>

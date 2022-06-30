@@ -11,6 +11,8 @@ import Text from "../../components/Text";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
 
+const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
+
 interface ButtonProps {
   background: string
   textColor: string
@@ -34,20 +36,26 @@ const Form = styled.div`
   flex-direction: column;
   align-items: flex-start;
   min-width: 380px;
-  min-height: 420px;
+  //min-height: 420px;
   padding: 32px 40px;
   background: #fff;
   border-radius: 20px;
 `
 
 const TextLink = styled(Link)`
+  position: relative;
   color: #51A25A;
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 12px;
   
+  &:last-child{
+    margin-bottom: 0;
+  }
+  
   &:hover {
     cursor: pointer;
+    text-decoration: underline;
   }
 `
 
@@ -55,7 +63,7 @@ const FlexLinksWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 20px;
+  margin-top: 40px;
 `
 
 const Button = styled.button<ButtonProps>`
@@ -89,7 +97,7 @@ const Login = (props: LoginPropType) => {
   async function login() {
     const registrationUrl = `${API_URL}/api/login`
     const requestOptions = {
-      method: 'PUT',
+      method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         login: email,
@@ -101,14 +109,31 @@ const Login = (props: LoginPropType) => {
     console.log(response)
   }
 
-  const isValid = email && password
+  const isValid = emailValid && passwordValid
 
   return (
     <LoginPageContainer>
       <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
       <Form>
-        <SimpleValidatedInput onValidationChange={setEmailValid}/>
-        <span>Here password input</span>
+        <SimpleValidatedInput
+          onValidationChange={setEmailValid}
+          onChange={setEmail}
+          validationFunction={(text) => testEmailRegex.test(text)}
+          errorTooltipText={'Please enter a correct email'}
+          placeholder="Email"
+          type={'email'}
+          label={"Email address"}
+        />
+        <SimpleValidatedInput
+          label={"Password"}
+          errorTooltipText={'Password should be longer than 8 characters'}
+          placeholder="Password"
+          type={'password'}
+          autocomplete={'current-password'}
+          onValidationChange={setPasswordValid}
+          onChange={setPassword}
+          validationFunction={(text) => text.length>8}
+        />
         <Button textColor={'#fff'} background={'#33CC66'}>Sign in</Button>
         <FlexLinksWrapper>
           <TextLink to={''}>Forgot password?</TextLink>
