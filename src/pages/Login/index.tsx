@@ -84,8 +84,8 @@ const Button = styled.button<ButtonProps>`
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('danilitmo@gmail.com')
-  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('Vfhecz_123')
+  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
+  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
 
   const [cookies, setCookie] = useCookies(['auth']);
 

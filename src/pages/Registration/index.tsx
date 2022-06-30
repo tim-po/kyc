@@ -94,9 +94,9 @@ const Registration = (props: RegistrationPropType) => {
 
   const history = useHistory()
 
-  const [email, setEmail] = useState<string>('danilitmo@gmail.com')
-  const [password, setPassword] = useState<string>('Vfhecz_123')
-  const [repeatedPassword, setRepeatedPassword] = useState<string>('Vfhecz_123')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [repeatedPassword, setRepeatedPassword] = useState<string>('')
 
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
