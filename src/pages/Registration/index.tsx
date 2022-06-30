@@ -118,9 +118,11 @@ const Registration = (props: RegistrationPropType) => {
 
   async function checkErrorsAndRegisterUser() {
     const {code, error} = await registration()
-    if (code !== 200) {
+    if (code !== (200 || 201)) {
       setIsError(true)
       setErrorMessage(error)
+    } else {
+      history.push(RouteName.LOGIN)
     }
   }
 

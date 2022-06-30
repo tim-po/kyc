@@ -20,7 +20,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   const {locale} = useContext(LocaleContext)
 
   return (
-    <VerificationTile>
+    <VerificationTile isValid={true}>
       <Text fontSize={24} color={'#000'}>Identity information</Text>
         // here nationality input
       <FlexWrapper>

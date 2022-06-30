@@ -20,7 +20,7 @@ const Residence = (props: ResidencePropType) => {
   const {locale} = useContext(LocaleContext)
 
   return (
-    <VerificationTile>
+    <VerificationTile isValid={true}>
       <Text fontSize={24} color={'#000'}>Residence</Text>
       // here country select
       <FlexWrapper>

@@ -13,7 +13,7 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   const {locale} = useContext(LocaleContext)
 
   return (
-    <VerificationTile>
+    <VerificationTile isValid={true}>
       <Text fontSize={24} color={'#000'}>Wallet</Text>
     </VerificationTile>
   )

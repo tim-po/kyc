@@ -9,6 +9,7 @@ import Wallet from "../../components/Wallet";
 import IdentityInformation from "../../components/IdentityInformation";
 import Documents from "../../components/Documents";
 import VerificationIcon from '../../icons/Verified'
+import Residence from "../../components/Residence";
 
 type VerificationPropType = {}
 
@@ -38,17 +39,22 @@ const RowFlexWrapper = styled.div`
 const Verification = (props: VerificationPropType) => {
   const {locale} = useContext(LocaleContext)
 
+  async function verify() {
+
+  }
+
   return (
     <VerificationPageContainer>
       <Text fontWeight={700} fontSize={40} marginBottom={12}>Account Verification</Text>
       <Text fontWeight={400} fontSize={24} marginBottom={70}>Verify your account to access services on MMPro</Text>
       <FlexWrapper>
         <Text fontWeight={400} fontSize={18} marginBottom={40}>
-          Please make sure that all the information entered is consistent with your ID documents.
+          Please make sure that all the information entered is consistent with your ID documents. <br/>
           You won’t be able to change it once verified.
         </Text>
         <Wallet/>
         <IdentityInformation/>
+        <Residence />
         <Documents />
         <RowFlexWrapper>
           <VerificationIcon />
