@@ -14,8 +14,8 @@ const defaultProps = {
   locales: ['en']
 }
 
-const StandardAppContainer = (props: {logoHref?: string, children: any, locales: string[], isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
-  const {locales, isDarkBG, version, pages, logoHref} = props
+const StandardAppContainer = (props: {logoHref?: string, hideWalletConnector?: boolean, children: any, locales: string[], isDarkBG?: boolean, version: string, pages?: {title: string, url: string}[] }) => {
+  const {locales, isDarkBG, version, pages, logoHref, hideWalletConnector} = props
 
   let forcedLocale
   if(locales.length === 1){
@@ -58,7 +58,7 @@ const StandardAppContainer = (props: {logoHref?: string, children: any, locales:
               Please use Metamask to disconnect
             </div>
           </div>
-          <Header logoHref={logoHref} displayNotification={displayNotification} pages={pages} locales={locales}/>
+          <Header logoHref={logoHref} hideWalletConnector={hideWalletConnector} displayNotification={displayNotification} pages={pages} locales={locales}/>
           <div className={'children-container'}>
             {props.children}
             <Footer version={version}/>

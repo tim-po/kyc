@@ -16,6 +16,8 @@ type SimpleValidatedInputPropType = {
     defaultValue?: string,
     validationFunction?: (text: string) => boolean
     onValidationChange: (isValid: boolean) => void
+    isForceValid?: boolean
+    id?: string
     //restProps
     [x:string]: any
 }
@@ -29,6 +31,7 @@ const SimpleValidatedInputDefaultProps = {
     defaultValue: '',
     shouldValidateOnInput: false,
     onValidationChange: ()=>{},
+    isForceValid: undefined,
     validationFunction: ()=>{return true},
 }
 
@@ -47,7 +50,10 @@ const SimpleValidatedInput = (props: SimpleValidatedInputPropType) => {
         hasDefaultValueButton,
         defaultValueButtonText,
         defaultValue,
-        autocomplete
+        autocomplete,
+        isForceValid,
+        label,
+        id,
     } = props
 
     const [isValid, setIsValid] = useState(true)
@@ -55,7 +61,7 @@ const SimpleValidatedInput = (props: SimpleValidatedInputPropType) => {
 
     const onChangeInner = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (onChange) {
-            onChange(e)
+            onChange(e.target.value)
         }
         if(validationFunction && validationFunction(e.target.value)){
             setIsValid(true)
@@ -97,26 +103,34 @@ const SimpleValidatedInput = (props: SimpleValidatedInputPropType) => {
     }
 
     return (
-        <form className={`relative`}>
-            <input
-                ref={inputRef}
-                onChange={onChangeInner}
-                onFocus={onFocusInner}
-                onBlur={onBlurInner}
-                className={`SimpleValidatedInput ${isValid ? '': 'not-valid'} ${className}`}
-                placeholder={placeholder}
-                type={type}
-                autoComplete={autocomplete}
-            />
-            {hasDefaultValueButton &&
-                <button type={'button'} className={'default-value-button'} onClick={setDefaultValue}>
-                    {defaultValueButtonText}
-                </button>
+        <section className={`relative w-full simple-validated-input-form`}>
+            {label &&
+                <label htmlFor={id} className={'simple-validated-input-label'}>
+                    {label}
+                </label>
             }
-            <div className={`validation-error-tooltip ${isValid? '': 'active'}`}>
-                {errorTooltipText}
+            <div className={'input-container'}>
+                <input
+                    id={id}
+                    ref={inputRef}
+                    onChange={onChangeInner}
+                    onFocus={onFocusInner}
+                    onBlur={onBlurInner}
+                    className={`SimpleValidatedInput ${(isForceValid !== undefined ? isForceValid : isValid) ? '': 'not-valid'} ${className || ''}`}
+                    placeholder={placeholder}
+                    type={type}
+                    autoComplete={autocomplete}
+                />
+                {hasDefaultValueButton &&
+                  <button type={'button'} className={'default-value-button'} onClick={setDefaultValue}>
+                      {defaultValueButtonText}
+                  </button>
+                }
+                <div className={`validation-error-tooltip ${(isForceValid !== undefined ? isForceValid : isValid)? '': 'active'}`}>
+                    {errorTooltipText}
+                </div>
             </div>
-        </form>
+        </section>
     )
 };
 
