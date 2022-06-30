@@ -3,13 +3,14 @@ import texts from './localization'
 import LocaleContext from "../../Standard/LocaleContext";
 import {localized} from "../../Standard/utils/localized";
 import styled from "styled-components";
-import {Link} from 'react-router-dom';
+import { Link, useHistory } from "react-router-dom";
 import {RouteName} from '../../router';
 import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
 import Text from "../../components/Text";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
+import {useCookies} from "react-cookie";
 
 const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
 
@@ -40,6 +41,7 @@ const Form = styled.div`
   padding: 32px 40px;
   background: #fff;
   border-radius: 20px;
+  margin-top: 20px;
 `
 
 const TextLink = styled(Link)`
@@ -93,9 +95,12 @@ const Login = (props: LoginPropType) => {
 
   const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
   const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
+  const history = useHistory()
 
-  async function login() {
-    const registrationUrl = `${API_URL}/api/login`
+  const [cookies, setCookie] = useCookies(['auth']);
+
+  async function setUser(): Promise<{ data: { token: string } }> {
+    const registrationUrl = `${API_URL}/api/auth/login`
     const requestOptions = {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -104,9 +109,14 @@ const Login = (props: LoginPropType) => {
         password: sha256(password).toString(),
       })
     }
+    return fetch(registrationUrl, requestOptions)
+      .then(res => res.json())
+  }
 
-    const response = await fetch(registrationUrl, requestOptions)
-    console.log(response)
+  async function login() {
+    const {data: {token}} = await setUser()
+    setCookie('auth', token, { path: window.location.pathname })
+    history.push(RouteName.VERIFICATION)
   }
 
   const isValid = emailValid && passwordValid
@@ -134,7 +144,7 @@ const Login = (props: LoginPropType) => {
           onChange={setPassword}
           validationFunction={(text) => text.length>8}
         />
-        <Button textColor={'#fff'} background={'#33CC66'}>Sign in</Button>
+        <Button textColor={'#fff'} background={'#33CC66'} onClick={login}>Sign in</Button>
         <FlexLinksWrapper>
           <TextLink to={''}>Forgot password?</TextLink>
           <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>

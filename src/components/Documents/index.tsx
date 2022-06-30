@@ -5,11 +5,19 @@ import {localized} from "../../Standard/utils/localized";
 import IosStyleSegmentedControll from "../IosStyleSegmentedControll";
 import Text from "../Text";
 import VerificationTile from "../VerificationTile";
-import './index.css'
+import DocumentRulesGallery from "../DocumentRulesGallery";
+import './index.css';
+import CameraIcon from '../../icons/Camera';
+import styled from "styled-components";
 
 type DocumentsPropType = {}
 
 const DocumentsDefaultProps = {}
+
+const FlexWrapper = styled.div`
+  display: flex;
+  gap: 20px;
+`
 
 const Documents = (props: DocumentsPropType) => {
   const {locale} = useContext(LocaleContext)
@@ -34,10 +42,23 @@ const Documents = (props: DocumentsPropType) => {
         firstSelectedIndex={0}
         onChange={handleActiveButton}
       />
-      <label className="file-select">
-        <div className="select-button">Upload main page</div>
-        <input type="file" />
-      </label>
+      <DocumentRulesGallery />
+      <FlexWrapper>
+        <label className="file-select">
+          <div className="select-button">
+            <CameraIcon />
+            Upload main page
+          </div>
+          <input type="file" />
+        </label>
+        <label className="file-select">
+          <div className="select-button">
+            <CameraIcon />
+            Upload registration page
+          </div>
+          <input type="file" />
+        </label>
+      </FlexWrapper>
     </VerificationTile>
   )
 };

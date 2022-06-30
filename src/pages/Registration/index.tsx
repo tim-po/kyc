@@ -10,8 +10,11 @@ import {API_URL} from "../../api/constants";
 import Text from "../../components/Text";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
+import ErrorMessage from "../../components/ErrorMessage";
+import {useHistory} from "react-router-dom";
 
 const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
+
 
 interface ButtonProps {
   background: string
@@ -45,13 +48,6 @@ const Form = styled.form`
   background: #fff;
   border-radius: 20px;
 `
-
-// const Text = styled.div`
-//   font-weight: 700;
-//   font-size: 36px;
-//   color: #fff;
-//   margin-bottom: 40px;
-// `
 
 const GrayText = styled.div`
   color: #8D929C;
@@ -105,9 +101,13 @@ const Registration = (props: RegistrationPropType) => {
   const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
   const [[repeatedPassword, setRepeatPassword], [repeatedPasswordValid, setRepeatedPasswordValid]] = useValidatedState<string>('')
 
+  const history = useHistory()
 
-  async function setUser() {
-    const registrationUrl = `${API_URL}/api/registration`
+  const [isError, setIsError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  async function registration(): Promise<{ code: number, error: string }> {
+    const registrationUrl = `${API_URL}/api/auth/registration`
     const requestOptions = {
       method: 'PUT',
       headers: {'Content-Type': 'application/json'},
@@ -118,13 +118,16 @@ const Registration = (props: RegistrationPropType) => {
       })
     }
     return fetch(registrationUrl, requestOptions)
-      .then(response => response.json())
+      .then(res => res.json())
   }
 
-  useEffect(()=>{
-    console.log(password, repeatedPassword)
-    setRepeatedPasswordValid(password === repeatedPassword)
-  }, [password, repeatedPassword])
+  async function checkErrorsAndRegisterUser() {
+    const {code, error} = await registration()
+    if (code !== 200) {
+      setIsError(true)
+      setErrorMessage(error)
+    }
+  }
 
   return (
     <LoginPageContainer>
@@ -157,11 +160,12 @@ const Registration = (props: RegistrationPropType) => {
           placeholder="Password"
           type={'password'}
           autocomplete={'new-password'}
-          onValidationChange={()=>{}}
-          onChange={setPassword}
-          isForceValid={repeatedPasswordValid}
+          onValidationChange={setRepeatedPasswordValid}
+          onChange={setRepeatPassword}
+          validationFunction={(text) => text === password}
         />
-        <Button textColor={'#fff'} background={'#33CC66'}>Sign up</Button>
+        {isError && <ErrorMessage message={errorMessage}/>}
+        <Button type={'button'} textColor={'#fff'} background={'#33CC66'} onClick={checkErrorsAndRegisterUser}>Sign up</Button>
         <FlexLinksWrapper>
           <GrayText>Already registered?</GrayText>
           <TextLink to={RouteName.LOGIN}>Sign in</TextLink>

@@ -11,10 +11,10 @@ const baseUrl = document.getElementsByTagName("base")[0].getAttribute("href");
 const rootElement = document.getElementById("root");
 
 ReactDOM.render(
-    <BrowserRouter basename={baseUrl}>
-        <Web3ReactProvider getLibrary={getLibrary}>
-            <App/>
-        </Web3ReactProvider>
-    </BrowserRouter>,
-    rootElement
+  <BrowserRouter basename={baseUrl}>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <App/>
+    </Web3ReactProvider>
+  </BrowserRouter>,
+  rootElement
 );
