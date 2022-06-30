@@ -10,7 +10,7 @@ type TextPropType = {
   fontSize: number
   marginBottom?: number
   color?: string
-  children: string
+  children: string | React.ReactNode
 }
 
 const TextDefaultProps = {

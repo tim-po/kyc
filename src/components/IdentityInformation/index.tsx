@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import texts from "./localization";
 import LocaleContext from "../../Standard/LocaleContext";
 import { localized } from "../../Standard/utils/localized";
@@ -9,7 +9,10 @@ import styled from "styled-components";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
 
-type IdentityInformationPropType = {}
+type IdentityInformationPropType = {
+  onChangeData: (data: any)=>void,
+  onChangeValid: (isValid: boolean)=>void,
+}
 
 const IdentityInformationDefaultProps = {};
 
@@ -20,6 +23,7 @@ const FlexWrapper = styled.div`
 
 const IdentityInformation = (props: IdentityInformationPropType) => {
   const { locale } = useContext(LocaleContext);
+  const {onChangeData, onChangeValid} = props
 
   const [[firstName, setFirstName], [firstNameValid, setFirstNameValid]] = useValidatedState<string>("");
   const [[lastName, setLastName], [lastNameValid, setLastNameValid]] = useValidatedState<string>("");
@@ -28,9 +32,15 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   const [[bDate, setBDate], [bDateValid, setBDateValid]] = useValidatedState<string>("");
 
 
+  useEffect(()=>{
+    if(nationality && firstName && lastName && bDate){
+      onChangeValid(firstNameValid && lastNameValid && nationalityValid && bDateValid)
+    }
+    onChangeData({nationality, firstName, lastName, middleName, bDate})
+  }, [nationality, firstName, lastName, middleName, bDate, firstNameValid, lastNameValid, middleNameValid, nationalityValid, bDateValid])
 
   return (
-    <VerificationTile>
+    <VerificationTile isValid={firstNameValid && lastNameValid && nationalityValid && bDateValid}>
       <form autoComplete={'on'}>
         <Text fontSize={24} color={"#000"}>Identity information</Text>
         <div className={'mb-4'}/>

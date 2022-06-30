@@ -23,7 +23,7 @@ const Documents = (props: DocumentsPropType) => {
   const {locale} = useContext(LocaleContext)
 
   const buttonsArray = ['Passport', 'ID card', 'Driver’s License']
-  const [activeButton, setActiveButton] = useState<number>()
+  const [activeButton, setActiveButton] = useState<number>(0)
 
   const handleActiveButton = (index: number) => {
     setActiveButton(index)
@@ -34,7 +34,7 @@ const Documents = (props: DocumentsPropType) => {
   }
 
   return (
-    <VerificationTile>
+    <VerificationTile isValid={true}>
       <Text fontSize={24} color={'#000'}>Document</Text>
       <IosStyleSegmentedControll
         width={400}
@@ -42,22 +42,25 @@ const Documents = (props: DocumentsPropType) => {
         firstSelectedIndex={0}
         onChange={handleActiveButton}
       />
-      <DocumentRulesGallery />
+      <DocumentRulesGallery/>
       <FlexWrapper>
         <label className="file-select">
           <div className="select-button">
-            <CameraIcon />
+            <CameraIcon/>
             Upload main page
           </div>
-          <input type="file" />
+          <input type="file"/>
         </label>
-        <label className="file-select">
-          <div className="select-button">
-            <CameraIcon />
-            Upload registration page
-          </div>
-          <input type="file" />
-        </label>
+        {
+          activeButton === 0 &&
+          <label className="file-select">
+            <div className="select-button">
+              <CameraIcon/>
+              Upload registration page
+            </div>
+            <input type="file"/>
+          </label>
+        }
       </FlexWrapper>
     </VerificationTile>
   )

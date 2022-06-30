@@ -5,11 +5,12 @@ import {localized} from "../../Standard/utils/localized";
 import styled from 'styled-components';
 
 interface StripProps {
-  isActive: boolean
+  isValid: boolean
 }
 
 type VerificationTilePropType = {
-  children: ReactNode
+  children: ReactNode,
+  isValid: boolean
 }
 
 const VerificationTileDefaultProps = {}
@@ -18,9 +19,12 @@ const Tile = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 900px;
+  width: 100%;
   height: max-content;
-  padding: 22px 52px;
+  padding-left: 52px;
+  padding-right: 52px;
+  padding-top: 22px;
+  padding-bottom: 40px;
   background: #fff;
   border-radius: 20px;
   margin-bottom: 50px;
@@ -31,7 +35,7 @@ const Tile = styled.div`
 const Strip = styled.div<StripProps>`
   width: 12px;
   height: 100%;
-  background: ${p => p.isActive ? '#33CC66' : '#D2D5DA'};
+  background: ${p => p.isValid ? '#33CC66' : '#D2D5DA'};
   position: absolute;
   left: 0;
   top: 0;
@@ -40,14 +44,11 @@ const Strip = styled.div<StripProps>`
 
 const VerificationTile = (props: VerificationTilePropType) => {
   const {locale} = useContext(LocaleContext)
-
-  const [isStripActive, setIsStripActive] = useState(false)
-
-  const {children} = props
+  const {children, isValid} = props
 
   return (
     <Tile>
-      <Strip isActive={isStripActive}/>
+      <Strip isValid={isValid}/>
       {children}
     </Tile>
   )

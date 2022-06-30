@@ -7,7 +7,7 @@ import React from 'react';
 export default () => {
   return (
     <svg width="65" height="45" viewBox="0 0 65 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_263_205)">
+      <g clipPath="url(#clip0_263_205)">
         <rect width="65" height="40" rx="3" fill="#F3F5F8"/>
         <rect x="8" y="4" width="50" height="30" rx="2" fill="url(#paint0_linear_263_205)"/>
         <rect x="11" y="13" width="4" height="2" fill="#5081BC"/>
@@ -37,8 +37,8 @@ export default () => {
       </g>
       <defs>
         <filter id="filter0_df_263_205" x="4.88086" y="-2" width="42.2383" height="46" filterUnits="userSpaceOnUse"
-                color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
           <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
                          result="hardAlpha"/>
           <feOffset dy="4"/>
@@ -50,21 +50,21 @@ export default () => {
           <feGaussianBlur stdDeviation="1" result="effect2_foregroundBlur_263_205"/>
         </filter>
         <filter id="filter1_f_263_205" x="7.2207" y="-0.779053" width="37.5576" height="37.5579"
-                filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
           <feGaussianBlur stdDeviation="0.5" result="effect1_foregroundBlur_263_205"/>
         </filter>
         <filter id="filter2_f_263_205" x="6.99951" y="-1" width="38" height="38" filterUnits="userSpaceOnUse"
-                color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
           <feGaussianBlur stdDeviation="0.5" result="effect1_foregroundBlur_263_205"/>
         </filter>
         <linearGradient id="paint0_linear_263_205" x1="8" y1="5" x2="58" y2="34" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#B4DDE7"/>
-          <stop offset="0.489583" stop-color="#F3E0F4"/>
-          <stop offset="1" stop-color="#B4DDE7"/>
+          <stop stopColor="#B4DDE7"/>
+          <stop offset="0.489583" stopColor="#F3E0F4"/>
+          <stop offset="1" stopColor="#B4DDE7"/>
         </linearGradient>
         <clipPath id="clip0_263_205">
           <rect width="65" height="45" fill="white"/>

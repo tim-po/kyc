@@ -39,7 +39,7 @@ const Residence = (props: ResidencePropType) => {
 
 
   return (
-    <VerificationTile>
+    <VerificationTile isValid={nationalityValid && cityValid && zipValid && addressValid}>
       <Text fontSize={24} color={'#000'}>Residence</Text>
       <div className={'mb-4'}/>
       <SimpleValidatedInput

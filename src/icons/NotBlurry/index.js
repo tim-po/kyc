@@ -7,7 +7,7 @@ import React from 'react';
 export default () => {
   return (
     <svg width="65" height="45" viewBox="0 0 65 45" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_263_186)">
+      <g clipPath="url(#clip0_263_186)">
         <rect width="65" height="40" rx="3" fill="#F3F5F8"/>
         <g filter="url(#filter0_f_263_186)">
           <rect x="25" y="4" width="50" height="30" rx="2" fill="url(#paint0_linear_263_186)"/>
@@ -27,15 +27,15 @@ export default () => {
       </g>
       <defs>
         <filter id="filter0_f_263_186" x="22" y="1" width="56" height="36" filterUnits="userSpaceOnUse"
-                color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                colorInterpolationFilters="sRGB">
+          <feFlood floodOpacity="0" result="BackgroundImageFix"/>
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
           <feGaussianBlur stdDeviation="1.5" result="effect1_foregroundBlur_263_186"/>
         </filter>
         <linearGradient id="paint0_linear_263_186" x1="25" y1="5" x2="75" y2="34" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#B4DDE7"/>
-          <stop offset="0.489583" stop-color="#F3E0F4"/>
-          <stop offset="1" stop-color="#B4DDE7"/>
+          <stop stopColor="#B4DDE7"/>
+          <stop offset="0.489583" stopColor="#F3E0F4"/>
+          <stop offset="1" stopColor="#B4DDE7"/>
         </linearGradient>
         <clipPath id="clip0_263_186">
           <rect width="65" height="45" fill="white"/>
