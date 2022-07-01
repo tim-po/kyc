@@ -11,6 +11,8 @@ import Text from "../../components/Text";
 import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
 import useValidatedState from "../../Standard/hooks/useValidatedState";
 import {useCookies} from "react-cookie";
+import ErrorMessage from "../../components/ErrorMessage";
+import Spinner from "../../Standard/components/Spinner";
 
 const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
 
@@ -97,6 +99,9 @@ const Login = (props: LoginPropType) => {
   const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
   const history = useHistory()
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [isServerError, setIsServerError] = useState(false)
+
   const [cookies, setCookie] = useCookies(['auth']);
 
   async function setUser(): Promise<{ data: { token: string } }> {
@@ -111,11 +116,21 @@ const Login = (props: LoginPropType) => {
     }
     return fetch(registrationUrl, requestOptions)
       .then(res => res.json())
+      .catch(() => {
+        setIsServerError(true)
+        setIsLoading(false)
+      })
   }
 
   async function login() {
+
+    if (!isValid) return
+    
+    setIsLoading(true)
+    setIsServerError(false)
     const {data: {token}} = await setUser()
     setCookie('auth', token, { path: window.location.pathname })
+    setIsLoading(false)
     history.push(RouteName.VERIFICATION)
   }
 
@@ -144,7 +159,21 @@ const Login = (props: LoginPropType) => {
           onChange={setPassword}
           validationFunction={(text) => text.length>8}
         />
-        <Button textColor={'#fff'} background={'#33CC66'} onClick={login}>Sign in</Button>
+        {isServerError && <ErrorMessage message={'Something went wrong'} title={'Error signing in'} />}
+        <Button
+          marginTop={20}
+          type={'button'}
+          textColor={isValid ? '#fff' : 'rgba(255, 255, 255, 0.6)'}
+          background={isValid ? '#33CC66' : 'rgba(0, 0, 0, 0.2)'}
+          onClick={login}
+        >
+          {
+            isLoading ?
+              <Spinner color='white' size={25} />
+              :
+              "Sign in"
+          }
+        </Button>
         <FlexLinksWrapper>
           <TextLink to={''}>Forgot password?</TextLink>
           <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>
