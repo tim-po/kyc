@@ -12,6 +12,7 @@ import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput
 import useValidatedState from "../../Standard/hooks/useValidatedState";
 import ErrorMessage from "../../components/ErrorMessage";
 import {useHistory} from "react-router-dom";
+import Spinner from "../../Standard/components/Spinner";
 
 const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
 
@@ -20,10 +21,6 @@ interface ButtonProps {
   background: string
   textColor: string
   marginTop?: number
-}
-
-interface TextLinkProps {
-  textColor: string
 }
 
 type RegistrationPropType = {}
@@ -60,9 +57,10 @@ const TextLink = styled(Link)`
   color: #51A25A;
   font-weight: 700;
   font-size: 14px;
-
+  
   &:hover {
     cursor: pointer;
+    text-decoration: underline;
   }
 `
 
@@ -105,6 +103,9 @@ const Registration = (props: RegistrationPropType) => {
 
   const [isError, setIsError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const isValid = emailValid && repeatedPasswordValid && passwordValid
 
   async function registration(): Promise<{ code: number, error: string }> {
     const registrationUrl = `${API_URL}/api/auth/registration`
@@ -122,6 +123,10 @@ const Registration = (props: RegistrationPropType) => {
   }
 
   async function checkErrorsAndRegisterUser() {
+
+    if (!isValid) return
+
+    setIsLoading(true)
     const {code, error} = await registration()
     if (code !== (200 || 201)) {
       setIsError(true)
@@ -129,6 +134,7 @@ const Registration = (props: RegistrationPropType) => {
     } else {
       history.push(RouteName.LOGIN)
     }
+    setIsLoading(false)
   }
 
   return (
@@ -167,7 +173,20 @@ const Registration = (props: RegistrationPropType) => {
           validationFunction={(text) => text === password}
         />
         {isError && <ErrorMessage message={errorMessage}/>}
-        <Button type={'button'} textColor={'#fff'} background={'#33CC66'} onClick={checkErrorsAndRegisterUser}>Sign up</Button>
+        <Button
+          type={'button'}
+          marginTop={20}
+          textColor={isValid ? '#fff' : 'rgba(255, 255, 255, 0.6)'}
+          background={isValid ? '#33CC66' : 'rgba(0, 0, 0, 0.2)'}
+          onClick={checkErrorsAndRegisterUser}
+        >
+          {
+            isLoading ?
+              <Spinner color='white' size={25} />
+              :
+              "Sign up"
+          }
+        </Button>
         <FlexLinksWrapper>
           <GrayText>Already registered?</GrayText>
           <TextLink to={RouteName.LOGIN}>Sign in</TextLink>
