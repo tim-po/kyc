@@ -1,4 +1,4 @@
-.SimpleValidatedInput{
+.SimpleInput{
     outline: none !important;
     border-radius: 10px;
     /*margin-top: 8px;*/
@@ -17,7 +17,7 @@
     margin-bottom: 28px;
 }
 
-.SimpleValidatedInput.not-valid{
+.SimpleInput.not-valid{
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 11px;
@@ -25,7 +25,7 @@
     border: 2px solid rgba(255, 29, 94, 1) !important;
 }
 
-.simple-validated-input-form{
+.simple-input-form{
     color: black;
 }
 
@@ -33,17 +33,17 @@
     position: relative;
 }
 
-.simple-validated-input-label{
+.simple-input-label{
     font-size: 16px;
     margin-bottom: 8px;
     display: block;
 }
 
-.SimpleValidatedInput::placeholder{
+.SimpleInput::placeholder{
     color: #9F9F9F;
 }
 
-.SimpleValidatedInput:focus{
+.SimpleInput:focus{
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 11px;
