@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import texts from './localization'
 import LocaleContext from "../../LocaleContext";
 import {localized} from "../../utils/localized";
@@ -6,6 +6,7 @@ import Button from "../Button";
 import MetamaskJazzicon from "../MetamaskJazzicon";
 import {HidingText} from "../HidingText";
 import {useWeb3React} from "@web3-react/core";
+import useOnClickOutside from "../../hooks/useOnClickOutside";
 import './index.css'
 import {injected, switchNetwork, walletconnect} from "../../wallet";
 
@@ -29,9 +30,12 @@ const WalletConnector = (props: WalletConnectorPropType) => {
     const {displayNotification} = props
     const {locale} = useContext(LocaleContext)
     const {chainId, account, deactivate, activate, active, connector, error} = useWeb3React();
+    const ref = useRef(null);
 
     const [isConnectorOpen, setIsConnectorOpen] = useState(false)
     const [isDisconnectShowing, setIsDisconnectShowing] = useState(false)
+
+    useOnClickOutside(ref, () => setIsConnectorOpen(false))
 
     function mainButtonClick(){
         if(!active){
@@ -63,7 +67,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
     }, [active, chainId, error]);
 
     return (
-        <div className={'disconnect-button-container'}>
+        <div className={'disconnect-button-container'} ref={ref}>
             <div
                 onMouseEnter={() => setIsDisconnectShowing(true)}
                 onMouseLeave={() => setIsDisconnectShowing(false)}

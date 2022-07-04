@@ -1,18 +1,20 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useRef, useState} from "react";
 import './index.css'
 import {useLocale} from "../../hooks/useLocale";
 import LocaleContext from "../../LocaleContext";
+import useOnClickOutside from "../../hooks/useOnClickOutside";
 
 export const LocaleSelector = (props: {locales: string[]}) => {
   const {locales} = props
   const [isOpened, setIsOpened] = useState(false)
   const {setLocale, locale} = useContext(LocaleContext)
   const [selected, setSelected] = useState(locale)
+  const ref = useRef(null)
 
-  console.log(locales)
+  useOnClickOutside(ref, () => setIsOpened(false))
 
   return (
-    <div className={`locale-selector`}>
+    <div className={`locale-selector`} ref={ref}>
       {locales.map((loc, index) => (
         <button
           className={`
