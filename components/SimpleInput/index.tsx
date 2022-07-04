@@ -17,7 +17,6 @@ interface SimpleInputPropType {
     isValid?: boolean
     id?: string
     autoComplete?: string
-    label?: string
     onChangeRaw?: (newValue: string) => void
     onBlurRaw?: (newValue: string) => void
     onFocusRaw?: (newValue: string) => void
@@ -32,7 +31,7 @@ const SimpleInputDefaultProps = {
     defaultValueButtonText: "Default",
     defaultValue: "",
     onlyEmmitOnBlur: false,
-    inputProps: {},
+    inputProps: {type: "text"},
     isValid: true
 };
 
@@ -51,7 +50,6 @@ const SimpleInput = (props: SimpleInputPropType) => {
         defaultValueButtonText,
         defaultValue,
         autoComplete,
-        label,
         id,
         isValid,
         onChangeRaw,
@@ -109,35 +107,29 @@ const SimpleInput = (props: SimpleInputPropType) => {
     };
 
     return (
-        <section className={`relative w-full simple-input-form`}>
-            {label &&
-                <label htmlFor={id} className={"simple-input-label"}>
-                    {label}
-                </label>
+        <div className={"input-container"}>
+            <input
+                {...props.inputProps}
+                id={id}
+                name={autoComplete}
+                ref={inputRef}
+                onChange={onChangeInner}
+                onFocus={onFocusInner}
+                onBlur={onBlurInner}
+                className={`SimpleInput style-override ${shouldDisplayAsInvalid ? "" : "not-valid"} ${className || ""}`}
+                placeholder={placeholder}
+                type={type}
+                autoComplete={autoComplete}
+            />
+            {hasDefaultValueButton &&
+                <button type={"button"} className={"default-value-button"} onClick={setDefaultValue}>
+                    {defaultValueButtonText}
+                </button>
             }
-            <div className={"input-container"}>
-                <input
-                    {...props.inputProps}
-                    id={id}
-                    ref={inputRef}
-                    onChange={onChangeInner}
-                    onFocus={onFocusInner}
-                    onBlur={onBlurInner}
-                    className={`SimpleInput style-override ${shouldDisplayAsInvalid ? "" : "not-valid"} ${className || ""}`}
-                    placeholder={placeholder}
-                    type={type}
-                    autoComplete={autoComplete}
-                />
-                {hasDefaultValueButton &&
-                    <button type={"button"} className={"default-value-button"} onClick={setDefaultValue}>
-                        {defaultValueButtonText}
-                    </button>
-                }
-                <div className={`validation-error-tooltip ${shouldDisplayAsInvalid ? "" : "active"}`}>
-                    {errorTooltipText}
-                </div>
+            <div className={`validation-error-tooltip ${shouldDisplayAsInvalid ? "" : "active"}`}>
+                {errorTooltipText}
             </div>
-        </section>
+        </div>
     );
 };
 

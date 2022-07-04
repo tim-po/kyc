@@ -1,0 +1,64 @@
+.SimpleInput{
+  transition: box-shadow 0.1s 0.1s ease-in-out;
+  outline: none !important;
+  border-radius: 10px;
+  color: black;
+  border: 1px solid #a4a4a4;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 12px;
+  padding-right: 12px;
+  position: relative;
+  height: 50px;
+  width: 100%;
+  box-shadow: 0 0 0 0px rgba(103, 201, 113, 0.2);
+
+  &:hover{
+    border-color: #67C971;
+  }
+
+  &:focus{
+    box-shadow: none !important;
+  }
+}
+
+.SimpleInput.not-valid{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 11px;
+  padding-right: 11px;
+  border: 2px solid rgba(255, 29, 94, 1) !important;
+}
+
+.SimpleInput::placeholder{
+  color: #9F9F9F;
+}
+
+.SimpleInput:focus{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 11px;
+  padding-right: 11px;
+  border: 2px solid #67C971;
+}
+
+.validation-error-tooltip{
+  transition: all 0.3s;
+  position: absolute;
+  top: -9px;
+  height: 11px;
+  left: 12px;
+  padding-left: 6px;
+  padding-right: 6px;
+  max-width: 100%;
+  font-size: 12px;
+  background: white;
+  z-index: 1;
+  color: rgba(255, 29, 94, 1);
+  transform: scale(0);
+  /*border-radius: 2px;*/
+}
+
+.validation-error-tooltip.active{
+  transform: scale(1);
+}

@@ -1,77 +1,3 @@
-.SimpleInput{
-    outline: none !important;
-    border-radius: 10px;
-    /*margin-top: 8px;*/
-    color: black;
-    border: 1px solid #a4a4a4;
-    padding-top: 1px;
-    padding-bottom: 1px;
-    padding-left: 12px;
-    padding-right: 12px;
-    /*padding-right: 8px;*/
-    /*padding-left: 8px;*/
-    position: relative;
-    /*margin-bottom: 16px;*/
-    height: 50px;
-    width: 100%;
-    margin-bottom: 28px;
-}
-
-.SimpleInput.not-valid{
-    padding-top: 0px;
-    padding-bottom: 0px;
-    padding-left: 11px;
-    padding-right: 11px;
-    border: 2px solid rgba(255, 29, 94, 1) !important;
-}
-
-.simple-input-form{
-    color: black;
-}
-
-.input-container{
-    position: relative;
-}
-
-.simple-input-label{
-    font-size: 16px;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.SimpleInput::placeholder{
-    color: #9F9F9F;
-}
-
-.SimpleInput:focus{
-    padding-top: 0px;
-    padding-bottom: 0px;
-    padding-left: 11px;
-    padding-right: 11px;
-    border: 2px solid #67C971;
-}
-
-.validation-error-tooltip{
-    transition: all 0.3s;
-    position: absolute;
-    top: -9px;
-    height: 11px;
-    left: 12px;
-    padding-left: 6px;
-    padding-right: 6px;
-    max-width: 100%;
-    font-size: 12px;
-    background: white;
-    z-index: 1;
-    color: rgba(255, 29, 94, 1);
-    transform: scale(0);
-    /*border-radius: 2px;*/
-}
-
-.validation-error-tooltip.active{
-    transform: scale(1);
-}
-
 .default-value-button{
     transition: all 0.2s;
     position: absolute;
@@ -94,4 +20,8 @@
 
 .default-value-button:hover{
     background: rgba(255, 255, 255, 0.2);
+}
+
+.input-container{
+    position: relative;
 }
