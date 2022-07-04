@@ -1,49 +1,45 @@
-import React, { useContext, useEffect } from "react";
-import texts from './localization'
+import React, { useContext, useEffect, useState } from "react";
+import texts from "./localization";
 import LocaleContext from "../../Standard/LocaleContext";
-import {localized} from "../../Standard/utils/localized";
+import { localized } from "../../Standard/utils/localized";
 import VerificationTile from "../VerificationTile";
 import Text from "../Text";
-import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
-import useValidatedState from "../../Standard/hooks/useValidatedState";
-
-const testAdressRegex = /0x*/g;
+import useValidatedState, { validationFuncs } from "../../Standard/hooks/useValidatedState";
+import SimpleInput from "../../Standard/components/SimpleInput";
 
 type WalletVerificationPropType = {
-  onChangeData: (data: any)=>void,
-  onChangeValid: (isValid: boolean)=>void,
+    onChangeData: (data: any) => void,
 }
 
-const WalletVerificationDefaultProps = {}
+const WalletVerificationDefaultProps = {};
 
 const WalletVerification = (props: WalletVerificationPropType) => {
-  const {locale} = useContext(LocaleContext)
-  const {onChangeData, onChangeValid} = props
+    const { locale } = useContext(LocaleContext);
+    const { onChangeData } = props;
 
-  const [[transferAddress, setTransferAddress], [transferAddressValid, setTransferAddressValid]] = useValidatedState<string | undefined>(undefined)
+    const [[transferAddress, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
 
-  useEffect(()=>{
-    if(transferAddress){
-      onChangeValid(transferAddressValid)
-    }
-    onChangeData({transferAddress})
-  }, [transferAddress, transferAddressValid])
+    useEffect(() => {
+        onChangeData({data: { transferAddress }, isValid: transferAddressValid});
+    }, [transferAddress, transferAddressValid]);
 
-  return (
-    <VerificationTile isValid={transferAddressValid}>
-      <Text fontSize={24} color={'#000'}>Wallet</Text>
-      <SimpleValidatedInput
-        className="w-full"
-        onChange={setTransferAddress}
-        onValidationChange={(isValid) => setTransferAddressValid(isValid)}
-        validationFunction={(text) => testAdressRegex.test(text)}
-        errorTooltipText={'Please enter a correct address'}
-        placeholder="Transfer address"
-      />
-    </VerificationTile>
-  )
+    return (
+        <VerificationTile isValid={transferAddressValid}>
+            <Text fontSize={24} color={"#000"}>Wallet</Text>
+            <SimpleInput
+                onlyEmmitOnBlur
+                isValid={transferAddressValid}
+                onChangeRaw={setTransferAddress}
+                errorTooltipText={"Please enter a correct address"}
+                inputProps={{
+                    className: "w-full",
+                    placeholder: "Transfer address"
+                }}
+            />
+        </VerificationTile>
+    );
 };
 
-WalletVerification.defaultProps = WalletVerificationDefaultProps
+WalletVerification.defaultProps = WalletVerificationDefaultProps;
 
-export default WalletVerification
+export default WalletVerification;

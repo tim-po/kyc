@@ -8,11 +8,12 @@ import {RouteName} from '../../router';
 import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
 import Text from "../../components/Text";
-import SimpleValidatedInput from "../../Standard/components/SimpleValidatedInput";
-import useValidatedState from "../../Standard/hooks/useValidatedState";
+import SimpleValidatedInput from "../../Standard/components/SimpleInput";
+import useValidatedState, { validationFuncs } from "../../Standard/hooks/useValidatedState";
 import {useCookies} from "react-cookie";
 import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../Standard/components/Spinner";
+import SimpleInput from "../../Standard/components/SimpleInput";
 
 const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
 
@@ -95,8 +96,8 @@ const Button = styled.button<ButtonProps>`
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const [[email, setEmail], [emailValid, setEmailValid]] = useValidatedState<string>('')
-  const [[password, setPassword], [passwordValid, setPasswordValid]] = useValidatedState<string>('')
+  const [[email, setEmail], emailValid] = useValidatedState<string>('', validationFuncs.isEmail)
+  const [[password, setPassword], passwordValid] = useValidatedState<string>('', validationFuncs.validPassword)
   const history = useHistory()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -140,24 +141,24 @@ const Login = (props: LoginPropType) => {
     <LoginPageContainer>
       <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
       <Form>
-        <SimpleValidatedInput
-          onValidationChange={setEmailValid}
-          onChange={setEmail}
-          validationFunction={(text) => testEmailRegex.test(text)}
+        <SimpleInput
+          onChangeRaw={setEmail}
           errorTooltipText={'Please enter a correct email'}
-          placeholder="Email"
-          type={'email'}
+          inputProps={{
+            placeholder: "Email",
+            type: "email",
+          }}
           label={"Email address"}
         />
-        <SimpleValidatedInput
+        <SimpleInput
           label={"Password"}
           errorTooltipText={'Password should be longer than 8 characters'}
-          placeholder="Password"
-          type={'password'}
-          autocomplete={'current-password'}
-          onValidationChange={setPasswordValid}
-          onChange={setPassword}
-          validationFunction={(text) => text.length>8}
+          inputProps={{
+            placeholder: "Password",
+            type: "password",
+          }}
+          autoComplete={'current-password'}
+          onChangeRaw={setPassword}
         />
         {isServerError && <ErrorMessage message={'Something went wrong'} title={'Error signing in'} />}
         <Button
