@@ -9,6 +9,9 @@ import styled from "styled-components";
 import SimpleValidatedInput from "../../Standard/components/SimpleInput";
 import useValidatedState, { validationFuncs } from "../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../Standard/components/SimpleInput";
+import { DatePicker } from "antd";
+import SimpleDatePicker from "../../Standard/components/SimpleDatePicker";
+import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
 
 type IdentityInformationPropType = {
     onChangeData: (data: any) => void,
@@ -29,7 +32,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
     const [[lastName, setLastName], lastNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
     const [middleName, setMiddleName] = useState<string>("");
     const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", newValue => true);
-    const [[bDate, setBDate], bDateValid] = useValidatedState<string>("", newValue => true);
+    const [[bDate, setBDate], bDateValid] = useValidatedState<string | undefined>(undefined, newValue => true);
 
 
     useEffect(() => {
@@ -46,67 +49,66 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
             <form autoComplete={"on"}>
                 <Text fontSize={24} color={"#000"}>Identity information</Text>
                 <div className={"mb-4"} />
-                <SimpleInput
-                    isValid={nationalityValid}
-                    onChangeRaw={setNationality}
-                    errorTooltipText={"Nationality is required"}
-                    inputProps={{
-                        placeholder: "Nationality",
-                        type: "text",
-                        name: "country-name",
-                    }}
-                    label={"Nationality"}
-                    autoComplete={"country-name"}
-                    id="name"
-                />
+                <SimpleLabelContainer label={"Nationality"} id="nationality">
+                    <SimpleInput
+                        isValid={nationalityValid}
+                        onChangeRaw={setNationality}
+                        errorTooltipText={"Nationality is required"}
+                        inputProps={{
+                            placeholder: "Nationality"
+                        }}
+                        autoComplete={"country-name"}
+                        id="nationality"
+                    />
+                </SimpleLabelContainer>
                 <FlexWrapper>
-                    <SimpleInput
-                        isValid={firstNameValid}
-                        onChangeRaw={setFirstName}
-                        errorTooltipText={"First name is required"}
-                        inputProps={{
-                            placeholder: "First name",
-                            type: "text",
-                            name: "firstname",
-                        }}
+                    <SimpleLabelContainer
                         label={"First name"}
-                        autoComplete={"firstname"}
-                        id="name"
-                    />
-                    <SimpleInput
-                        isValid={lastNameValid}
-                        onChangeRaw={setLastName}
-                        errorTooltipText={"Last name is required"}
-                        inputProps={{
-                            placeholder: "Last name",
-                            type: "text",
-                            name: "lastname",
-                        }}
-                        autoComplete={"lastname"}
-                        label={"First name"}
-                    />
+                        id="firstname"
+                    >
+                        <SimpleInput
+                            isValid={firstNameValid}
+                            onChangeRaw={setFirstName}
+                            errorTooltipText={"First name is required"}
+                            inputProps={{
+                                placeholder: "First name"
+                            }}
+                            autoComplete={"firstname"}
+                            id="firstname"
+                        />
+                    </SimpleLabelContainer>
+                    <SimpleLabelContainer label={"Last name"} id={"lastname"}>
+                        <SimpleInput
+                            isValid={lastNameValid}
+                            onChangeRaw={setLastName}
+                            errorTooltipText={"Last name is required"}
+                            inputProps={{
+                                placeholder: "Last name"
+                            }}
+                            autoComplete={"lastname"}
+                        />
+                    </SimpleLabelContainer>
                 </FlexWrapper>
                 <FlexWrapper>
-                    <SimpleInput
-                        onChangeRaw={setMiddleName}
-                        inputProps={{
-                            placeholder: "Middle name",
-                            type: "text",
-                            name: "middlename",
-                        }}
-                        autoComplete={"middlename"}
-                        label={"Middle name"}
-                    />
-                    <SimpleInput
-                        isValid={bDateValid}
-                        onChangeRaw={setBDate}
-                        errorTooltipText={"Please enter a correct email"}
-                        inputProps={{
-                            type: "date",
-                        }}
-                        autoComplete={"birthdate"}
-                        label={"Birth Date"}
-                    />
+                    <SimpleLabelContainer label={"Middle name"} id={"middlename"}>
+                        <SimpleInput
+                            onChangeRaw={setMiddleName}
+                            inputProps={{
+                                placeholder: "Middle name"
+                            }}
+                            autoComplete={"middlename"}
+                            id={"middlename"}
+                        />
+                    </SimpleLabelContainer>
+                    <SimpleLabelContainer label={"Birth Date"} id={"birthdate"}>
+                        <SimpleDatePicker
+                            value={bDate}
+                            onChangeRaw={setBDate}
+                            isValid={bDateValid}
+                            errorTooltipText={"Please enter a date in the past"}
+                            autoComplete={"birthdate"}
+                        />
+                    </SimpleLabelContainer>
                 </FlexWrapper>
             </form>
         </VerificationTile>

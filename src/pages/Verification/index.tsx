@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import texts from "./localization";
 import LocaleContext from "../../Standard/LocaleContext";
 import { localized } from "../../Standard/utils/localized";
@@ -11,6 +11,8 @@ import Documents from "../../components/Documents";
 import VerificationIcon from "../../icons/Verified";
 import Residence from "../../components/Residence";
 import useValidatedState, { ControlledValidationState, validationFuncs } from "../../Standard/hooks/useValidatedState";
+import { API_URL } from "../../api/constants";
+import { Country } from "../../types";
 
 type VerificationPropType = {}
 
@@ -48,7 +50,28 @@ const Verification = (props: VerificationPropType) => {
     const [[residence, setResidence], residenceValid] = useValidatedState<ControlledValidationState<any>>({ data: {}, isValid: false }, validationFuncs.controlled);
     const [[wallet, setWallet], walletValid] = useValidatedState<ControlledValidationState<any>>({ data: {}, isValid: false }, validationFuncs.controlled);
 
+    const [countries, setCountries] = useState<Country[]>([])
+
     const isValid = identityInformationValid && residenceValid && walletValid;
+
+    const getCountryes = () => {
+        const registrationUrl = `${API_URL}/api/countries`
+        const requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+        }
+        fetch(registrationUrl, requestOptions)
+            .then(res => res.json())
+            .then(obj => setCountries(obj.data))
+    }
+
+    useEffect(()=>{
+        getCountryes()
+    }, [])
+
+    useEffect(()=>{
+        console.log(countries)
+    }, [countries])
 
     return (
         <VerificationPageContainer>
@@ -62,7 +85,7 @@ const Verification = (props: VerificationPropType) => {
                 </Text>
                 <Wallet onChangeData={setWallet} />
                 <IdentityInformation onChangeData={setIdentityInformation} />
-                <Residence onChangeData={setResidence} />
+                <Residence countries={countries} onChangeData={setResidence} />
                 <Documents />
                 <RowFlexWrapper>
                     <VerificationIcon />

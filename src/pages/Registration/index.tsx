@@ -13,6 +13,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { useHistory } from "react-router-dom";
 import Spinner from "../../Standard/components/Spinner";
 import SimpleInput from "../../Standard/components/SimpleInput";
+import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
 
 interface ButtonProps {
     background: string;
@@ -138,42 +139,46 @@ const Registration = (props: RegistrationPropType) => {
         <LoginPageContainer>
             <Text fontSize={36} marginBottom={40}>Sign up to your account</Text>
             <Form>
-                <SimpleInput
-                    isValid={emailValid}
-                    onChangeRaw={setEmail}
-                    errorTooltipText={"Please enter a correct email"}
-                    inputProps={{
-                        placeholder: "Email",
-                        type: "email",
-                    }}
-                    label={"Email address"}
-                />
-                <SimpleInput
-                    isValid={passwordValid}
-                    label={"Password"}
-                    errorTooltipText={"Password should be longer than 8 characters"}
-                    inputProps={{
-                        placeholder: "Password",
-                        type: "password",
-                        name: "new-password",
-                    }}
-                    autoComplete={"new-password"}
-                    id="new-password-text-field"
-                    onChangeRaw={setPassword}
-                />
-                <SimpleInput
-                    isValid={repeatedPasswordValid}
-                    id="confirm-password-text-field"
-                    label={"Confirm password"}
-                    errorTooltipText={"Passwords should match"}
-                    inputProps={{
-                        placeholder: "Confirm password",
-                        type: "password",
-                        name: "new-password",
-                    }}
-                    autoComplete={"new-password"}
-                    onChangeRaw={setRepeatPassword}
-                />
+                <SimpleLabelContainer label={"Email address"} id={"email"}>
+                    <SimpleInput
+                        isValid={emailValid}
+                        onChangeRaw={setEmail}
+                        errorTooltipText={"Please enter a correct email"}
+                        inputProps={{
+                            placeholder: "Email",
+                            type: "email"
+                        }}
+                        id={"email"}
+                    />
+                </SimpleLabelContainer>
+                <SimpleLabelContainer label={"Password"} id="new-password-text-field">
+                    <SimpleInput
+                        isValid={passwordValid}
+                        errorTooltipText={"Password should be longer than 8 characters"}
+                        inputProps={{
+                            placeholder: "Password",
+                            type: "password",
+                            name: "new-password"
+                        }}
+                        autoComplete={"new-password"}
+                        id="new-password-text-field"
+                        onChangeRaw={setPassword}
+                    />
+                </SimpleLabelContainer>
+                <SimpleLabelContainer label={"Confirm password"} id="confirm-password-text-field">
+                    <SimpleInput
+                        isValid={repeatedPasswordValid}
+                        id="confirm-password-text-field"
+                        errorTooltipText={"Passwords should match"}
+                        inputProps={{
+                            placeholder: "Confirm password",
+                            type: "password",
+                            name: "new-password"
+                        }}
+                        autoComplete={"new-password"}
+                        onChangeRaw={setRepeatPassword}
+                    />
+                </SimpleLabelContainer>
                 {isError && <ErrorMessage message={errorMessage} />}
                 <Button
                     type={"button"}

@@ -6,6 +6,7 @@ import VerificationTile from "../VerificationTile";
 import Text from "../Text";
 import useValidatedState, { validationFuncs } from "../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../Standard/components/SimpleInput";
+import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
 
 type WalletVerificationPropType = {
     onChangeData: (data: any) => void,
@@ -20,22 +21,24 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     const [[transferAddress, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
 
     useEffect(() => {
-        onChangeData({data: { transferAddress }, isValid: transferAddressValid});
+        onChangeData({ data: { transferAddress }, isValid: transferAddressValid });
     }, [transferAddress, transferAddressValid]);
 
     return (
         <VerificationTile isValid={transferAddressValid}>
             <Text fontSize={24} color={"#000"}>Wallet</Text>
-            <SimpleInput
-                onlyEmmitOnBlur
-                isValid={transferAddressValid}
-                onChangeRaw={setTransferAddress}
-                errorTooltipText={"Please enter a correct address"}
-                inputProps={{
-                    className: "w-full",
-                    placeholder: "Transfer address"
-                }}
-            />
+            <SimpleLabelContainer>
+                <SimpleInput
+                    onlyEmmitOnBlur
+                    isValid={transferAddressValid}
+                    onChangeRaw={setTransferAddress}
+                    errorTooltipText={"Please enter a correct address"}
+                    inputProps={{
+                        className: "w-full",
+                        placeholder: "Wallet address"
+                    }}
+                />
+            </SimpleLabelContainer>
         </VerificationTile>
     );
 };
