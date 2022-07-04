@@ -9,14 +9,15 @@ export const LocaleSelector = (props: {locales: string[]}) => {
   const [isOpened, setIsOpened] = useState(false)
   const {setLocale, locale} = useContext(LocaleContext)
   const [selected, setSelected] = useState(locale)
-  const ref = useRef(null)
 
+  const ref = useRef(null)
   useOnClickOutside(ref, () => setIsOpened(false))
 
   return (
     <div className={`locale-selector`} ref={ref}>
       {locales.map((loc, index) => (
         <button
+          key={loc}
           className={`
           locale-button selector
            ${isOpened ? 'opened': ''}

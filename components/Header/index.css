@@ -48,3 +48,16 @@
     justify-content: flex-end;
     gap: 12px
 }
+
+.logo-small{
+    display: none;
+}
+@media screen and (max-width: 800px){
+    .logo-small{
+        display: block;
+    }
+    .logo-large{
+        display: none;
+    }
+}
+

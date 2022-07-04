@@ -3,7 +3,7 @@ import React from "react";
 export default (props) => {
   return (
     <div className="py-8" style={{minWidth: 340}}>
-      <footer className="mx-auto px-4 flex flex-row justify-center text-center">
+      <footer className="mx-auto px-4 flex flex-row justify-center items-center text-center">
         <a
           href="https://twitter.com/MarketmakingPro"
           target="_blank"
