@@ -53,8 +53,8 @@ const Verification = (props: VerificationPropType) => {
     const [countries, setCountries] = useState<Country[]>([])
 
     const isValid = identityInformationValid && residenceValid && walletValid;
-
-    const getCountryes = () => {
+  console.log(wallet)
+    const getCountries = () => {
         const registrationUrl = `${API_URL}/api/countries`
         const requestOptions = {
             method: 'GET',
@@ -66,12 +66,12 @@ const Verification = (props: VerificationPropType) => {
     }
 
     useEffect(()=>{
-        getCountryes()
+      getCountries()
     }, [])
 
-    useEffect(()=>{
-        console.log(countries)
-    }, [countries])
+    useEffect(() => {
+      // localStorage.setItem('wallet', JSON.stringify())
+    }, [])
 
     return (
         <VerificationPageContainer>
