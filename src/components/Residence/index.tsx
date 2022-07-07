@@ -13,6 +13,7 @@ import placeholder from "lodash/fp/placeholder";
 import { Country } from "../../types";
 import { AutoComplete } from "antd";
 import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
+import SimpleAutocomplete from "../../Standard/components/SimpleAutocomplete";
 
 type ResidencePropType = {
     onChangeData: (data: any) => void,
@@ -53,15 +54,15 @@ const Residence = (props: ResidencePropType) => {
             <Text fontSize={24} color={"#000"}>Residence</Text>
             <div className={"mb-4"} />
             <SimpleLabelContainer label={"Residence"} id={"shipping country-name"}>
-                <SimpleInput
+                <SimpleAutocomplete
                     isValid={nationalityValid}
                     onChangeRaw={setNationality}
                     errorTooltipText={"Residence is required"}
-                    inputProps={{
-                        placeholder: "Residence"
-                    }}
+                    placeholder={"Residence"}
                     autoComplete={"shipping country-name"}
                     id={"shipping country-name"}
+                    options={countries.map(ctr => {return({label: ctr.name, value: ctr.code})})}
+                    value={nationality}
                 />
             </SimpleLabelContainer>
             <FlexWrapper>

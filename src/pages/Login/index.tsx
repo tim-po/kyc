@@ -169,7 +169,7 @@ const Login = (props: LoginPropType) => {
                 <Button
                     marginTop={20}
                     type={"button"}
-                    textColor={isValid ? "#fff" : "rgba(255, 255, 255, 0.6)"}
+                    textColor={isValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
                     background={isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
                     onClick={login}
                 >
