@@ -1,19 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import texts from "./localization";
-import LocaleContext from "../../Standard/LocaleContext";
-import { localized } from "../../Standard/utils/localized";
+import LocaleContext from "../../../Standard/LocaleContext";
+import { localized } from "../../../Standard/utils/localized";
 import "./index.css";
-import VerificationTile from "../VerificationTile";
-import Text from "../Text";
+import VerificationTile from "../../VerificationTile";
+import Text from "../../Text";
 import styled from "styled-components";
-import SimpleValidatedInput from "../../Standard/components/SimpleInput";
-import useValidatedState, { validationFuncs } from "../../Standard/hooks/useValidatedState";
-import SimpleInput from "../../Standard/components/SimpleInput";
+import SimpleValidatedInput from "../../../Standard/components/SimpleInput";
+import useValidatedState, { validationFuncs } from "../../../Standard/hooks/useValidatedState";
+import SimpleInput from "../../../Standard/components/SimpleInput";
 import placeholder from "lodash/fp/placeholder";
-import { Country } from "../../types";
+import { Country } from "../../../types";
 import { AutoComplete } from "antd";
-import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
-import SimpleAutocomplete from "../../Standard/components/SimpleAutocomplete";
+import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
+import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete";
 
 type ResidencePropType = {
     onChangeData: (data: any) => void,
@@ -30,24 +30,48 @@ const FlexWrapper = styled.div`
 const Residence = (props: ResidencePropType) => {
     const { onChangeData, countries } = props;
     const { locale } = useContext(LocaleContext);
+
+    const [isFirstRender, setIsFirstRender] = useState(true);
+    const [localStorageData, setLocalStorageData] = useState({
+        address: "",
+        city: "",
+        nationality: "",
+        zip: ""
+    });
+
     // const [[nationality, setNationality], nationalityValid] = useValidatedState<Country | undefined>(undefined, newValue => newValue !== undefined && countries.includes(newValue));
-    const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", newValue => true);
+    const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", newValue => countries.map(ctr => ctr.name).includes(newValue));
     const [[city, setCity], cityValid] = useValidatedState<string>("", validationFuncs.hasValue);
     const [[zip, setZip], zipValid] = useValidatedState<string>("", validationFuncs.hasValue);
     const [[address, setAddress], addressValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
-    const [isFirstRender, setIsFirstRender] = useState(true);
-
-    useEffect(() => {
-        if (isFirstRender) {
+    function setWalletInner(residence: { data: {}, isValid: boolean }) {
+        if (!isFirstRender) {
+            localStorage.setItem("residence", JSON.stringify(residence.data));
+            onChangeData(residence);
+        } else {
             setIsFirstRender(false);
         }
-        onChangeData({
+    }
+
+    useEffect(() => {
+        const residence = localStorage.getItem("residence");
+        const parsed = JSON.parse(`${residence}`)
+        if(parsed){
+            setLocalStorageData(parsed);
+        }
+        setNationality(localStorageData.nationality);
+        setCity(localStorageData.city);
+        setZip(localStorageData.zip);
+        setAddress(localStorageData.address);
+    }, [isFirstRender, localStorageData.nationality, localStorageData.city, localStorageData.zip, localStorageData.address]);
+
+    useEffect(() => {
+        setWalletInner({
             data: { nationality, city, zip, address },
             isValid: nationalityValid && cityValid && zipValid && addressValid
         });
     }, [nationality, city, zip, address, nationalityValid, cityValid, zipValid, addressValid]);
-
 
     return (
         <VerificationTile isValid={nationalityValid && cityValid && zipValid && addressValid && !isFirstRender}>
@@ -61,7 +85,7 @@ const Residence = (props: ResidencePropType) => {
                     placeholder={"Residence"}
                     autoComplete={"shipping country-name"}
                     id={"shipping country-name"}
-                    options={countries.map(ctr => {return({label: ctr.name, value: ctr.code})})}
+                    options={countries.map(ctr => {return({value: ctr.name})})}
                     value={nationality}
                 />
             </SimpleLabelContainer>
@@ -72,7 +96,8 @@ const Residence = (props: ResidencePropType) => {
                         onChangeRaw={setCity}
                         errorTooltipText={"City is required"}
                         inputProps={{
-                            placeholder: "City"
+                            placeholder: "City",
+                            value: city
                         }}
                         id={"city-name"}
                         autoComplete={"shipping city-name"}
@@ -85,6 +110,7 @@ const Residence = (props: ResidencePropType) => {
                         errorTooltipText={"Postal code is required"}
                         inputProps={{
                             placeholder: "Postal code",
+                            value: zip
                         }}
                         id={"zip-code"}
                         autoComplete={"shipping zip-code"}
@@ -98,6 +124,7 @@ const Residence = (props: ResidencePropType) => {
                     errorTooltipText={"Address is required"}
                     inputProps={{
                         placeholder: "Address",
+                        value: address
                     }}
                     id={"shipping address"}
                     autoComplete={"shipping address"}
