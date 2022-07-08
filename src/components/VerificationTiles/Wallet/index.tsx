@@ -62,7 +62,6 @@ const WalletVerification = (props: WalletVerificationPropType) => {
           isValid={transferAddressValid}
           onChangeRaw={setTransferAddress}
           errorTooltipText={"Please enter a correct address"}
-          didInput={isFirstRender ? transferAddress !== "" : undefined}
           inputProps={{
             className: "w-full",
             placeholder: "Wallet address",
