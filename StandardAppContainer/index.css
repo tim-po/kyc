@@ -11,7 +11,8 @@
 
 .children-container{
     position: relative;
-    flex-grow: 2;
+    /*flex-grow: 2;*/
+    height: calc(100vh - 80px);
     overflow: auto;
     display: flex;
     flex-direction: column;

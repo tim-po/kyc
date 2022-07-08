@@ -20,14 +20,7 @@ export default (props) => {
         >
           <img src="/images/sm-telegram.svg" alt="" width="20" />
         </a>
-        <a
-          href="http://marketmaking.pro"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mr-4"
-        >
-          <span>v {props.version || "1.0.0"}</span>
-        </a>
+        <span>v {props.version || "1.0.0"}</span>
       </footer>
     </div>
   );

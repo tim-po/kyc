@@ -16,6 +16,7 @@ interface SimpleInputPropType {
     defaultValue?: string
     isValid?: boolean
     id?: string
+    didInput?: boolean
     autoComplete?: string
     onChangeRaw?: (newValue: string) => void
     onBlurRaw?: (newValue: string) => void
@@ -32,7 +33,8 @@ const SimpleInputDefaultProps = {
     defaultValue: "",
     onlyEmmitOnBlur: false,
     inputProps: {type: "text"},
-    isValid: true
+    isValid: true,
+    didInput: false
 };
 
 const SimpleInput = (props: SimpleInputPropType) => {
@@ -45,6 +47,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
             onChange,
             onFocus,
         },
+        didInput,
         errorTooltipText,
         hasDefaultValueButton,
         defaultValueButtonText,
@@ -58,7 +61,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
         onlyEmmitOnBlur
     } = props;
 
-    const [didUserInput, setDidUserInput] = useState(false)
+    const [didUserInput, setDidUserInput] = useState(didInput)
     const inputRef = React.createRef<HTMLInputElement>();
     const shouldDisplayAsInvalid = isValid || !didUserInput
 
@@ -95,6 +98,8 @@ const SimpleInput = (props: SimpleInputPropType) => {
             onChangeRaw(e.target.value)
         }
     };
+
+    console.log(isValid, didUserInput)
 
     const setDefaultValue = () => {
         if (inputRef.current && defaultValue) {
