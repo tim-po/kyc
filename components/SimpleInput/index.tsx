@@ -9,19 +9,18 @@ import "./index.css";
 
 interface SimpleInputPropType {
     // You should declare props like this, delete this if you don't need props
-    onlyEmmitOnBlur?: boolean
-    errorTooltipText?: string
-    hasDefaultValueButton?: boolean
-    defaultValueButtonText?: string
-    defaultValue?: string
-    isValid?: boolean
-    id?: string
-    didInput?: boolean
-    autoComplete?: string
-    onChangeRaw?: (newValue: string) => void
-    onBlurRaw?: (newValue: string) => void
-    onFocusRaw?: (newValue: string) => void
-    inputProps: React.InputHTMLAttributes<HTMLInputElement>
+    onlyEmmitOnBlur?: boolean;
+    errorTooltipText?: string;
+    hasDefaultValueButton?: boolean;
+    defaultValueButtonText?: string;
+    defaultValue?: string;
+    isValid?: boolean;
+    id?: string;
+    autoComplete?: string;
+    onChangeRaw?: (newValue: string) => void;
+    onBlurRaw?: (newValue: string) => void;
+    onFocusRaw?: (newValue: string) => void;
+    inputProps: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
 
@@ -32,9 +31,8 @@ const SimpleInputDefaultProps = {
     defaultValueButtonText: "Default",
     defaultValue: "",
     onlyEmmitOnBlur: false,
-    inputProps: {type: "text"},
-    isValid: true,
-    didInput: false
+    inputProps: { type: "text" },
+    isValid: true
 };
 
 const SimpleInput = (props: SimpleInputPropType) => {
@@ -46,8 +44,8 @@ const SimpleInput = (props: SimpleInputPropType) => {
             onBlur,
             onChange,
             onFocus,
+            value
         },
-        didInput,
         errorTooltipText,
         hasDefaultValueButton,
         defaultValueButtonText,
@@ -61,18 +59,24 @@ const SimpleInput = (props: SimpleInputPropType) => {
         onlyEmmitOnBlur
     } = props;
 
-    const [didUserInput, setDidUserInput] = useState(didInput)
+    const [didUserInput, setDidUserInput] = useState(false);
     const inputRef = React.createRef<HTMLInputElement>();
-    const shouldDisplayAsInvalid = isValid || !didUserInput
+    const shouldDisplayAsInvalid = isValid || !didUserInput;
 
     const onChangeInner = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(!onlyEmmitOnBlur){
-            setDidUserInput(true)
+        if (!onlyEmmitOnBlur) {
+            setDidUserInput(true);
             if (onChange) {
                 onChange(e);
             }
-            if(onChangeRaw){
-                onChangeRaw(e.target.value)
+            if (onChangeRaw) {
+                onChangeRaw(e.target.value);
+            }
+        } else {
+            if (props.inputProps.value !== undefined) {
+                if (onChangeRaw) {
+                    onChangeRaw(e.target.value);
+                }
             }
         }
     };
@@ -81,25 +85,23 @@ const SimpleInput = (props: SimpleInputPropType) => {
         if (onFocus) {
             onFocus(e);
         }
-        if(onFocusRaw){
-            onFocusRaw(e.target.value)
+        if (onFocusRaw) {
+            onFocusRaw(e.target.value);
         }
     };
 
     const onBlurInner = (e: React.FocusEvent<HTMLInputElement>) => {
-        setDidUserInput(true)
+        setDidUserInput(true);
         if (onBlur) {
             onBlur(e);
         }
-        if(onBlurRaw){
-            onBlurRaw(e.target.value)
+        if (onBlurRaw) {
+            onBlurRaw(e.target.value);
         }
-        if(onChangeRaw && onlyEmmitOnBlur){
-            onChangeRaw(e.target.value)
+        if (onChangeRaw && onlyEmmitOnBlur) {
+            onChangeRaw(e.target.value);
         }
     };
-
-    console.log(isValid, didUserInput)
 
     const setDefaultValue = () => {
         if (inputRef.current && defaultValue) {
@@ -116,6 +118,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
             <input
                 {...props.inputProps}
                 id={id}
+                value={value}
                 name={autoComplete}
                 ref={inputRef}
                 onChange={onChangeInner}
