@@ -114,7 +114,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
     };
 
     return (
-        <div className={"input-container"}>
+        <div className={"input-container style-override"}>
             <input
                 {...props.inputProps}
                 id={id}
@@ -124,7 +124,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
                 onChange={onChangeInner}
                 onFocus={onFocusInner}
                 onBlur={onBlurInner}
-                className={`SimpleInput style-override ${shouldDisplayAsInvalid ? "" : "not-valid"} ${className || ""}`}
+                className={`SimpleInput ${shouldDisplayAsInvalid ? "" : "not-valid"} ${className || ""}`}
                 placeholder={placeholder}
                 type={type}
                 autoComplete={autoComplete}
