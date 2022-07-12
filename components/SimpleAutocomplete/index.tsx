@@ -53,10 +53,13 @@ const SimpleAutocomplete = (props: SimpleAutocompletePropType) => {
     const shouldDisplayAsInvalid = isValid || !didUserInput;
 
     const onChangeInner = (newValue: string) => {
-        setDidUserInput(true);
+      if(!onlyEmmitOnBlur) {
+        setDidUserInput(true)
+
         if (onChangeRaw) {
-            onChangeRaw(newValue);
+          onChangeRaw(newValue);
         }
+      }
     };
 
     const filterOptions = (searchValue: string) => {
@@ -80,7 +83,7 @@ const SimpleAutocomplete = (props: SimpleAutocompletePropType) => {
                 onClear={clear}
                 placeholder={placeholder}
             >
-                <Input className={"SimpleInput"} id={id} autoComplete={autoComplete}/>
+                <Input className={`SimpleInput ${shouldDisplayAsInvalid ? "" : "not-valid"}`} id={id} autoComplete={autoComplete}/>
             </AutoComplete>
             <div className={`validation-error-tooltip ${shouldDisplayAsInvalid ? "" : "active"}`}>
                 {errorTooltipText}
