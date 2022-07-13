@@ -9,6 +9,7 @@ import {useWeb3React} from "@web3-react/core";
 import useOnClickOutside from "../../hooks/useOnClickOutside";
 import './index.scss'
 import {injected, switchNetwork, walletconnect} from "../../wallet";
+import {useHistory} from "react-router-dom";
 
 // CONSTANTS
 
@@ -34,6 +35,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
 
     const [isConnectorOpen, setIsConnectorOpen] = useState(false)
     const [isCopyShowing, setIsCopyShowing] = useState(false)
+    const history = useHistory()
 
     useOnClickOutside(ref, () => setIsConnectorOpen(false))
 
@@ -49,6 +51,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
         }else{
             displayNotification()
         }
+        setIsConnectorOpen(false)
     }
 
     function truncate(str: string) {
@@ -115,6 +118,10 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                           <button
                             className="connection-button"
                             style={{paddingLeft: 0, paddingRight: 0}}
+                            onClick={()=>{
+                                window.open('https://kyc-7pb.pages.dev/', '_blank')
+                                setIsConnectorOpen(false)
+                            }}
                           >
                               <div className={'bordered'}>
                                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -133,7 +140,8 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                           <button
                             className="connection-button"
                             onClick={() => {
-                                alert(2)
+                                history.replace({search: 'collection=open'})
+                                setIsConnectorOpen(false)
                             }}
                           >
                               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,7 +157,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                             onClick={disconect}
                           >
                               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <rect x="1" y="1" width="14" height="14" rx="7" stroke="white" stroke-width="2"/>
+                                  <rect x="1" y="1" width="14" height="14" rx="7" stroke="white" strokeWidth="2"/>
                                   <rect x="2" y="3.41431" width="2" height="15" transform="rotate(-45 2 3.41431)" fill="white"/>
                               </svg>
                               <div style={{marginRight: 12}}/>
