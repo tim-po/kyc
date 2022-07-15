@@ -2,6 +2,28 @@
     position: relative;
 }
 
+.ant-picker-panel-container {
+  border-radius: 10px;
+  font-family: "Helvetica";
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  border: 1px solid #33CC66;
+  border-radius: 6px;
+  content: '';
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: #33CC66;
+  border-radius: 6px;
+}
+
 .SimpleDatePicker{
     transition: box-shadow 0.1s ease-in-out;
     position: relative;
