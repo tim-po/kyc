@@ -13,6 +13,7 @@ import Residence from "../../components/VerificationTiles/Residence";
 import useValidatedState, {ControlledValidationState, validationFuncs} from "../../Standard/hooks/useValidatedState";
 import {API_URL} from "../../api/constants";
 import {Country} from "../../types";
+import Info from '../../icons/Info/index'
 
 type VerificationPropType = {}
 
@@ -37,7 +38,35 @@ const FlexWrapper = styled.div`
 const RowFlexWrapper = styled.div`
   display: flex;
   gap: 10px;
+  align-items: center;
 `;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #FFFFFF;
+  width: 240px;
+  height: 50px;
+  background: #33CC66;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 40px;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+`
+
+const FlexEndWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`
 
 const Verification = (props: VerificationPropType) => {
   const {locale} = useContext(LocaleContext);
@@ -59,6 +88,10 @@ const Verification = (props: VerificationPropType) => {
     data: {},
     isValid: false
   }, validationFuncs.controlled);
+  const [[documents, setDocuments], documentsValid] = useValidatedState<ControlledValidationState<any>>({
+    data: {},
+    isValid: false
+  }, validationFuncs.controlled)
 
   const [countries, setCountries] = useState<Country[]>([])
 
@@ -89,10 +122,14 @@ const Verification = (props: VerificationPropType) => {
           Please make sure that all the information entered is consistent with your ID documents. <br/>
           You won’t be able to change it once verified.
         </Text>
+        <RowFlexWrapper>
+          <Info/>
+          <Text fontWeight={400} fontSize={16}>We automatically save all input so you can leave page at any time</Text>
+        </RowFlexWrapper>
         <Wallet onChangeData={setWallet}/>
         <IdentityInformation onChangeData={setIdentityInformation}/>
         <Residence countries={countries} onChangeData={setResidence}/>
-        <Documents/>
+        <Documents onChangeData={setDocuments}/>
         <RowFlexWrapper>
           <VerificationIcon/>
           <Text fontSize={16} fontWeight={400}>
@@ -100,6 +137,9 @@ const Verification = (props: VerificationPropType) => {
             and is kept private and confidential by MMPro
           </Text>
         </RowFlexWrapper>
+        <FlexEndWrapper>
+          <Button>Verify account</Button>
+        </FlexEndWrapper>
       </FlexWrapper>
     </VerificationPageContainer>
   );

@@ -50,9 +50,6 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     setTransferAddress(localStorageData.transferAddress)
   }, [isFirstRender, localStorageData.transferAddress])
 
-  console.log(transferAddressValid)
-  console.log(transferAddress)
-
   return (
     <VerificationTile isValid={transferAddressValid}>
       <Text fontSize={24} color={"#000"}>Wallet</Text>

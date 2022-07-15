@@ -1,27 +1,24 @@
-import React, { useContext, useState } from "react";
+import React, {useContext, useState} from "react";
 import texts from "./localization";
 import LocaleContext from "../../Standard/LocaleContext";
-import { localized } from "../../Standard/utils/localized";
+import {localized} from "../../Standard/utils/localized";
 import styled from "styled-components";
-import { Link, useHistory } from "react-router-dom";
-import { RouteName } from "../../router";
-import { API_URL } from "../../api/constants";
+import {Link, useHistory} from "react-router-dom";
+import {RouteName} from "../../router";
+import {API_URL} from "../../api/constants";
 import sha256 from "crypto-js/sha256";
 import Text from "../../components/Text";
-import SimpleValidatedInput from "../../Standard/components/SimpleInput";
-import useValidatedState, { validationFuncs } from "../../Standard/hooks/useValidatedState";
-import { useCookies } from "react-cookie";
+import useValidatedState, {validationFuncs} from "../../Standard/hooks/useValidatedState";
+import {useCookies} from "react-cookie";
 import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../Standard/components/Spinner";
 import SimpleInput from "../../Standard/components/SimpleInput";
 import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
 
-const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
-
 interface ButtonProps {
-    background: string;
-    textColor: string;
-    marginTop?: number;
+  background: string;
+  textColor: string;
+  marginTop?: number;
 }
 
 type LoginPropType = {}
@@ -34,6 +31,7 @@ const LoginPageContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
+  min-height: 800px;
 `;
 
 const Form = styled.div`
@@ -95,98 +93,98 @@ const Button = styled.button<ButtonProps>`
 `;
 
 const Login = (props: LoginPropType) => {
-    const { locale } = useContext(LocaleContext);
+  const {locale} = useContext(LocaleContext);
 
-    const [[email, setEmail], emailValid] = useValidatedState<string>("", validationFuncs.isEmail);
-    const [[password, setPassword], passwordValid] = useValidatedState<string>("", validationFuncs.validPassword);
-    const history = useHistory();
+  const [[email, setEmail], emailValid] = useValidatedState<string>("", validationFuncs.isEmail);
+  const [[password, setPassword], passwordValid] = useValidatedState<string>("", validationFuncs.validPassword);
+  const history = useHistory();
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [isServerError, setIsServerError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isServerError, setIsServerError] = useState(false);
 
-    const [cookies, setCookie] = useCookies(["auth"]);
+  const [cookies, setCookie] = useCookies(["auth"]);
 
-    async function setUser(): Promise<{ data: { token: string } }> {
-        const registrationUrl = `${API_URL}/api/auth/login`;
-        const requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                login: email,
-                password: sha256(password).toString()
-            })
-        };
-        return fetch(registrationUrl, requestOptions)
-            .then(res => res.json())
-            .catch(() => {
-                setIsServerError(true);
-                setIsLoading(false);
-            });
-    }
-
-    async function login() {
-
-        if (!isValid) return;
-
-        setIsLoading(true);
-        setIsServerError(false);
-        const { data: { token } } = await setUser();
-        setCookie("auth", token, { path: window.location.pathname });
+  async function setUser(): Promise<{ data: { token: string } }> {
+    const registrationUrl = `${API_URL}/api/auth/login`;
+    const requestOptions = {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        login: email,
+        password: sha256(password).toString()
+      })
+    };
+    return fetch(registrationUrl, requestOptions)
+      .then(res => res.json())
+      .catch(() => {
+        setIsServerError(true);
         setIsLoading(false);
-        history.push(RouteName.VERIFICATION);
-    }
+      });
+  }
 
-    const isValid = emailValid && passwordValid;
+  async function login() {
 
-    return (
-        <LoginPageContainer>
-            <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
-            <Form>
-                <SimpleLabelContainer label={"Email address"} id={"email"}>
-                    <SimpleInput
-                        onChangeRaw={setEmail}
-                        errorTooltipText={"Please enter a correct email"}
-                        inputProps={{
-                            placeholder: "Email",
-                            type: "email"
-                        }}
-                        id={"email"}
-                    />
-                </SimpleLabelContainer>
-                <SimpleLabelContainer label={"Password"} id={"current-password"}>
-                    <SimpleInput
-                        errorTooltipText={"Password should be longer than 8 characters"}
-                        inputProps={{
-                            placeholder: "Password",
-                            type: "password"
-                        }}
-                        id={"current-password"}
-                        autoComplete={"current-password"}
-                        onChangeRaw={setPassword}
-                    />
-                </SimpleLabelContainer>
-                {isServerError && <ErrorMessage message={"Something went wrong"} title={"Error signing in"} />}
-                <Button
-                    marginTop={20}
-                    type={"button"}
-                    textColor={isValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
-                    background={isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
-                    onClick={login}
-                >
-                    {
-                        isLoading ?
-                            <Spinner color="white" size={25} />
-                            :
-                            "Sign in"
-                    }
-                </Button>
-                <FlexLinksWrapper>
-                    <TextLink to={""}>Forgot password?</TextLink>
-                    <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>
-                </FlexLinksWrapper>
-            </Form>
-        </LoginPageContainer>
-    );
+    if (!isValid) return;
+
+    setIsLoading(true);
+    setIsServerError(false);
+    const {data: {token}} = await setUser();
+    setCookie("auth", token, {path: window.location.pathname});
+    setIsLoading(false);
+    history.push(RouteName.VERIFICATION);
+  }
+
+  const isValid = emailValid && passwordValid;
+
+  return (
+    <LoginPageContainer>
+      <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
+      <Form>
+        <SimpleLabelContainer label={"Email address"} id={"email"}>
+          <SimpleInput
+            onChangeRaw={setEmail}
+            errorTooltipText={"Please enter a correct email"}
+            inputProps={{
+              placeholder: "Email",
+              type: "email"
+            }}
+            id={"email"}
+          />
+        </SimpleLabelContainer>
+        <SimpleLabelContainer label={"Password"} id={"current-password"}>
+          <SimpleInput
+            errorTooltipText={"Password should be longer than 8 characters"}
+            inputProps={{
+              placeholder: "Password",
+              type: "password"
+            }}
+            id={"current-password"}
+            autoComplete={"current-password"}
+            onChangeRaw={setPassword}
+          />
+        </SimpleLabelContainer>
+        {isServerError && <ErrorMessage message={"Something went wrong"} title={"Error signing in"}/>}
+        <Button
+          marginTop={20}
+          type={"button"}
+          textColor={isValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
+          background={isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
+          onClick={login}
+        >
+          {
+            isLoading ?
+              <Spinner color="white" size={25}/>
+              :
+              "Sign in"
+          }
+        </Button>
+        <FlexLinksWrapper>
+          <TextLink to={""}>Forgot password?</TextLink>
+          <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>
+        </FlexLinksWrapper>
+      </Form>
+    </LoginPageContainer>
+  );
 };
 
 Login.defaultProps = LoginDefaultProps;
