@@ -63,8 +63,6 @@ const SimpleInput = (props: SimpleInputPropType) => {
     const inputRef = React.createRef<HTMLInputElement>();
     const shouldDisplayAsInvalid = (isValid) || !didUserInput || value === "";
 
-    console.log('value', value)
-
     const onChangeInner = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!onlyEmmitOnBlur) {
             setDidUserInput(true);
