@@ -34,6 +34,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
     lastName: "",
     middleName: "",
     nationality: "",
+    bDate: ""
   })
 
   const [[firstName, setFirstName], firstNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
@@ -48,7 +49,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
     }
   }, [isFirstRender])
 
-  function setWalletInner(identityInformation: { data: {}, isValid: boolean }) {
+  function setIdentityInformationInner(identityInformation: { data: {}, isValid: boolean }) {
     if (!isFirstRender) {
       localStorage.setItem('identityInformation', JSON.stringify(identityInformation.data))
       onChangeData(identityInformation)
@@ -67,10 +68,11 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
     setLastName(localStorageData.lastName)
     setMiddleName(localStorageData.middleName)
     setNationality(localStorageData.nationality)
+    setBDate(localStorageData.bDate)
   }, [isFirstRender, localStorageData.firstName, localStorageData.lastName, localStorageData.middleName, localStorageData.nationality])
 
   useEffect(() => {
-    setWalletInner(
+    setIdentityInformationInner(
       {
         data: {nationality, firstName, lastName, middleName, bDate},
         isValid: firstNameValid && lastNameValid && nationalityValid && bDateValid

@@ -11,6 +11,7 @@ import CameraIcon from '../../icons/Camera';
 import styled from "styled-components";
 import useValidatedState, {validationFuncs} from "../../Standard/hooks/useValidatedState";
 import {API_URL} from "../../api/constants";
+import {useCookies} from "react-cookie";
 
 type DocumentsPropType = {
   onChangeData: (data: any) => void,
@@ -30,11 +31,14 @@ const Documents = (props: DocumentsPropType) => {
   const buttonsArray = ['Passport', 'ID card', 'Driver’s License']
   const [activeButton, setActiveButton] = useState<number>(0)
 
+  const [isFirstRender, setIsFirstRender] = useState(true)
+  const [localStorageData, setLocalStorageData] = useState(undefined)
+
   const [mainDoc, setMainDoc] = useState(undefined)
   const [additionalDoc, setAdditioanlDoc] = useState(undefined)
   const [token, setToken] = useState(undefined)
 
-  const isValid = !!(mainDoc || additionalDoc)
+  const [cookies] = useCookies(['auth']);
 
   const handleActiveButton = (index: number) => {
     setActiveButton(index)
@@ -42,11 +46,19 @@ const Documents = (props: DocumentsPropType) => {
 
   async function getUserToken(body: FormData) {
     const userTokenUrl = `${API_URL}/api/validation/upload`;
-    const requestOptions = {
+
+    const response = await fetch(userTokenUrl, {
       method: 'POST',
+      headers: {
+        'Authorization': cookies.auth
+      },
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
       body
-    }
-    const response = await fetch(userTokenUrl, requestOptions)
+    })
 
     return response.json()
   }
@@ -66,10 +78,11 @@ const Documents = (props: DocumentsPropType) => {
   }
 
   const handleMainFileChange = (event: any) => {
+
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
       setMainDoc(event.target.files[0]);
-      uploadFiles('main', mainDoc)
+      uploadFiles('main', event.target.files[0])
     }
   }
 
@@ -77,19 +90,34 @@ const Documents = (props: DocumentsPropType) => {
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
       setAdditioanlDoc(event.target.files[0]);
-      uploadFiles('additional', additionalDoc)
+      uploadFiles('additional', event.target.files[0])
     }
   }
 
   useEffect(() => {
-    onChangeData({
-      data: {token},
-      isValid
+    if (!isFirstRender) {
+      localStorage.setItem('documents', JSON.stringify(localStorageData))
+    }
+  }, [isFirstRender])
+
+  function setDocumentsInner(documents: { data: {}, isValid: boolean }) {
+    if (!isFirstRender) {
+      localStorage.setItem('documents', JSON.stringify(documents.data))
+      onChangeData(documents)
+    } else {
+      setIsFirstRender(false)
+    }
+  }
+
+  useEffect(() => {
+    setDocumentsInner({
+      data: {token, type: buttonsArray[activeButton]},
+      isValid: !!token
     });
-  }, [mainDoc, additionalDoc]);
+  }, [token, activeButton]);
 
   return (
-    <VerificationTile isValid={isValid}>
+    <VerificationTile isValid={!!token}>
       <Text fontSize={24} color={'#000'}>Document</Text>
       <IosStyleSegmentedControll
         width={400}

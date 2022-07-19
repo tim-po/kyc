@@ -7,12 +7,19 @@ import Text from "../../Text";
 import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../../Standard/components/SimpleInput";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
+import styled from "styled-components";
 
 type WalletVerificationPropType = {
   onChangeData: (data: any) => void,
 }
 
 const WalletVerificationDefaultProps = {};
+
+const FlexWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`
 
 const WalletVerification = (props: WalletVerificationPropType) => {
   const {locale} = useContext(LocaleContext);
@@ -52,7 +59,9 @@ const WalletVerification = (props: WalletVerificationPropType) => {
 
   return (
     <VerificationTile isValid={transferAddressValid}>
-      <Text fontSize={24} color={"#000"}>Wallet</Text>
+      <FlexWrapper>
+        <Text fontSize={24} color={"#000"}>Wallet</Text>
+      </FlexWrapper>
       <SimpleLabelContainer>
         <SimpleInput
           // onlyEmmitOnBlur
@@ -66,6 +75,7 @@ const WalletVerification = (props: WalletVerificationPropType) => {
           }}
         />
       </SimpleLabelContainer>
+      <Text fontWeight={400} fontSize={14} color={'#000'} marginTop={-20}>Please check that the specified wallet is in the Binance network.</Text>
     </VerificationTile>
   );
 };

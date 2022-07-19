@@ -39,13 +39,12 @@ const Residence = (props: ResidencePropType) => {
     zip: ""
   });
 
-  // const [[nationality, setNationality], nationalityValid] = useValidatedState<Country | undefined>(undefined, newValue => newValue !== undefined && countries.includes(newValue));
   const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", newValue => countries.map(ctr => ctr.name).includes(newValue));
   const [[city, setCity], cityValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[zip, setZip], zipValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[address, setAddress], addressValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
-  function setWalletInner(residence: { data: {}, isValid: boolean }) {
+  function setResidenceInner(residence: { data: {}, isValid: boolean }) {
     if (!isFirstRender) {
       localStorage.setItem("residence", JSON.stringify(residence.data));
       onChangeData(residence);
@@ -75,14 +74,14 @@ const Residence = (props: ResidencePropType) => {
   }, [isFirstRender, localStorageData.nationality, localStorageData.city, localStorageData.zip, localStorageData.address]);
 
   useEffect(() => {
-    setWalletInner({
+    setResidenceInner({
       data: {nationality, city, zip, address},
       isValid: nationalityValid && cityValid && zipValid && addressValid
     });
   }, [nationality, city, zip, address, nationalityValid, cityValid, zipValid, addressValid]);
 
   return (
-    <VerificationTile isValid={nationalityValid && cityValid && zipValid && addressValid && !isFirstRender}>
+    <VerificationTile isValid={nationalityValid && cityValid && zipValid && addressValid}>
       <Text fontSize={24} color={"#000"}>Residence</Text>
       <div className={"mb-4"}/>
       <SimpleLabelContainer label={"Residence"} id={"shipping country-name"}>

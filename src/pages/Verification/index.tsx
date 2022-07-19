@@ -14,17 +14,19 @@ import useValidatedState, {ControlledValidationState, validationFuncs} from "../
 import {API_URL} from "../../api/constants";
 import {Country} from "../../types";
 import Info from '../../icons/Info/index'
+import PassportInformation from "../../components/VerificationTiles/PassportInformation";
+import {useCookies} from "react-cookie";
 
 type VerificationPropType = {}
 
 const VerificationDefaultProps = {};
+
 
 const VerificationPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  //height: 100%;
   padding-top: 40px;
 `;
 
@@ -35,26 +37,33 @@ const FlexWrapper = styled.div`
   flex-direction: column;
 `;
 
-const RowFlexWrapper = styled.div`
+const RowFlexWrapper = styled.div<{ marginBottom?: number }>`
   display: flex;
   gap: 10px;
   align-items: center;
+
+  ${({marginBottom}) => {
+    return css`
+      margin-bottom: ${marginBottom}px;
+    `;
+  }};
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ isValid: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #FFFFFF;
+  color: ${p => p.isValid ? '#fff' : 'rgba(255, 255, 255, 0.6)'};
   width: 240px;
   height: 50px;
-  background: #33CC66;
+  background: ${p => p.isValid ? '#33CC66' : 'rgba(0, 0, 0, 0.2)'};
   border-radius: 10px;
   font-weight: 700;
   font-size: 20px;
   cursor: pointer;
   margin-top: 40px;
+  transition: background 0.3s ease;
 
   &:focus,
   &:active {
@@ -71,11 +80,6 @@ const FlexEndWrapper = styled.div`
 const Verification = (props: VerificationPropType) => {
   const {locale} = useContext(LocaleContext);
 
-  async function verify() {
-
-  }
-
-  const [isFirstRender, setIsFirstRender] = useState(true)
   const [[identityInformation, setIdentityInformation], identityInformationValid] = useValidatedState<ControlledValidationState<any>>({
     data: {},
     isValid: false
@@ -92,10 +96,21 @@ const Verification = (props: VerificationPropType) => {
     data: {},
     isValid: false
   }, validationFuncs.controlled)
+  const [[passportInformation, setPassportInformation], passportInformationValid] = useValidatedState<ControlledValidationState<any>>({
+    data: {},
+    isValid: false
+  }, validationFuncs.controlled);
 
   const [countries, setCountries] = useState<Country[]>([])
 
-  const isValid = identityInformationValid && residenceValid && walletValid;
+  const [cookies] = useCookies(['auth']);
+
+  const isValid =
+    documents.data.token &&
+    identityInformationValid &&
+    residenceValid &&
+    walletValid &&
+    passportInformationValid
 
   const getCountries = () => {
     const registrationUrl = `${API_URL}/api/countries`
@@ -106,6 +121,36 @@ const Verification = (props: VerificationPropType) => {
     fetch(registrationUrl, requestOptions)
       .then(res => res.json())
       .then(obj => setCountries(obj.data))
+  }
+  console.log(isValid)
+  async function setVerification() {
+
+    if (!isValid) {
+      return
+    }
+
+    const userData = {
+      ...identityInformation.data,
+      ...residence.data,
+      ...wallet.data,
+      ...documents.data,
+      ...passportInformation.data
+    }
+    console.log(userData)
+    const verificationUrl = `${API_URL}/api/validation`
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': cookies.auth
+      },
+      body: JSON.stringify(userData)
+    }
+
+    const response = await fetch(verificationUrl, requestOptions)
+    console.log(response.json())
+
   }
 
   useEffect(() => {
@@ -122,7 +167,7 @@ const Verification = (props: VerificationPropType) => {
           Please make sure that all the information entered is consistent with your ID documents. <br/>
           You won’t be able to change it once verified.
         </Text>
-        <RowFlexWrapper>
+        <RowFlexWrapper marginBottom={20}>
           <Info/>
           <Text fontWeight={400} fontSize={16}>We automatically save all input so you can leave page at any time</Text>
         </RowFlexWrapper>
@@ -130,6 +175,7 @@ const Verification = (props: VerificationPropType) => {
         <IdentityInformation onChangeData={setIdentityInformation}/>
         <Residence countries={countries} onChangeData={setResidence}/>
         <Documents onChangeData={setDocuments}/>
+        <PassportInformation onChangeData={setPassportInformation}/>
         <RowFlexWrapper>
           <VerificationIcon/>
           <Text fontSize={16} fontWeight={400}>
@@ -138,7 +184,7 @@ const Verification = (props: VerificationPropType) => {
           </Text>
         </RowFlexWrapper>
         <FlexEndWrapper>
-          <Button>Verify account</Button>
+          <Button isValid={isValid} onClick={setVerification}>Verify account</Button>
         </FlexEndWrapper>
       </FlexWrapper>
     </VerificationPageContainer>

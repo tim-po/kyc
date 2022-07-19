@@ -9,6 +9,7 @@ type TextPropType = {
   fontWeight: number
   fontSize: number
   marginBottom?: number
+  marginTop?: number,
   color?: string
   children: string | React.ReactNode
 }
@@ -17,6 +18,7 @@ const TextDefaultProps = {
   fontWeight: 700,
   fontSize: 20,
   marginBottom: 0,
+  marginTop: 0,
   color: '#fff',
 }
 
@@ -24,10 +26,11 @@ const CustomText = styled.div<TextPropType>`
   font-weight: ${p => p.fontWeight};
   font-size: ${p => p.fontSize}px;
 
-  ${({marginBottom, color}) => {
+  ${({marginBottom, color, marginTop}) => {
     return css`
       margin-bottom: ${marginBottom}px;
       color: ${color};
+      margin-top: ${marginTop}px;
     `;
   }};
 `
@@ -35,7 +38,7 @@ const CustomText = styled.div<TextPropType>`
 const Text = (props: TextPropType) => {
   const {locale} = useContext(LocaleContext)
 
-  const {fontSize, color, fontWeight, marginBottom, children} = props
+  const {fontSize, color, fontWeight, marginBottom, children, marginTop} = props
 
   return (
     <CustomText
@@ -43,6 +46,7 @@ const Text = (props: TextPropType) => {
       fontSize={fontSize}
       fontWeight={fontWeight}
       marginBottom={marginBottom}
+      marginTop={marginTop}
     >
       {children}
     </CustomText>
