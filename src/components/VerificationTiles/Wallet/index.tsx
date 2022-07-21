@@ -11,6 +11,7 @@ import styled from "styled-components";
 
 type WalletVerificationPropType = {
   onChangeData: (data: any) => void,
+  isSubmitted: boolean
 }
 
 const WalletVerificationDefaultProps = {};
@@ -26,8 +27,8 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   const {onChangeData} = props;
 
   const [isFirstRender, setIsFirstRender] = useState(true)
-  const [[transferAddress, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
-  const [localStorageData, setLocalStorageData] = useState({transferAddress: ''})
+  const [[wallet, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
+  const [localStorageData, setLocalStorageData] = useState({wallet: ''})
 
   useEffect(() => {
     if (!isFirstRender) {
@@ -45,8 +46,8 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   }
 
   useEffect(() => {
-    setWalletInner({data: {transferAddress}, isValid: transferAddressValid});
-  }, [transferAddress, transferAddressValid]);
+    setWalletInner({data: {wallet}, isValid: transferAddressValid});
+  }, [wallet, transferAddressValid]);
 
   useEffect(() => {
     const wallet = localStorage.getItem("wallet");
@@ -54,8 +55,8 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     if(parsed){
       setLocalStorageData(parsed);
     }
-    setTransferAddress(localStorageData.transferAddress)
-  }, [isFirstRender, localStorageData.transferAddress])
+    setTransferAddress(localStorageData.wallet)
+  }, [isFirstRender, localStorageData.wallet])
 
   return (
     <VerificationTile isValid={transferAddressValid}>
@@ -71,7 +72,7 @@ const WalletVerification = (props: WalletVerificationPropType) => {
           inputProps={{
             className: "w-full",
             placeholder: "Wallet address",
-            value: transferAddress
+            value: wallet
           }}
         />
       </SimpleLabelContainer>

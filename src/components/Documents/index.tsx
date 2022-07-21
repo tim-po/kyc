@@ -14,7 +14,8 @@ import {API_URL} from "../../api/constants";
 import {useCookies} from "react-cookie";
 
 type DocumentsPropType = {
-  onChangeData: (data: any) => void,
+  onChangeData: (data: any) => void
+  isSubmitted: boolean
 }
 
 const DocumentsDefaultProps = {}
@@ -39,6 +40,8 @@ const Documents = (props: DocumentsPropType) => {
   const [token, setToken] = useState(undefined)
 
   const [cookies] = useCookies(['auth']);
+
+  const isValid = !!(mainDoc || additionalDoc)
 
   const handleActiveButton = (index: number) => {
     setActiveButton(index)

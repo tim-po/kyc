@@ -14,7 +14,8 @@ import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 
 type IdentityInformationPropType = {
-  onChangeData: (data: any) => void,
+  onChangeData: (data: any) => void
+  isSubmitted: boolean
 }
 
 const IdentityInformationDefaultProps = {};
@@ -40,8 +41,8 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   const [[firstName, setFirstName], firstNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[lastName, setLastName], lastNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [middleName, setMiddleName] = useState<string>("");
-  const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", newValue => true);
-  const [[bDate, setBDate], bDateValid] = useValidatedState<string | undefined>(undefined, newValue => true);
+  const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", validationFuncs.hasValue);
+  const [[bDate, setBDate], bDateValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
   useEffect(() => {
     if (!isFirstRender) {

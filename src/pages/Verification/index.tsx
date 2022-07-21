@@ -103,14 +103,15 @@ const Verification = (props: VerificationPropType) => {
 
   const [countries, setCountries] = useState<Country[]>([])
 
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
   const [cookies] = useCookies(['auth']);
 
   const isValid =
     documents.data.token &&
     identityInformationValid &&
     residenceValid &&
-    walletValid &&
-    passportInformationValid
+    walletValid
 
   const getCountries = () => {
     const registrationUrl = `${API_URL}/api/countries`
@@ -122,7 +123,7 @@ const Verification = (props: VerificationPropType) => {
       .then(res => res.json())
       .then(obj => setCountries(obj.data))
   }
-  console.log(isValid)
+
   async function setVerification() {
 
     if (!isValid) {
@@ -134,9 +135,8 @@ const Verification = (props: VerificationPropType) => {
       ...residence.data,
       ...wallet.data,
       ...documents.data,
-      ...passportInformation.data
     }
-    console.log(userData)
+
     const verificationUrl = `${API_URL}/api/validation`
 
     const requestOptions = {
@@ -148,13 +148,32 @@ const Verification = (props: VerificationPropType) => {
       body: JSON.stringify(userData)
     }
 
-    const response = await fetch(verificationUrl, requestOptions)
-    console.log(response.json())
+    fetch(verificationUrl, requestOptions).then(res => {
+      if (res.status == 200) {
+        setIsSubmitted(true)
+      }
+    })
+  }
 
+  async function checkIsUserDataSubmitted(){
+    const isUserDataUrl = `${API_URL}/api/validation/data`
+
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': cookies.auth
+      }
+    }
+
+    fetch(isUserDataUrl, requestOptions)
+      .then(res => res.json())
+      .then(userData => setIsSubmitted(userData.data.isSubmitted))
   }
 
   useEffect(() => {
     getCountries()
+    checkIsUserDataSubmitted()
   }, [])
 
   return (
@@ -171,11 +190,11 @@ const Verification = (props: VerificationPropType) => {
           <Info/>
           <Text fontWeight={400} fontSize={16}>We automatically save all input so you can leave page at any time</Text>
         </RowFlexWrapper>
-        <Wallet onChangeData={setWallet}/>
-        <IdentityInformation onChangeData={setIdentityInformation}/>
-        <Residence countries={countries} onChangeData={setResidence}/>
-        <Documents onChangeData={setDocuments}/>
-        <PassportInformation onChangeData={setPassportInformation}/>
+        <Wallet onChangeData={setWallet} isSubmitted={isSubmitted}/>
+        <IdentityInformation onChangeData={setIdentityInformation} isSubmitted={isSubmitted}/>
+        <Residence countries={countries} onChangeData={setResidence} isSubmitted={isSubmitted}/>
+        <Documents onChangeData={setDocuments} isSubmitted={isSubmitted}/>
+        {/*<PassportInformation onChangeData={setPassportInformation}/>*/}
         <RowFlexWrapper>
           <VerificationIcon/>
           <Text fontSize={16} fontWeight={400}>

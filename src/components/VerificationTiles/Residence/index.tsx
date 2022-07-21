@@ -18,6 +18,7 @@ import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete"
 type ResidencePropType = {
   onChangeData: (data: any) => void,
   countries: Country[]
+  isSubmitted: boolean
 }
 
 const ResidenceDefaultProps = {};
@@ -33,16 +34,16 @@ const Residence = (props: ResidencePropType) => {
 
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [localStorageData, setLocalStorageData] = useState({
-    address: "",
+    street: "",
     city: "",
-    nationality: "",
+    country: "",
     zip: ""
   });
 
-  const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", newValue => countries.map(ctr => ctr.name).includes(newValue));
+  const [[country, setCountry], countryValid] = useValidatedState<string>("", newValue => countries.map(ctr => ctr.name).includes(newValue));
   const [[city, setCity], cityValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[zip, setZip], zipValid] = useValidatedState<string>("", validationFuncs.hasValue);
-  const [[address, setAddress], addressValid] = useValidatedState<string>("", validationFuncs.hasValue);
+  const [[street, setStreet], streetValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
   function setResidenceInner(residence: { data: {}, isValid: boolean }) {
     if (!isFirstRender) {
@@ -54,40 +55,32 @@ const Residence = (props: ResidencePropType) => {
   }
 
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-
-    }, 3000)
-
-    return () => clearTimeout(delayDebounceFn)
-  }, [nationality])
-
-  useEffect(() => {
     const residence = localStorage.getItem("residence");
     const parsed = JSON.parse(`${residence}`)
     if (parsed) {
       setLocalStorageData(parsed);
     }
-    setNationality(localStorageData.nationality);
+    setCountry(localStorageData.country);
     setCity(localStorageData.city);
     setZip(localStorageData.zip);
-    setAddress(localStorageData.address);
-  }, [isFirstRender, localStorageData.nationality, localStorageData.city, localStorageData.zip, localStorageData.address]);
+    setStreet(localStorageData.street);
+  }, [isFirstRender, localStorageData.country, localStorageData.city, localStorageData.zip, localStorageData.street]);
 
   useEffect(() => {
     setResidenceInner({
-      data: {nationality, city, zip, address},
-      isValid: nationalityValid && cityValid && zipValid && addressValid
+      data: {country, city, zip, street},
+      isValid: countryValid && cityValid && zipValid && streetValid
     });
-  }, [nationality, city, zip, address, nationalityValid, cityValid, zipValid, addressValid]);
+  }, [country, city, zip, street, countryValid, cityValid, zipValid, streetValid]);
 
   return (
-    <VerificationTile isValid={nationalityValid && cityValid && zipValid && addressValid}>
+    <VerificationTile isValid={countryValid && cityValid && zipValid && streetValid}>
       <Text fontSize={24} color={"#000"}>Residence</Text>
       <div className={"mb-4"}/>
       <SimpleLabelContainer label={"Residence"} id={"shipping country-name"}>
         <SimpleAutocomplete
-          isValid={nationalityValid}
-          onChangeRaw={setNationality}
+          isValid={countryValid}
+          onChangeRaw={setCountry}
           errorTooltipText={"Residence is required"}
           placeholder={"Residence"}
           autoComplete={"shipping country-name"}
@@ -95,7 +88,7 @@ const Residence = (props: ResidencePropType) => {
           options={countries.map(ctr => {
             return ({value: ctr.name})
           })}
-          value={nationality}
+          value={country}
         />
       </SimpleLabelContainer>
       <FlexWrapper>
@@ -128,12 +121,12 @@ const Residence = (props: ResidencePropType) => {
       </FlexWrapper>
       <SimpleLabelContainer label={"Address"} id={"shipping address"}>
         <SimpleInput
-          isValid={addressValid}
-          onChangeRaw={setAddress}
+          isValid={streetValid}
+          onChangeRaw={setStreet}
           errorTooltipText={"Address is required"}
           inputProps={{
             placeholder: "Address",
-            value: address
+            value: street
           }}
           id={"shipping address"}
           autoComplete={"shipping address"}
