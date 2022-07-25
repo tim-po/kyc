@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./index.scss";
 import {ConfigProvider, DatePicker} from "antd";
 import moment from "moment";
@@ -17,8 +17,10 @@ interface SimpleDatePickerPropType {
   isValid?: boolean
   id?: string
   autoComplete?: string
-  onChangeRaw?: (newValue: string) => void,
+  onChangeRaw?: (newValue: string) => void
   value: string | undefined
+  required?: boolean
+  placeholder?: string
 }
 
 const SimpleDatePickerDefaultProps = {
@@ -27,10 +29,12 @@ const SimpleDatePickerDefaultProps = {
   defaultValue: "",
   onlyEmmitOnBlur: false,
   inputProps: {},
-  isValid: true
+  isValid: true,
+  placeholder: "dd.mm.yyyy"
 };
 
 const dateFormat = "DD.MM.YYYY";
+const dateFormatRegexp = /^\s*(3[01]|[12][0-9]|0?[1-9])\.(1[012]|0?[1-9])\.((?:19|20)\d{2})\s*$/
 
 const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
   const {
@@ -40,13 +44,16 @@ const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
     onChangeRaw,
     onlyEmmitOnBlur,
     autoComplete,
-    value
+    value,
+    required,
+    placeholder
   } = props;
 
   const [didUserInput, setDidUserInput] = useState(false);
-  const shouldDisplayAsInvalid = isValid || !didUserInput;
+  const shouldDisplayAsValid = (!required && isValid) || (required && value !== "" && isValid) || !didUserInput
 
   const onChangeInner = (newDate: string) => {
+    console.log(newDate)
     if (!onlyEmmitOnBlur) {
       setDidUserInput(true);
       if (onChangeRaw) {
@@ -55,19 +62,45 @@ const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
     }
   };
 
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if(dateFormatRegexp.test(e.target.value)){
+      console.log(e.target.value)
+      onChangeInner(e.target.value)
+    }
+  }
+
+  useEffect(()=>{
+    if(id){
+      const input = document.getElementById(id)
+      if(input){
+        // @ts-ignore
+        input.addEventListener("input", onInputChange)
+      }
+
+      return ()=>{
+        const input = document.getElementById(id)
+        if(input){
+          // @ts-ignore
+          input.removeEventListener("input", onInputChange)
+        }
+      }
+    }
+  }, [])
+
   return (
     <div className={"input-container"}>
       <DatePicker
-        className={"SimpleInput SimpleDatePicker"}
+        className={`SimpleInput SimpleDatePicker ${shouldDisplayAsValid ? "": "not-valid"}`}
         onChange={(date, dateString) => onChangeInner(dateString)}
         showToday={false}
         value={value ? moment(value, dateFormat) : undefined}
         format={dateFormat}
         autoComplete={autoComplete}
+        placeholder={placeholder}
         id={id}
       />
-      <div className={`validation-error-tooltip ${shouldDisplayAsInvalid ? "" : "active"}`}>
-        {errorTooltipText}
+      <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
+        {(required && value === "") ? "field is required" : errorTooltipText}
       </div>
     </div>
   );

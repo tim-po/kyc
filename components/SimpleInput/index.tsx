@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./index.css";
+import ForceValidateContext from "../../ForceValidateContext";
 
 // CONSTANTS
 
@@ -21,6 +22,7 @@ interface SimpleInputPropType {
     onBlurRaw?: (newValue: string) => void;
     onFocusRaw?: (newValue: string) => void;
     inputProps: React.InputHTMLAttributes<HTMLInputElement>;
+    required?: boolean;
 }
 
 
@@ -56,12 +58,14 @@ const SimpleInput = (props: SimpleInputPropType) => {
         onChangeRaw,
         onBlurRaw,
         onFocusRaw,
-        onlyEmmitOnBlur
+        onlyEmmitOnBlur,
+        required
     } = props;
 
+    const { forceValidate } = useContext(ForceValidateContext)
     const [didUserInput, setDidUserInput] = useState(false);
     const inputRef = React.createRef<HTMLInputElement>();
-    const shouldDisplayAsInvalid = (isValid) || !didUserInput || value === "";
+    const shouldDisplayAsValid = (!required && isValid) || (required && value !== "" && isValid) || (!forceValidate && !didUserInput);
 
     const onChangeInner = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!onlyEmmitOnBlur) {
@@ -124,7 +128,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
                 onChange={onChangeInner}
                 onFocus={onFocusInner}
                 onBlur={onBlurInner}
-                className={`SimpleInput ${shouldDisplayAsInvalid ? "" : "not-valid"} ${className || ""}`}
+                className={`SimpleInput ${shouldDisplayAsValid ? "" : "not-valid"} ${className || ""}`}
                 placeholder={placeholder}
                 type={type}
                 autoComplete={autoComplete}
@@ -134,8 +138,8 @@ const SimpleInput = (props: SimpleInputPropType) => {
                     {defaultValueButtonText}
                 </button>
             }
-            <div className={`validation-error-tooltip ${shouldDisplayAsInvalid ? "" : "active"}`}>
-                {errorTooltipText}
+            <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
+                {(required && value === "") ? "field is required" : errorTooltipText}
             </div>
         </div>
     );
