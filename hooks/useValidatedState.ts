@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const testEmailRegex = /^[ ]*([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})[ ]*$/i;
-const testAdressRegex = /0x*/g;
+const testAdressRegex = /^0x[a-fA-F0-9]{40}$/;
 
 export type ControlledValidationState<Type> = {
   data: Type;
@@ -14,6 +14,12 @@ export const validationFuncs = {
   validPassword: (newValue: string): boolean => newValue.length>8,
   isAddress: (newValue: string): boolean => testAdressRegex.test(newValue),
   controlled: (newValue: ControlledValidationState<any>): boolean => newValue.isValid
+}
+
+export const validationFuncsFactory = {
+  inArray: <T>(array: T[]): ((newValue: T)=> boolean) => {
+    return (newValue: T) => array.includes(newValue)
+},
 }
 
 export default function useValidatedState<Type>(defaultValue: Type, validationFunction: (newValue: Type) => boolean, defaultValidation?: boolean):

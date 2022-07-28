@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./index.scss";
 import { AutoComplete, ConfigProvider, DatePicker, Input } from "antd";
 import moment from "moment";
 import placeholder from "lodash/fp/placeholder";
+import ForceValidateContext from "../../ForceValidateContext";
 
 // CONSTANTS
 
@@ -19,9 +20,11 @@ interface SimpleAutocompletePropType {
     id?: string
     autoComplete?: string
     onChangeRaw: (newValue: string) => void,
-    options: {value: string}[]
+    options: { value: string }[]
     value: string | undefined
     placeholder: string
+    required?: boolean
+    name?: string
 }
 
 const SimpleAutocompleteDefaultProps = {
@@ -45,32 +48,38 @@ const SimpleAutocomplete = (props: SimpleAutocompletePropType) => {
         autoComplete,
         value,
         placeholder,
-        options
+        options,
+        required,
+        name,
     } = props;
 
+    const { forceValidate } = useContext(ForceValidateContext)
     const [didUserInput, setDidUserInput] = useState(false);
-    const [filteredOptions, setFilteredOptions] = useState(options)
-    const shouldDisplayAsInvalid = isValid || !didUserInput;
+    const [filteredOptions, setFilteredOptions] = useState(options);
+    const shouldDisplayAsValid = (!required && isValid) || (required && value !== "" && isValid) || (!forceValidate && !didUserInput);
 
     const onChangeInner = (newValue: string) => {
-      if(!onlyEmmitOnBlur) {
-        setDidUserInput(true)
-
         if (onChangeRaw) {
-          onChangeRaw(newValue);
+            onChangeRaw(newValue);
         }
-      }
+    };
+
+    const onBlurInner = (e: React.FocusEvent<HTMLInputElement>) => {
+        setDidUserInput(true);
+        if (onChangeRaw) {
+            onChangeRaw(e.target.value);
+        }
     };
 
     const filterOptions = (searchValue: string) => {
         const newOptions = [...options].filter(opt => opt.value.toLowerCase().includes(searchValue.toLowerCase()));
-        setFilteredOptions(newOptions)
-    }
+        setFilteredOptions(newOptions);
+    };
 
     const clear = () => {
-        setFilteredOptions(options)
-        onChangeRaw("")
-    }
+        setFilteredOptions(options);
+        onChangeRaw("");
+    };
 
     return (
         <div className={"input-container"}>
@@ -81,12 +90,21 @@ const SimpleAutocomplete = (props: SimpleAutocompletePropType) => {
                 onChange={onChangeInner}
                 value={value}
                 onClear={clear}
-                placeholder={placeholder}
             >
-                <Input className={`SimpleInput ${shouldDisplayAsInvalid ? "" : "not-valid"}`} id={id} autoComplete={autoComplete}/>
+                <span>
+                     <input
+                         name={name}
+                         placeholder={placeholder}
+                         onBlur={onBlurInner}
+                         className={`SimpleInput ${shouldDisplayAsValid ? "" : "not-valid"}`}
+                         id={id}
+                         autoComplete={autoComplete}
+                         value={value}
+                     />
+                </span>
             </AutoComplete>
-            <div className={`validation-error-tooltip ${shouldDisplayAsInvalid ? "" : "active"}`}>
-                {errorTooltipText}
+            <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
+                {(required && value === "") ? "field is required" : errorTooltipText}
             </div>
         </div>
     );
