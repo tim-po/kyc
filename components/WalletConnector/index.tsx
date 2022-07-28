@@ -10,6 +10,8 @@ import useOnClickOutside from "../../hooks/useOnClickOutside";
 import './index.scss'
 import {injected, switchNetwork, walletconnect} from "../../wallet";
 import {useHistory} from "react-router-dom";
+import NotificationContext from "../../utils/NotificationContext";
+import DisconnectWallletIcon from '../../icons/notificationIcon/index'
 
 // CONSTANTS
 
@@ -19,7 +21,7 @@ import {useHistory} from "react-router-dom";
 
 type WalletConnectorPropType = {
     // You should declare props like this, delete this if you don't need props
-    displayNotification: ()=>void
+
 }
 
 const WalletConnectorDefaultProps = {
@@ -28,8 +30,8 @@ const WalletConnectorDefaultProps = {
 }
 
 const WalletConnector = (props: WalletConnectorPropType) => {
-    const {displayNotification} = props
     const {locale} = useContext(LocaleContext)
+     const notificationContext = useContext(NotificationContext)
     const {chainId, account, deactivate, activate, active, connector, error} = useWeb3React();
     const ref = useRef(null);
 
@@ -49,7 +51,11 @@ const WalletConnector = (props: WalletConnectorPropType) => {
         if(connector && connector.walletConnectProvider){
             deactivate();
         }else{
-            displayNotification()
+            notificationContext.displayNotification(
+              'Wallet not disconnected',
+              'Please use Metamask to disconnect',
+              <DisconnectWallletIcon/>
+            )
         }
         setIsConnectorOpen(false)
     }
