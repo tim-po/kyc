@@ -10,6 +10,7 @@ import useOnClickOutside from "../../hooks/useOnClickOutside";
 import './index.scss'
 import {injected, switchNetwork, walletconnect} from "../../wallet";
 import {useHistory} from "react-router-dom";
+import Swoosh from '../../images/NegativeBorderRadiusRight'
 
 // CONSTANTS
 
@@ -95,12 +96,15 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                     {active &&
                         <>
                             <MetamaskJazzicon/>
-                            Profile
+                            <span className={`connect-title ${isConnectorOpen ? 'open': ''}`} style={{height: 30}}>Profile</span>
                         </>
                     }
                     {!active &&
                       <span className={`connect-title ${isConnectorOpen ? 'open': ''}`}>Connect Wallet</span>
                     }
+                    <div className={`swoosh ${isConnectorOpen ? 'open': ''}`}>
+                        <Swoosh />
+                    </div>
                 </Button>
                 {active &&
                   <div className={`connect-wallet-flex ${isConnectorOpen ? 'open': ''} ${active ? 'connected': 'not-connected'} `}>
@@ -178,8 +182,8 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                               <img
                                 src="/images/wallet/metamask.svg"
                                 alt="metamask"
-                                width="35"
-                                height="35"
+                                width="30"
+                                height="30"
                                 style={{marginRight: 10}}
                               />
                               <p>MetaMask</p>
@@ -195,8 +199,8 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                               <img
                                 src="/images/wallet/trustwallet.svg"
                                 alt="metamask"
-                                width="35"
-                                height="35"
+                                width="30"
+                                height="30"
                                 style={{marginRight: 10}}
                               />
                               <p>Wallet connect</p>

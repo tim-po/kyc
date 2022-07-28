@@ -10,12 +10,12 @@
 }
 
 .wallet-button{
-    background: rgba(255, 255, 255, 0.3);
+    background: #606274;
     /*width: 100%;*/
-    transition: all 0.1s 0.2s !important;
+    transition: all 0.1s 0.2s ease-out !important;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     gap: 8px;
     border-radius: 25px !important;
@@ -25,6 +25,20 @@
     height: 46px;
 }
 
+.swoosh{
+    transition: all 0.2s 0s;
+    position: absolute;
+    top: calc(100% - 9px);
+    right: calc(100% - 1px);
+    transform: scaleX(0);
+    transform-origin: right;
+
+    &.open{
+        transition: all 0.2s 0.2s;
+        transform: scaleX(1);
+    }
+}
+
 .wallet-button.connected:hover{
     /*background: rgba(199, 0, 0, 0.6);*/
 }
@@ -32,29 +46,32 @@
 .wallet-button.not-connected{
     padding: 10px !important;
     font-weight: bolder;
-    background: rgba(31, 189, 122, 0.8);
+    background: #33CC66;
     padding-right: 0px !important;
     padding-left: 0px !important;
 }
 
 .wallet-button.not-connected.open:hover{
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(30px);
+    background: #606274;
 }
 
 .wallet-button.open{
-    transition: all 0.1s !important;
-    background: rgba(255, 255, 255, 0.3);
-    padding-bottom: 0 !important;
-    padding-top: 2px !important;
-    border-radius: 10px 10px 0 0 !important;
+    transition: all 0.2s ease-in !important;
+    background: #606274;
+    border-radius: 22px 22px 0 0 !important;
     height: calc(46px + 10px);
 }
 
 .connect-title{
     /*width: 150px;*/
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 26px;
     padding-right: 8px;
     padding-left: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .connect-title.open{
@@ -74,10 +91,8 @@
     flex-direction: column;
     align-items: center;
     justify-items: flex-start;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 10px 0 10px 10px;
-    backdrop-filter: blur(30px);
-    /*transform: scaleX(0);*/
+    background: #606274;
+    border-radius: 20px 0 20px 20px;
     transform-origin: top right;
     overflow: hidden;
 }
@@ -93,7 +108,7 @@
 }
 
 .connector-options{
-    transition: all 0.2s;
+    //transition: all 0.3s;
     width: max-content;
     display: flex;
     flex-direction: column;
@@ -103,13 +118,15 @@
 }
 
 .connector-options .connection-button{
-    transition: all 0.2s, background 0.1s;
+    transition: all 0.2s ease-in, background 0.1s;
     height: 0px;
+    transform: scaleY(0);
 }
 
 .connector-options.open .connection-button{
-    transition: all 0.2s 0.1s, background 0.1s;
+    transition: all 0.2s 0.2s ease-out, background 0.1s;
     height: 50px;
+    transform: scaleY(1);
 
     .bordered{
         border-top: 1px solid #A4A4A4;
@@ -118,7 +135,7 @@
 }
 
 .wallet-button.not-connected:hover{
-    background: rgba(31, 189, 122, 1);
+    background: #33CC66;
 }
 
 .connection-button{
