@@ -12,6 +12,8 @@ import {injected, switchNetwork, walletconnect} from "../../wallet";
 import {useHistory} from "react-router-dom";
 import Swoosh from '../../images/NegativeBorderRadiusRight'
 import WalletConnectorBubbleContext from "../../WalletConnectorBubbleContext";
+import NotificationContext from "../../utils/NotificationContext";
+import DisconnectWallletIcon from '../../icons/notificationIcon/index'
 
 // CONSTANTS
 
@@ -21,7 +23,7 @@ import WalletConnectorBubbleContext from "../../WalletConnectorBubbleContext";
 
 type WalletConnectorPropType = {
     // You should declare props like this, delete this if you don't need props
-    displayNotification: ()=>void
+
 }
 
 const WalletConnectorDefaultProps = {
@@ -30,9 +32,9 @@ const WalletConnectorDefaultProps = {
 }
 
 const WalletConnector = (props: WalletConnectorPropType) => {
-    const {displayNotification} = props
     const {locale} = useContext(LocaleContext)
-    const {setBubbleValue, bubbleValue, setAccentedControlButton} = useContext(WalletConnectorBubbleContext)
+    const {bubbleValue, setAccentedControlButton, accentedControlButton} = useContext(WalletConnectorBubbleContext)
+     const notificationContext = useContext(NotificationContext)
     const {chainId, account, deactivate, activate, active, connector, error} = useWeb3React();
     const ref = useRef(null);
 
@@ -59,7 +61,11 @@ const WalletConnector = (props: WalletConnectorPropType) => {
         if(connector && connector.walletConnectProvider){
             deactivate();
         }else{
-            displayNotification()
+            notificationContext.displayNotification(
+              'Wallet not disconnected',
+              'Please use Metamask to disconnect',
+              <DisconnectWallletIcon/>
+            )
         }
         setIsConnectorOpen(false)
     }
@@ -122,7 +128,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                   <div className={`connect-wallet-flex ${isConnectorOpen ? 'open': ''} ${(active || visualWaletFix) ? 'connected': 'not-connected'} `}>
                       <div className={`connector-options ${isConnectorOpen ? 'open': ''}`}>
                           <button
-                            className="connection-button"
+                            className={`connection-button ${accentedControlButton === 0 ? 'accented': ''}`}
                             onClick={() => {
                                 copyTextToClipboard(`${account}`)
                             }}
@@ -132,7 +138,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                               <HidingText defaultText={truncate(`${account}`)} hidingText={'Copied!'} peekOut={isCopyShowing}/>
                           </button>
                           <button
-                            className="connection-button"
+                            className={`connection-button ${accentedControlButton === 1 ? 'accented': ''}`}
                             style={{paddingLeft: 0, paddingRight: 0}}
                             onClick={()=>{
                                 window.open('https://kyc-7pb.pages.dev/', '_blank')
@@ -154,7 +160,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                               </div>
                           </button>
                           <button
-                            className="connection-button"
+                            className={`connection-button ${accentedControlButton === 2 ? 'accented': ''}`}
                             onClick={() => {
                                 history.replace({search: 'collection=open'})
                                 setIsConnectorOpen(false)
@@ -187,7 +193,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                   <div className={'connect-wallet-flex'}>
                       <div className={`connector-options ${isConnectorOpen ? 'open': ''}`}>
                           <div
-                            className="connection-button"
+                            className={`connection-button ${accentedControlButton === 3 ? 'accented': ''}`}
                             onClick={() => {
                                 activate(injected);
                             }}
@@ -202,7 +208,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                               <p>MetaMask</p>
                           </div>
                           <div
-                            className="connection-button"
+                            className={`connection-button ${accentedControlButton === 4 ? 'accented': ''}`}
                             onClick={() => {
                                 activate(walletconnect).then(()=>{
                                     window.location.reload()

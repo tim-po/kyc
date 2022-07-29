@@ -17,8 +17,8 @@ const HeaderDefaultProps = {
   logoHref: 'https://marketmaking.pro/'
 }
 
-const Header = (props: {logoHref?: string, hideWalletConnector?: boolean, displayNotification: ()=>void, locales: string[], pages?: {title: string, url: string}[]}) => {
-  const {locales, pages, displayNotification, logoHref, hideWalletConnector} = props
+const Header = (props: {logoHref?: string, hideWalletConnector?: boolean, locales: string[], pages?: {title: string, url: string}[]}) => {
+  const {locales, pages, logoHref, hideWalletConnector} = props
   const [selectedPage, setSelectedPage] = useState(pages ? pages[0].url: '')
 
   useEffect(()=>{
@@ -70,7 +70,7 @@ const Header = (props: {logoHref?: string, hideWalletConnector?: boolean, displa
                 <LocaleSelector locales={locales}/>
             }
             {!hideWalletConnector &&
-              <WalletConnector displayNotification={displayNotification}/>
+              <WalletConnector />
             }
           </div>
         </div>

@@ -152,6 +152,10 @@
     width: max-content;
     min-width: 100%;
     /*font-size: 16px;*/
+
+    &.accented{
+        background: rgba(51, 204, 102, 0.4);
+    }
 }
 
 .notification-bubble{
