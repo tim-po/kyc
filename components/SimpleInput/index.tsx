@@ -109,6 +109,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
 
     const setDefaultValue = () => {
         if (inputRef.current && defaultValue) {
+            console.log(defaultValue)
             inputRef.current.value = defaultValue;
             // @ts-ignore
             onChangeInner({ target: { value: defaultValue } });
@@ -139,7 +140,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
                 </button>
             }
             <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
-                {(required && value === "") ? "field is required" : errorTooltipText}
+                {(required && value === "") ? "Field is required" : errorTooltipText}
             </div>
         </div>
     );

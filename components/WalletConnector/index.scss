@@ -154,6 +154,31 @@
     /*font-size: 16px;*/
 }
 
+.notification-bubble{
+    transition: all 0.3s;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    padding: 0px 6px;
+    font-size: 12px;
+    border-radius: 9px;
+    background: #33CC66;
+    color: white;
+    font-weight: bolder;
+    overflow: hidden;
+    z-index: 2000;
+    transform: scaleX(1) scaleY(1);
+    transform-origin: bottom left;
+    min-width: 20px;
+    min-height: 20px;
+
+    &.hiding{
+        min-width: 0px;
+        min-height: 0px;
+        transform: scaleX(0) scaleY(0);
+    }
+}
+
 .bordered{
     border: 0px solid #A4A4A4;
     margin-right: 4px;

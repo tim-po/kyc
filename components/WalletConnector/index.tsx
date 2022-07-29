@@ -11,6 +11,7 @@ import './index.scss'
 import {injected, switchNetwork, walletconnect} from "../../wallet";
 import {useHistory} from "react-router-dom";
 import Swoosh from '../../images/NegativeBorderRadiusRight'
+import WalletConnectorBubbleContext from "../../WalletConnectorBubbleContext";
 
 // CONSTANTS
 
@@ -31,11 +32,13 @@ const WalletConnectorDefaultProps = {
 const WalletConnector = (props: WalletConnectorPropType) => {
     const {displayNotification} = props
     const {locale} = useContext(LocaleContext)
+    const {setBubbleValue, bubbleValue, setAccentedControlButton} = useContext(WalletConnectorBubbleContext)
     const {chainId, account, deactivate, activate, active, connector, error} = useWeb3React();
     const ref = useRef(null);
 
     const [isConnectorOpen, setIsConnectorOpen] = useState(false)
     const [isCopyShowing, setIsCopyShowing] = useState(false)
+    const [visualWaletFix, setVisualWaletFix] = useState(false)
     const history = useHistory()
 
     useOnClickOutside(ref, () => setIsConnectorOpen(false))
@@ -43,6 +46,12 @@ const WalletConnector = (props: WalletConnectorPropType) => {
     function mainButtonClick(){
         setIsConnectorOpen(!isConnectorOpen)
     }
+
+    // useEffect(()=>{
+    //     setTimeout(()=>{
+    //         setVisualWaletFix(false)
+    //     }, 1000)
+    // }, [])
 
     function disconect(){
         setIsConnectorOpen(!isConnectorOpen)
@@ -85,12 +94,15 @@ const WalletConnector = (props: WalletConnectorPropType) => {
 
     return (
         <div className={'disconnect-button-container'} ref={ref}>
+            <div className={`notification-bubble ${(!active || bubbleValue.length === 0) ? 'hiding': ''}`}>
+                {bubbleValue.replace("EMPTY", " ")}
+            </div>
             <div
                 style={{zIndex: 2, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}
             >
                 {/* @ts-ignore */}
                 <Button
-                    className={`wallet-button ${active ? 'connected': 'not-connected'} 
+                    className={`wallet-button ${(active || visualWaletFix) ? 'connected': 'not-connected'} 
                     ${isConnectorOpen ? 'open': ''}`} onClick={mainButtonClick}
                 >
                     {active &&
@@ -107,7 +119,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                     </div>
                 </Button>
                 {active &&
-                  <div className={`connect-wallet-flex ${isConnectorOpen ? 'open': ''} ${active ? 'connected': 'not-connected'} `}>
+                  <div className={`connect-wallet-flex ${isConnectorOpen ? 'open': ''} ${(active || visualWaletFix) ? 'connected': 'not-connected'} `}>
                       <div className={`connector-options ${isConnectorOpen ? 'open': ''}`}>
                           <button
                             className="connection-button"
@@ -146,6 +158,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
                             onClick={() => {
                                 history.replace({search: 'collection=open'})
                                 setIsConnectorOpen(false)
+                                setAccentedControlButton(2)
                             }}
                           >
                               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
