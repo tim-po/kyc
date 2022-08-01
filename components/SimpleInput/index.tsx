@@ -134,14 +134,16 @@ const SimpleInput = (props: SimpleInputPropType) => {
                 type={type}
                 autoComplete={autoComplete}
             />
-            {hasDefaultValueButton &&
-                <button type={"button"} className={"default-value-button"} onClick={setDefaultValue}>
+            {(hasDefaultValueButton && props.inputProps.className && !props.inputProps.className.includes('skeleton')) &&
+                <button type={"button"} className={`default-value-button`} onClick={setDefaultValue}>
                     {defaultValueButtonText}
                 </button>
             }
-            <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
-                {(required && value === "") ? "Field is required" : errorTooltipText}
-            </div>
+            {(props.inputProps.className && !props.inputProps.className.includes('skeleton')) &&
+              <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
+                  {(required && value === "") ? "Field is required" : errorTooltipText}
+              </div>
+            }
         </div>
     );
 };
