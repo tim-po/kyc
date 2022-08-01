@@ -48,7 +48,6 @@ const StandardAppContainer = (props: { logoHref?: string, hideWalletConnector?: 
   const [accentedControlButton, setAccentedControlButton] = useState(-1);
 
   const changeAccentedButton = (newIndex: number) => {
-    console.log(newIndex)
     if(accentedControlButton === newIndex){
       setAccentedControlButton(-1)
     }else {

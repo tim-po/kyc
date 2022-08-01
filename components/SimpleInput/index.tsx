@@ -109,7 +109,6 @@ const SimpleInput = (props: SimpleInputPropType) => {
 
     const setDefaultValue = () => {
         if (inputRef.current && defaultValue) {
-            console.log(defaultValue)
             inputRef.current.value = defaultValue;
             // @ts-ignore
             onChangeInner({ target: { value: defaultValue } });

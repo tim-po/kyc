@@ -53,7 +53,6 @@ const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
   const shouldDisplayAsValid = (!required && isValid) || (required && value !== "" && isValid) || !didUserInput
 
   const onChangeInner = (newDate: string) => {
-    console.log(newDate)
     if (!onlyEmmitOnBlur) {
       setDidUserInput(true);
       if (onChangeRaw) {
@@ -64,7 +63,6 @@ const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if(dateFormatRegexp.test(e.target.value)){
-      console.log(e.target.value)
       onChangeInner(e.target.value)
     }
   }
