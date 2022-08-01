@@ -176,6 +176,24 @@ const Verification = (props: VerificationPropType) => {
             .then(userData => {
                 if (userData && userData.data) {
                     setIsSubmitted(userData.data.isSubmitted);
+                    console.log(userData)
+                    const data = userData.data
+                    localStorage.setItem("identityInformation", JSON.stringify({
+                        nationality: data.nationality,
+                        firstName: data.firstName,
+                        middleName: data.middleName,
+                        lastName: data.lastName,
+                        bDate: data.bDate
+                    }));
+                    localStorage.setItem("residence", JSON.stringify({
+                        country: data.country,
+                        city: data.city,
+                        zip: data.zip,
+                        street: data.street,
+                    }));
+                    localStorage.setItem("wallet", JSON.stringify({
+                        wallet: data.wallet
+                    }));
                 }
             });
     }
