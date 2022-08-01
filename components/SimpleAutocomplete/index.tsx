@@ -25,6 +25,7 @@ interface SimpleAutocompletePropType {
     placeholder: string
     required?: boolean
     name?: string
+    displayAsLabel?: boolean
 }
 
 const SimpleAutocompleteDefaultProps = {
@@ -51,6 +52,7 @@ const SimpleAutocomplete = (props: SimpleAutocompletePropType) => {
         options,
         required,
         name,
+        displayAsLabel
     } = props;
 
     const { forceValidate } = useContext(ForceValidateContext)
@@ -93,10 +95,11 @@ const SimpleAutocomplete = (props: SimpleAutocompletePropType) => {
             >
                 <span>
                      <input
+                         disabled={displayAsLabel}
                          name={name}
                          placeholder={placeholder}
                          onBlur={onBlurInner}
-                         className={`SimpleInput ${shouldDisplayAsValid ? "" : "not-valid"}`}
+                         className={`SimpleInput ${shouldDisplayAsValid ? "" : "not-valid"} ${displayAsLabel ? 'display-as-label': ''}`}
                          id={id}
                          autoComplete={autoComplete}
                          value={value}

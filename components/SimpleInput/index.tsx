@@ -23,6 +23,7 @@ interface SimpleInputPropType {
     onFocusRaw?: (newValue: string) => void;
     inputProps: React.InputHTMLAttributes<HTMLInputElement>;
     required?: boolean;
+    displayAsLabel?: boolean;
 }
 
 
@@ -59,7 +60,8 @@ const SimpleInput = (props: SimpleInputPropType) => {
         onBlurRaw,
         onFocusRaw,
         onlyEmmitOnBlur,
-        required
+        required,
+        displayAsLabel
     } = props;
 
     const { forceValidate } = useContext(ForceValidateContext)
@@ -120,6 +122,7 @@ const SimpleInput = (props: SimpleInputPropType) => {
     return (
         <div className={"input-container style-override"}>
             <input
+                disabled={displayAsLabel}
                 {...props.inputProps}
                 id={id}
                 value={value}
@@ -128,17 +131,17 @@ const SimpleInput = (props: SimpleInputPropType) => {
                 onChange={onChangeInner}
                 onFocus={onFocusInner}
                 onBlur={onBlurInner}
-                className={`SimpleInput ${shouldDisplayAsValid ? "" : "not-valid"} ${className || ""}`}
-                placeholder={placeholder}
+                className={`SimpleInput ${shouldDisplayAsValid ? "" : "not-valid"} ${className || ""} ${displayAsLabel ? 'display-as-label': ''}`}
+                placeholder={displayAsLabel ? "-": placeholder}
                 type={type}
                 autoComplete={autoComplete}
             />
-            {(hasDefaultValueButton && props.inputProps.className && !props.inputProps.className.includes('skeleton')) &&
+            {(hasDefaultValueButton && !displayAsLabel && props.inputProps.className && !props.inputProps.className.includes('skeleton')) &&
                 <button type={"button"} className={`default-value-button`} onClick={setDefaultValue}>
                     {defaultValueButtonText}
                 </button>
             }
-            {(props.inputProps.className && !props.inputProps.className.includes('skeleton')) &&
+            {(props.inputProps.className && !displayAsLabel && !props.inputProps.className.includes('skeleton')) &&
               <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
                   {(required && value === "") ? "Field is required" : errorTooltipText}
               </div>
