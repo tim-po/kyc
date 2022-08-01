@@ -24,7 +24,7 @@ const FlexWrapper = styled.div`
 
 const WalletVerification = (props: WalletVerificationPropType) => {
   const {locale} = useContext(LocaleContext);
-  const {onChangeData} = props;
+  const {onChangeData, isSubmitted} = props;
 
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [[wallet, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
@@ -55,7 +55,9 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     if(parsed){
       setLocalStorageData(parsed);
     }
-    setTransferAddress(localStorageData.wallet)
+    if(localStorageData.wallet) {
+      setTransferAddress(localStorageData.wallet)
+    }
   }, [isFirstRender, localStorageData.wallet])
 
   return (
@@ -65,7 +67,9 @@ const WalletVerification = (props: WalletVerificationPropType) => {
       </FlexWrapper>
       <SimpleLabelContainer>
         <SimpleInput
-          // onlyEmmitOnBlur
+          onlyEmmitOnBlur
+          displayAsLabel={isSubmitted}
+          required
           isValid={transferAddressValid}
           onChangeRaw={setTransferAddress}
           errorTooltipText={"Please enter a correct address"}

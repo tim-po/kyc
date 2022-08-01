@@ -7,15 +7,18 @@ import VerificationTile from "../../VerificationTile";
 import Text from "../../Text";
 import styled from "styled-components";
 import SimpleValidatedInput from "../../../Standard/components/SimpleInput";
-import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useValidatedState";
+import useValidatedState, { validationFuncs, validationFuncsFactory } from "../../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../../Standard/components/SimpleInput";
 import {DatePicker} from "antd";
 import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
+import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete";
+import { Country } from "../../../types";
 
 type IdentityInformationPropType = {
   onChangeData: (data: any) => void
   isSubmitted: boolean
+  countries: Country[]
 }
 
 const IdentityInformationDefaultProps = {};
@@ -27,7 +30,7 @@ const FlexWrapper = styled.div`
 
 const IdentityInformation = (props: IdentityInformationPropType) => {
   const {locale} = useContext(LocaleContext);
-  const {onChangeData} = props;
+  const {onChangeData, countries, isSubmitted} = props;
 
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [localStorageData, setLocalStorageData] = useState({
@@ -41,8 +44,14 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   const [[firstName, setFirstName], firstNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[lastName, setLastName], lastNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [middleName, setMiddleName] = useState<string>("");
-  const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", validationFuncs.hasValue);
+  const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", validationFuncsFactory.inArray<string>(countries.map(ctr => ctr.name)));
   const [[bDate, setBDate], bDateValid] = useValidatedState<string>("", validationFuncs.hasValue);
+
+  const forceValidateSoft = () => {
+    // if(!forceValidate){
+    //   setForceValidate(true)
+    // }
+  }
 
   useEffect(() => {
     if (!isFirstRender) {
@@ -65,12 +74,27 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
     if(parsed){
       setLocalStorageData(parsed);
     }
-    setFirstName(localStorageData.firstName)
-    setLastName(localStorageData.lastName)
-    setMiddleName(localStorageData.middleName)
-    setNationality(localStorageData.nationality)
-    setBDate(localStorageData.bDate)
-  }, [isFirstRender, localStorageData.firstName, localStorageData.lastName, localStorageData.middleName, localStorageData.nationality])
+    if(localStorageData.firstName){
+      setFirstName(localStorageData.firstName)
+      forceValidateSoft()
+    }
+    if(localStorageData.lastName) {
+      setLastName(localStorageData.lastName)
+      forceValidateSoft()
+    }
+    if(localStorageData.middleName) {
+      setMiddleName(localStorageData.middleName)
+      forceValidateSoft()
+    }
+    if(localStorageData.nationality) {
+      setNationality(localStorageData.nationality)
+      forceValidateSoft()
+    }
+    if(localStorageData.bDate) {
+      setBDate(localStorageData.bDate)
+      forceValidateSoft()
+    }
+  }, [isFirstRender, localStorageData.firstName, localStorageData.bDate, localStorageData.lastName, localStorageData.middleName, localStorageData.nationality, countries])
 
   useEffect(() => {
     setIdentityInformationInner(
@@ -86,17 +110,21 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
       <form autoComplete={"on"}>
         <Text fontSize={24} color={"#000"}>Identity information</Text>
         <div className={"mb-4"}/>
-        <SimpleLabelContainer label={"Nationality"} id="nationality">
-          <SimpleInput
-            isValid={nationalityValid}
-            onChangeRaw={setNationality}
-            errorTooltipText={"Nationality is required"}
-            inputProps={{
-              placeholder: "Nationality",
-              value: nationality
-            }}
-            autoComplete={"country-name"}
-            id="nationality"
+        <SimpleLabelContainer label={"Nationality"} id="shipping country-name">
+          <SimpleAutocomplete
+              isValid={nationalityValid}
+              onChangeRaw={setNationality}
+              displayAsLabel={isSubmitted}
+              errorTooltipText={"Please select valid country"}
+              required
+              placeholder={"Nationality"}
+              autoComplete={"shipping country-name"}
+              name={"shipping country-name"}
+              id={"shipping country-name"}
+              options={countries.map(ctr => {
+                return ({value: ctr.name})
+              })}
+              value={nationality}
           />
         </SimpleLabelContainer>
         <FlexWrapper>
@@ -105,9 +133,9 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
             id="firstname"
           >
             <SimpleInput
-              isValid={firstNameValid}
               onChangeRaw={setFirstName}
-              errorTooltipText={"First name is required"}
+              required
+              displayAsLabel={isSubmitted}
               inputProps={{
                 placeholder: "First name",
                 value: firstName
@@ -118,9 +146,9 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           </SimpleLabelContainer>
           <SimpleLabelContainer label={"Last name"} id={"lastname"}>
             <SimpleInput
-              isValid={lastNameValid}
               onChangeRaw={setLastName}
-              errorTooltipText={"Last name is required"}
+              displayAsLabel={isSubmitted}
+              required
               inputProps={{
                 placeholder: "Last name",
                 value: lastName
@@ -133,6 +161,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           <SimpleLabelContainer label={"Middle name"} id={"middlename"}>
             <SimpleInput
               onChangeRaw={setMiddleName}
+              displayAsLabel={isSubmitted}
               inputProps={{
                 placeholder: "Middle name",
                 value: middleName
@@ -144,10 +173,13 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           <SimpleLabelContainer label={"Birth Date"} id={"birthdate"}>
             <SimpleDatePicker
               value={bDate}
+              displayAsLabel={isSubmitted}
               onChangeRaw={setBDate}
               isValid={bDateValid}
+              required
               errorTooltipText={"Please enter a date in the past"}
               autoComplete={"birthdate"}
+              id={"birthdate"}
             />
           </SimpleLabelContainer>
         </FlexWrapper>

@@ -75,9 +75,8 @@ const PassportInformation = (props: PassportInformationPropType) => {
         <div className={"mb-4"}/>
         <SimpleLabelContainer label={"Series and Number"} id="seriesAndNumber">
           <SimpleInput
-            isValid={seriesAndNumberValid}
             onChangeRaw={setSeriesAndNumber}
-            errorTooltipText={"Series and Number is required"}
+            required
             inputProps={{
               placeholder: "Series and Number",
               value: seriesAndNumber
@@ -88,9 +87,8 @@ const PassportInformation = (props: PassportInformationPropType) => {
         </SimpleLabelContainer>
         <SimpleLabelContainer label={"Issued by"} id="issuedBy">
           <SimpleInput
-            isValid={issuedByValid}
             onChangeRaw={setIssuedBy}
-            errorTooltipText={"Issued by is required"}
+            required
             inputProps={{
               placeholder: "Issued by",
               value: issuedBy
@@ -101,9 +99,8 @@ const PassportInformation = (props: PassportInformationPropType) => {
         </SimpleLabelContainer>
         <SimpleLabelContainer label={"Date of issue"} id="dateOfIssue">
           <SimpleInput
-            isValid={dateOfIssueValid}
             onChangeRaw={setDateOfIssue}
-            errorTooltipText={"Date of issue is required"}
+            required
             inputProps={{
               placeholder: "Date of issue",
               value: dateOfIssue
@@ -114,9 +111,8 @@ const PassportInformation = (props: PassportInformationPropType) => {
         </SimpleLabelContainer>
         <SimpleLabelContainer label={"Division code"} id="divisionCode">
           <SimpleInput
-            isValid={divisionCodeValid}
             onChangeRaw={setDivisionCode}
-            errorTooltipText={"Division code is required"}
+            required
             inputProps={{
               placeholder: "Division code",
               value: divisionCode
@@ -127,11 +123,10 @@ const PassportInformation = (props: PassportInformationPropType) => {
         </SimpleLabelContainer>
         <SimpleLabelContainer label={"Registration"} id="registration">
           <SimpleInput
-            isValid={registrationValid}
             onChangeRaw={setRegistration}
-            errorTooltipText={"Registration is required"}
+            required
             inputProps={{
-              placeholder: "Registration",
+              placeholder: "dd.mm.yyyy",
               value: registration
             }}
             autoComplete={"country-name"}

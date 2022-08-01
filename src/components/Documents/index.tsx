@@ -36,8 +36,9 @@ const Documents = (props: DocumentsPropType) => {
   const [localStorageData, setLocalStorageData] = useState(undefined)
 
   const [mainDoc, setMainDoc] = useState(undefined)
+  const [mainToken, setMainToken] = useState(undefined)
   const [additionalDoc, setAdditioanlDoc] = useState(undefined)
-  const [token, setToken] = useState(undefined)
+  const [additionalToken, setAdditionalToken] = useState(undefined)
 
   const [cookies] = useCookies(['auth']);
 
@@ -71,13 +72,19 @@ const Documents = (props: DocumentsPropType) => {
     body.append('attachment', file);
     body.append('type', documentImportantType);
 
-    if (token)
-      body.append('token', token);
+    switch (documentImportantType){
+      case "additional":
+        if (additionalToken)
+          body.append('token', additionalToken);
+      case "main":
+        if (mainToken)
+          body.append('token', mainToken);
+    }
 
     const response = await getUserToken(body)
 
     if (response && response.data.token)
-      setToken(response.data.token)
+      return response.data.token
   }
 
   const handleMainFileChange = (event: any) => {
@@ -85,7 +92,7 @@ const Documents = (props: DocumentsPropType) => {
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
       setMainDoc(event.target.files[0]);
-      uploadFiles('main', event.target.files[0])
+      uploadFiles('main', event.target.files[0]).then(token => setMainToken(token))
     }
   }
 
@@ -93,15 +100,15 @@ const Documents = (props: DocumentsPropType) => {
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
       setAdditioanlDoc(event.target.files[0]);
-      uploadFiles('additional', event.target.files[0])
+      uploadFiles('additional', event.target.files[0]).then(token => setAdditionalToken(token))
     }
   }
 
-  useEffect(() => {
-    if (!isFirstRender) {
-      localStorage.setItem('documents', JSON.stringify(localStorageData))
-    }
-  }, [isFirstRender])
+  // useEffect(() => {
+  //   if (!isFirstRender) {
+  //     localStorage.setItem('documents', JSON.stringify(localStorageData))
+  //   }
+  // }, [isFirstRender])
 
   function setDocumentsInner(documents: { data: {}, isValid: boolean }) {
     if (!isFirstRender) {
@@ -114,13 +121,13 @@ const Documents = (props: DocumentsPropType) => {
 
   useEffect(() => {
     setDocumentsInner({
-      data: {token, type: buttonsArray[activeButton]},
-      isValid: !!token
+      data: {mainToken, additionalToken, type: buttonsArray[activeButton]},
+      isValid: !!mainToken && (activeButton !== 0 || !!additionalToken)
     });
-  }, [token, activeButton]);
+  }, [mainToken, additionalToken, activeButton]);
 
   return (
-    <VerificationTile isValid={!!token}>
+    <VerificationTile isValid={!!mainToken && (activeButton !== 0 || !!additionalToken)}>
       <Text fontSize={24} color={'#000'}>Document</Text>
       <IosStyleSegmentedControll
         width={400}
