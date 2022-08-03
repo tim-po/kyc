@@ -26,7 +26,7 @@ const MetamaskJazzicon = () => {
         }
     }, [account, avatarRef]);
 
-    return <div style={{height: 30, width: 30}} ref={avatarRef} />;
+    return <div style={{height: 30, width: 30, transform: 'translateZ(0)'}} ref={avatarRef} />;
 };
 
 export default MetamaskJazzicon

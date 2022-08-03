@@ -28,8 +28,8 @@
 .swoosh{
     transition: all 0.2s 0s;
     position: absolute;
-    top: calc(100% - 9px);
-    right: calc(100% - 1px);
+    top: calc(100% - 10px);
+    right: calc(100% - 1.8px);
     transform: scaleX(0);
     transform-origin: right;
 
@@ -84,7 +84,7 @@
 .connect-wallet-flex{
     transition: all 0.3s;
     position: absolute;
-    top: calc(100% + 10px);
+    top: calc(100% + 9px);
     right: 0;
     width: max-content;
     display: flex;
