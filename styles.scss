@@ -1,5 +1,5 @@
 .SimpleInput{
-  transition: box-shadow 0.1s 0.1s ease-in-out;
+  transition: all 0.3s, box-shadow 0.1s 0.1s ease-in-out;
   outline: none !important;
   border-radius: 10px;
   color: black;
@@ -12,6 +12,27 @@
   height: 50px;
   width: 100%;
   box-shadow: 0 0 0 0px rgba(103, 201, 113, 0.2);
+
+  &.display-as-label{
+    border: 0px solid rgba(255, 255, 255, 0);
+    box-shadow: none;
+    padding: 0;
+    height: 20px;
+
+    &:focus{
+      border: 0px solid rgba(255, 255, 255, 0);
+      box-shadow: none;
+      padding: 0;
+      height: 20px;
+    }
+
+    &:hover{
+      border: 0px solid rgba(255, 255, 255, 0);
+      box-shadow: none;
+      padding: 0;
+      height: 20px;
+    }
+  }
 
   &:hover{
     border-color: #67C971;

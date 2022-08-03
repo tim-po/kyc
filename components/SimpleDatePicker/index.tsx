@@ -21,6 +21,7 @@ interface SimpleDatePickerPropType {
   value: string | undefined
   required?: boolean
   placeholder?: string
+  displayAsLabel?: boolean
 }
 
 const SimpleDatePickerDefaultProps = {
@@ -46,7 +47,8 @@ const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
     autoComplete,
     value,
     required,
-    placeholder
+    placeholder,
+    displayAsLabel
   } = props;
 
   const [didUserInput, setDidUserInput] = useState(false);
@@ -87,19 +89,30 @@ const SimpleDatePicker = (props: SimpleDatePickerPropType) => {
 
   return (
     <div className={"input-container"}>
-      <DatePicker
-        className={`SimpleInput SimpleDatePicker ${shouldDisplayAsValid ? "": "not-valid"}`}
-        onChange={(date, dateString) => onChangeInner(dateString)}
-        showToday={false}
-        value={value ? moment(value, dateFormat) : undefined}
-        format={dateFormat}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        id={id}
-      />
-      <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
-        {(required && value === "") ? "field is required" : errorTooltipText}
-      </div>
+      {displayAsLabel &&
+          <input
+              disabled
+              className={`SimpleInput SimpleDatePicker ${shouldDisplayAsValid ? "" : "not-valid"} ${displayAsLabel ? 'display-as-label' : ''}`}
+              value={value}
+          />
+      }
+      {!displayAsLabel &&
+          <>
+            <DatePicker
+                className={`SimpleInput SimpleDatePicker ${shouldDisplayAsValid ? "" : "not-valid"} ${displayAsLabel ? 'display-as-label' : ''}`}
+                onChange={(date, dateString) => onChangeInner(dateString)}
+                showToday={false}
+                value={value ? moment(value, dateFormat) : undefined}
+                format={dateFormat}
+                autoComplete={autoComplete}
+                placeholder={placeholder}
+                id={id}
+            />
+            <div className={`validation-error-tooltip ${shouldDisplayAsValid ? "" : "active"}`}>
+              {(required && value === "") ? "field is required" : errorTooltipText}
+            </div>
+          </>
+      }
     </div>
   );
 };
