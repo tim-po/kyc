@@ -114,7 +114,7 @@ const WalletConnector = (props: WalletConnectorPropType) => {
           {active &&
             <>
               <MetamaskJazzicon/>
-              <span className={`connect-title ${isConnectorOpen ? 'open' : ''}`} style={{height: 30}}>Profile</span>
+              <span className={`connect-title ${isConnectorOpen ? 'open' : ''}`} style={{height: 30}}>{localized(texts.profile, locale)}</span>
             </>
           }
           {!active &&

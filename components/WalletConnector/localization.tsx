@@ -1,30 +1,34 @@
 export default {
+  profile: {
+    en: "Profile",
+    ja: "プロフィール"
+  },
   connectWallet: {
     en: 'Connect Wallet',
-    ja: ''
+    ja: 'コネクトウォレット'
   },
   verifyPersonalData: {
     en: 'Verify personal data',
-    ja: ''
+    ja: '個人情報の確認'
   },
   copied:{
     en: 'Copied',
-    ja: ''
+    ja: 'コピー機'
   },
   collection:{
     en: 'Collection',
-    ja: ''
+    ja: 'コレクション'
   },
   disconnectWallet:{
     en: 'Disconnect wallet',
-    ja: ''
+    ja: 'ウォレットの接続を解除する'
   },
   metamaskWalletDisconnectNotificationTitle:{
     en: 'Wallet not disconnected',
-    ja: ''
+    ja: 'ウォレットが切断されていない'
   },
   metamaskWalletDisconnectNotificationSubtitle:{
     en: 'Please use Metamask to disconnect',
-    ja: ''
+    ja: 'メタマスクで接続を解除してください'
   }
 }
