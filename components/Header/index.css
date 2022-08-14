@@ -1,10 +1,11 @@
-.logo-and-tabs{
+.logo-and-tabs {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 12px
 }
-.separator{
+
+.separator {
     height: 30px;
     width: 0px;
     background: rgba(255, 255, 255, 0.8);
@@ -12,14 +13,14 @@
     margin-right: 20px;
 }
 
-.tabs{
+.tabs {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 20px
 }
 
-.page-tab{
+.page-tab {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -27,7 +28,7 @@
     justify-content: center;
 }
 
-.tab-selector{
+.tab-selector {
     transition: all 0.2s;
     width: 100%;
     height: 2px;
@@ -38,25 +39,43 @@
     bottom: 0;
 }
 
-.page-tab.tab-selected .tab-selector{
+.page-tab.tab-selected .tab-selector {
     opacity: 1;
 }
 
-.control-strip{
+.control-strip {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 12px
 }
 
-.logo-small{
+.logo-small {
     display: none;
 }
-@media screen and (max-width: 800px){
-    .logo-small{
+
+.user-manual {
+    font-weight: 700;
+    font-size: 20px;
+    border-radius: 23px;
+    height: 46px;
+    width: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none !important;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
+    color: white;
+}
+
+@media screen and (max-width: 800px) {
+    .logo-small {
         display: block;
     }
-    .logo-large{
+
+    .logo-large {
         display: none;
     }
 }

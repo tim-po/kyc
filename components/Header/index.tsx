@@ -17,11 +17,11 @@ const HeaderDefaultProps = {
   logoHref: 'https://marketmaking.pro/'
 }
 
-const Header = (props: {logoHref?: string, hideWalletConnector?: boolean, locales: string[], pages?: {title: string, url: string}[]}) => {
+const Header = (props: { logoHref?: string, hideWalletConnector?: boolean, locales: string[], pages?: { title: string, url: string }[] }) => {
   const {locales, pages, logoHref, hideWalletConnector} = props
-  const [selectedPage, setSelectedPage] = useState(pages ? pages[0].url: '')
+  const [selectedPage, setSelectedPage] = useState(pages ? pages[0].url : '')
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedPage(window.location.pathname)
   }, [])
 
@@ -46,31 +46,37 @@ const Header = (props: {logoHref?: string, hideWalletConnector?: boolean, locale
             </a>
             <div className={'separator'}/>
             <div className={'tabs'}>
-            {(pages !== undefined && pages.length > 0) &&
-                <>
-                  {pages.map(page => (
-                    <Link
-                        className={`page-tab ${selectedPage === page.url && 'tab-selected'}`}
-                        onClick={()=>{
-                          setSelectedPage(page.url)
-                        }}
-                        to={page.url}
-                    >
-                      {page.title}
-                      <div className={'tab-selector'}/>
-                    </Link>
-                  ))}
-                </>
-            }
+              {(pages !== undefined && pages.length > 0) &&
+              <>
+                {pages.map(page => (
+                  <Link
+                    className={`page-tab ${selectedPage === page.url && 'tab-selected'}`}
+                    onClick={() => {
+                      setSelectedPage(page.url)
+                    }}
+                    to={page.url}
+                  >
+                    {page.title}
+                    <div className={'tab-selector'}/>
+                  </Link>
+                ))}
+              </>
+              }
             </div>
           </div>
 
           <div className={'control-strip'}>
+            <a
+              className={'user-manual'}
+              href="presentations/UserManual.pdf"
+              target={'_blank'}>
+              ?
+            </a>
             {locales.length > 1 &&
-                <LocaleSelector locales={locales}/>
+            <LocaleSelector locales={locales}/>
             }
             {!hideWalletConnector &&
-              <WalletConnector />
+            <WalletConnector/>
             }
           </div>
         </div>
