@@ -95,7 +95,7 @@ const StandardAppContainer = (props: { logoHref?: string, hideWalletConnector?: 
                         </div>
                       </div>
                       <Header logoHref={logoHref} hideWalletConnector={hideWalletConnector} pages={pages} locales={locales}/>
-                      <div className={"children-container"}>
+                      <div className={"children-container"} id='main-scroll-container'>
                         {props.children}
                         <Footer version={version}/>
                       </div>
