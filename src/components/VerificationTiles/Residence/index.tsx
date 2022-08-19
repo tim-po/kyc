@@ -83,16 +83,16 @@ const Residence = (props: ResidencePropType) => {
 
     return (
         <VerificationTile isValid={countryValid && cityValid && zipValid && streetValid}>
-            <Text fontSize={24} color={"#000"}>Residence</Text>
+            <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
             <div className={"mb-4"} />
-            <SimpleLabelContainer label={"Residence"} id={"country-name"}>
+            <SimpleLabelContainer label={localized(texts.residenceLabel, locale)} id={"country-name"}>
                 <SimpleAutocomplete
                     isValid={countryValid}
                     displayAsLabel={isSubmitted}
                     onChangeRaw={setCountry}
                     errorTooltipText={"Please select valid country"}
                     required
-                    placeholder={"Residence"}
+                    placeholder={localized(texts.residenceLabel, locale)}
                     autoComplete={"country-name"}
                     id={"country-name"}
                     name={"country-name"}
@@ -103,26 +103,26 @@ const Residence = (props: ResidencePropType) => {
                 />
             </SimpleLabelContainer>
             <FlexWrapper>
-                <SimpleLabelContainer label={"City"} id={"city-name"}>
+                <SimpleLabelContainer label={localized(texts.cityLabel, locale)} id={"city-name"}>
                     <SimpleInput
                         displayAsLabel={isSubmitted}
                         onChangeRaw={setCity}
                         required
                         inputProps={{
-                            placeholder: "City",
+                            placeholder: `${localized(texts.cityLabel, locale)}`,
                             value: city
                         }}
                         id={"city-name"}
                         autoComplete={"shipping city-name"}
                     />
                 </SimpleLabelContainer>
-                <SimpleLabelContainer label={"Postal code"} id={"zip-code"}>
+                <SimpleLabelContainer label={localized(texts.postalCodeLabel, locale)} id={"zip-code"}>
                     <SimpleInput
                         onChangeRaw={setZip}
                         displayAsLabel={isSubmitted}
                         required
                         inputProps={{
-                            placeholder: "Postal code",
+                            placeholder: `${localized(texts.postalCodeLabel, locale)}`,
                             value: zip
                         }}
                         id={"zip-code"}
@@ -130,13 +130,13 @@ const Residence = (props: ResidencePropType) => {
                     />
                 </SimpleLabelContainer>
             </FlexWrapper>
-            <SimpleLabelContainer label={"Address"} id={"shipping address"}>
+            <SimpleLabelContainer label={localized(texts.addressLabel, locale)} id={"shipping address"}>
                 <SimpleInput
                     onChangeRaw={setStreet}
                     displayAsLabel={isSubmitted}
                     required
                     inputProps={{
-                        placeholder: "Address",
+                        placeholder: `${localized(texts.addressLabel, locale)}`,
                         value: street
                     }}
                     id={"shipping address"}

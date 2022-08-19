@@ -63,7 +63,7 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   return (
     <VerificationTile isValid={transferAddressValid}>
       <FlexWrapper>
-        <Text fontSize={24} color={"#000"}>Wallet</Text>
+        <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       </FlexWrapper>
       <SimpleLabelContainer>
         <SimpleInput
@@ -75,12 +75,12 @@ const WalletVerification = (props: WalletVerificationPropType) => {
           errorTooltipText={"Please enter a correct address"}
           inputProps={{
             className: "w-full",
-            placeholder: "Wallet address",
+            placeholder: `${localized(texts.walletPlaceholder, locale)}`,
             value: wallet
           }}
         />
       </SimpleLabelContainer>
-      <Text fontWeight={400} fontSize={14} color={'#000'} marginTop={-20}>Please check that the specified wallet is in the Binance network.</Text>
+      <Text fontWeight={400} fontSize={14} color={'#000'} marginTop={-20}>{localized(texts.checkBSCNetwork, locale)}</Text>
     </VerificationTile>
   );
 };

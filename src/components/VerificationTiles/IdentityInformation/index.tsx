@@ -108,16 +108,16 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   return (
     <VerificationTile isValid={firstNameValid && lastNameValid && nationalityValid && bDateValid}>
       <form autoComplete={"on"}>
-        <Text fontSize={24} color={"#000"}>Identity information</Text>
+        <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
         <div className={"mb-4"}/>
-        <SimpleLabelContainer label={"Nationality"} id="shipping country-name">
+        <SimpleLabelContainer label={localized(texts.nationalityLabel, locale)} id="shipping country-name">
           <SimpleAutocomplete
               isValid={nationalityValid}
               onChangeRaw={setNationality}
               displayAsLabel={isSubmitted}
               errorTooltipText={"Please select valid country"}
               required
-              placeholder={"Nationality"}
+              placeholder={localized(texts.nationalityLabel, locale)}
               autoComplete={"shipping country-name"}
               name={"shipping country-name"}
               id={"shipping country-name"}
@@ -129,7 +129,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
         </SimpleLabelContainer>
         <FlexWrapper>
           <SimpleLabelContainer
-            label={"First name"}
+            label={localized(texts.firstNameLabel, locale)}
             id="firstname"
           >
             <SimpleInput
@@ -137,20 +137,20 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               required
               displayAsLabel={isSubmitted}
               inputProps={{
-                placeholder: "First name",
+                placeholder: `${localized(texts.nationalityLabel, locale)}`,
                 value: firstName
               }}
               autoComplete={"firstname"}
               id="firstname"
             />
           </SimpleLabelContainer>
-          <SimpleLabelContainer label={"Last name"} id={"lastname"}>
+          <SimpleLabelContainer label={localized(texts.lastNameLabel, locale)} id={"lastname"}>
             <SimpleInput
               onChangeRaw={setLastName}
               displayAsLabel={isSubmitted}
               required
               inputProps={{
-                placeholder: "Last name",
+                placeholder: `${localized(texts.lastNameLabel, locale)}`,
                 value: lastName
               }}
               autoComplete={"lastname"}
@@ -158,19 +158,19 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           </SimpleLabelContainer>
         </FlexWrapper>
         <FlexWrapper>
-          <SimpleLabelContainer label={"Middle name"} id={"middlename"}>
+          <SimpleLabelContainer label={localized(texts.middleNameLabel, locale)} id={"middlename"}>
             <SimpleInput
               onChangeRaw={setMiddleName}
               displayAsLabel={isSubmitted}
               inputProps={{
-                placeholder: "Middle name",
+                placeholder: `${localized(texts.middleNameLabel, locale)}`,
                 value: middleName
               }}
               autoComplete={"middlename"}
               id={"middlename"}
             />
           </SimpleLabelContainer>
-          <SimpleLabelContainer label={"Birth Date"} id={"birthdate"}>
+          <SimpleLabelContainer label={localized(texts.birthDateLabel, locale)} id={"birthdate"}>
             <SimpleDatePicker
               value={bDate}
               displayAsLabel={isSubmitted}

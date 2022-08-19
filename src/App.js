@@ -4,7 +4,7 @@ import AppRouter from "./router/AppRouter";
 
 export const App = () => {
   return (
-    <StandardAppContainer hideWalletConnector forcedLocale={'ru'}>
+    <StandardAppContainer hideWalletConnector locales={['en', 'ja']}>
       <AppRouter/>
     </StandardAppContainer>
   );

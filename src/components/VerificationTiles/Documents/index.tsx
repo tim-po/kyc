@@ -1,16 +1,16 @@
 import React, {useContext, useState, useRef, useEffect} from "react";
 import texts from './localization'
-import LocaleContext from "../../Standard/LocaleContext";
-import {localized} from "../../Standard/utils/localized";
-import IosStyleSegmentedControll from "../IosStyleSegmentedControll";
-import Text from "../Text";
-import VerificationTile from "../VerificationTile";
-import DocumentRulesGallery from "../DocumentRulesGallery";
+import LocaleContext from "../../../Standard/LocaleContext";
+import {localized} from "../../../Standard/utils/localized";
+import IosStyleSegmentedControll from "../../IosStyleSegmentedControll";
+import Text from "../../Text";
+import VerificationTile from "../../VerificationTile";
+import DocumentRulesGallery from "../../DocumentRulesGallery";
 import './index.css';
-import CameraIcon from '../../icons/Camera';
+import CameraIcon from '../../../icons/Camera';
 import styled from "styled-components";
-import useValidatedState, {validationFuncs} from "../../Standard/hooks/useValidatedState";
-import {API_URL} from "../../api/constants";
+import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useValidatedState";
+import {API_URL} from "../../../api/constants";
 import {useCookies} from "react-cookie";
 
 type DocumentsPropType = {
@@ -29,7 +29,12 @@ const Documents = (props: DocumentsPropType) => {
   const {locale} = useContext(LocaleContext)
   const {onChangeData} = props
 
-  const buttonsArray = ['Passport', 'ID card', 'Driver’s License']
+  const buttonsArray = [
+    `${localized(texts.passport, locale)}`,
+    `${localized(texts.idCard, locale)}`,
+    `${localized(texts.driverLicense, locale)}`
+  ]
+
   const [activeButton, setActiveButton] = useState<number>(0)
 
   const [isFirstRender, setIsFirstRender] = useState(true)
@@ -128,7 +133,7 @@ const Documents = (props: DocumentsPropType) => {
 
   return (
     <VerificationTile isValid={!!mainToken && (activeButton !== 0 || !!additionalToken)}>
-      <Text fontSize={24} color={'#000'}>Document</Text>
+      <Text fontSize={24} color={'#000'}>{localized(texts.tileTitle, locale)}</Text>
       <IosStyleSegmentedControll
         width={400}
         buttons={buttonsArray}
@@ -145,7 +150,7 @@ const Documents = (props: DocumentsPropType) => {
                 :
                 <>
                   <CameraIcon/>
-                  Upload main page
+                  {localized(texts.uploadMainPage, locale)}
                 </>
             }
           </div>
@@ -161,7 +166,7 @@ const Documents = (props: DocumentsPropType) => {
                   :
                   <>
                     <CameraIcon/>
-                    Upload registration page
+                    {localized(texts.uploadRegistrationPage, locale)}
                   </>
               }
             </div>
