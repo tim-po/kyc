@@ -73,8 +73,9 @@ const StandardAppContainer = (props: { headerButtons?: React.ReactElement[], log
     }, 2500);
   };
 
-  // @ts-ignore
-  return (<ConfigProvider getPopupContainer={trigger => trigger.parentElement}>
+  return (
+    // @ts-ignore
+    <ConfigProvider getPopupContainer={trigger => trigger.parentElement}>
       <LocaleContext.Provider value={{setLocale, locale}}>
         <WalletConnectorBubbleContext.Provider value={{
           setBubbleValue: setBubbleValue,
