@@ -110,7 +110,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
       <form autoComplete={"on"}>
         <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
         <div className={"mb-4"}/>
-        <SimpleLabelContainer label={localized(texts.nationalityLabel, locale)} id="shipping country-name">
+        <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.nationalityLabel, locale)} id="shipping country-name">
           <SimpleAutocomplete
               isValid={nationalityValid}
               onChangeRaw={setNationality}
@@ -129,6 +129,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
         </SimpleLabelContainer>
         <FlexWrapper>
           <SimpleLabelContainer
+              displayAsLabel={isSubmitted}
             label={localized(texts.firstNameLabel, locale)}
             id="firstname"
           >
@@ -144,7 +145,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               id="firstname"
             />
           </SimpleLabelContainer>
-          <SimpleLabelContainer label={localized(texts.lastNameLabel, locale)} id={"lastname"}>
+          <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.lastNameLabel, locale)} id={"lastname"}>
             <SimpleInput
               onChangeRaw={setLastName}
               displayAsLabel={isSubmitted}
@@ -158,7 +159,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           </SimpleLabelContainer>
         </FlexWrapper>
         <FlexWrapper>
-          <SimpleLabelContainer label={localized(texts.middleNameLabel, locale)} id={"middlename"}>
+          <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.middleNameLabel, locale)} id={"middlename"}>
             <SimpleInput
               onChangeRaw={setMiddleName}
               displayAsLabel={isSubmitted}
@@ -170,7 +171,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               id={"middlename"}
             />
           </SimpleLabelContainer>
-          <SimpleLabelContainer label={localized(texts.birthDateLabel, locale)} id={"birthdate"}>
+          <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.birthDateLabel, locale)} id={"birthdate"}>
             <SimpleDatePicker
               value={bDate}
               displayAsLabel={isSubmitted}

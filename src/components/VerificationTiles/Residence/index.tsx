@@ -84,8 +84,8 @@ const Residence = (props: ResidencePropType) => {
     return (
         <VerificationTile isValid={countryValid && cityValid && zipValid && streetValid}>
             <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
-            <div className={"mb-4"} />
-            <SimpleLabelContainer label={localized(texts.residenceLabel, locale)} id={"country-name"}>
+            {/*<div className={"mb-4"} />*/}
+            <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.residenceLabel, locale)} id={"country-name"}>
                 <SimpleAutocomplete
                     isValid={countryValid}
                     displayAsLabel={isSubmitted}
@@ -103,7 +103,7 @@ const Residence = (props: ResidencePropType) => {
                 />
             </SimpleLabelContainer>
             <FlexWrapper>
-                <SimpleLabelContainer label={localized(texts.cityLabel, locale)} id={"city-name"}>
+                <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.cityLabel, locale)} id={"city-name"}>
                     <SimpleInput
                         displayAsLabel={isSubmitted}
                         onChangeRaw={setCity}
@@ -116,7 +116,7 @@ const Residence = (props: ResidencePropType) => {
                         autoComplete={"shipping city-name"}
                     />
                 </SimpleLabelContainer>
-                <SimpleLabelContainer label={localized(texts.postalCodeLabel, locale)} id={"zip-code"}>
+                <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.postalCodeLabel, locale)} id={"zip-code"}>
                     <SimpleInput
                         onChangeRaw={setZip}
                         displayAsLabel={isSubmitted}
@@ -130,7 +130,7 @@ const Residence = (props: ResidencePropType) => {
                     />
                 </SimpleLabelContainer>
             </FlexWrapper>
-            <SimpleLabelContainer label={localized(texts.addressLabel, locale)} id={"shipping address"}>
+            <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.addressLabel, locale)} id={"shipping address"}>
                 <SimpleInput
                     onChangeRaw={setStreet}
                     displayAsLabel={isSubmitted}
