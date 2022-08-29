@@ -132,7 +132,7 @@ const Login = (props: LoginPropType) => {
     history.push(RouteName.VERIFICATION);
   }
 
-  const handleEnterPress = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+  const handleEnterPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if ((event.code === "Enter" || event.code === "NumpadEnter")) {
       login()
     }
@@ -141,14 +141,16 @@ const Login = (props: LoginPropType) => {
   const isValid = emailValid && passwordValid;
 
   useEffect(() => {
-    //@ts-ignore
-    document.addEventListener("keydown", handleEnterPress);
-
-    return () => {
+    if (email && password){
       //@ts-ignore
-      document.removeEventListener("keydown", handleEnterPress);
-    };
-  }, []);
+      document.addEventListener("keydown", handleEnterPress);
+
+      return () => {
+        //@ts-ignore
+        document.removeEventListener("keydown", handleEnterPress);
+      };
+    }
+  }, [email, password]);
 
   return (
     <LoginPageContainer>
