@@ -30,19 +30,19 @@ const DocumentRulesGallery = () => {
       <FlexWrapper>
         <IconWrapper>
           <GoodIdIcon />
-          <Text fontWeight={400} color={'#000'} fontSize={12}>Good</Text>
+          <Text fontWeight={400} color={'#000'} fontSize={12}>{localized(texts.good, locale)}</Text>
         </IconWrapper>
         <IconWrapper>
           <NotCutIcon />
-          <Text fontWeight={400} color={'#000'} fontSize={12}>Not cut</Text>
+          <Text fontWeight={400} color={'#000'} fontSize={12}>{localized(texts.notCut, locale)}</Text>
         </IconWrapper>
         <IconWrapper>
           <NotBlurryIcon />
-          <Text fontWeight={400} color={'#000'} fontSize={12}>Not blurry</Text>
+          <Text fontWeight={400} color={'#000'} fontSize={12}>{localized(texts.notBlurry, locale)}</Text>
         </IconWrapper>
         <IconWrapper>
           <NotReflectiveIcon />
-          <Text fontWeight={400} color={'#000'} fontSize={12}>Not reflective</Text>
+          <Text fontWeight={400} color={'#000'} fontSize={12}>{localized(texts.notReflective, locale)}</Text>
         </IconWrapper>
       </FlexWrapper>
     )

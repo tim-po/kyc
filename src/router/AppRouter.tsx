@@ -10,6 +10,8 @@ const AppRouter = () => {
   useEffect(() => {
     if (cookies.auth) {
       setIsAuth(true)
+    } else {
+      setIsAuth(false)
     }
   }, [cookies])
 

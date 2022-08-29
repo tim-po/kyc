@@ -8,6 +8,8 @@ import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useVal
 import SimpleInput from "../../../Standard/components/SimpleInput";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import styled from "styled-components";
+import { Checkbox } from "antd";
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
 
 type WalletVerificationPropType = {
   onChangeData: (data: any) => void,
@@ -29,6 +31,8 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [[wallet, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
   const [localStorageData, setLocalStorageData] = useState({wallet: ''})
+  const [checkboxChecked, setCheckboxChecked] = useState<boolean>(false);
+
 
   useEffect(() => {
     if (!isFirstRender) {
@@ -46,8 +50,8 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   }
 
   useEffect(() => {
-    setWalletInner({data: {wallet}, isValid: transferAddressValid});
-  }, [wallet, transferAddressValid]);
+    setWalletInner({data: {wallet}, isValid: (checkboxChecked && transferAddressValid)});
+  }, [wallet, transferAddressValid, checkboxChecked]);
 
   useEffect(() => {
     const wallet = localStorage.getItem("wallet");
@@ -60,10 +64,15 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     }
   }, [isFirstRender, localStorageData.wallet])
 
+  const onChange = (e: CheckboxChangeEvent) => {
+    setCheckboxChecked(e.target.checked)
+  };
+
+
   return (
-    <VerificationTile isValid={transferAddressValid}>
+    <VerificationTile isValid={transferAddressValid && checkboxChecked}>
       <FlexWrapper>
-        <Text fontSize={24} color={"#000"}>Wallet</Text>
+        <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       </FlexWrapper>
       <SimpleLabelContainer>
         <SimpleInput
@@ -75,12 +84,13 @@ const WalletVerification = (props: WalletVerificationPropType) => {
           errorTooltipText={"Please enter a correct address"}
           inputProps={{
             className: "w-full",
-            placeholder: "Wallet address",
+            placeholder: `${localized(texts.walletPlaceholder, locale)}`,
             value: wallet
           }}
         />
       </SimpleLabelContainer>
-      <Text fontWeight={400} fontSize={14} color={'#000'} marginTop={-20}>Please check that the specified wallet is in the Binance network.</Text>
+      <Checkbox onChange={onChange}>{localized(texts.checkBSCNetwork, locale)}</Checkbox>
+      {/*<Text fontWeight={400} fontSize={14} color={'#000'} marginTop={-20}>{localized(texts.checkBSCNetwork, locale)}</Text>*/}
     </VerificationTile>
   );
 };

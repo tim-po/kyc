@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import texts from "./localization";
 import LocaleContext from "../../Standard/LocaleContext";
 import {localized} from "../../Standard/utils/localized";
@@ -32,7 +32,6 @@ const LoginPageContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
-  min-height: 800px;
 `;
 
 const Form = styled.div`
@@ -40,7 +39,6 @@ const Form = styled.div`
   flex-direction: column;
   align-items: flex-start;
   min-width: 380px;
-  //min-height: 420px;
   padding: 32px 40px;
   background: #fff;
   border-radius: 20px;
@@ -124,7 +122,6 @@ const Login = (props: LoginPropType) => {
   }
 
   async function login() {
-
     if (!isValid) return;
 
     setIsLoading(true);
@@ -135,37 +132,62 @@ const Login = (props: LoginPropType) => {
     history.push(RouteName.VERIFICATION);
   }
 
+  const handleEnterPress = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if ((event.code === "Enter" || event.code === "NumpadEnter")) {
+      login()
+    }
+  }
+
   const isValid = emailValid && passwordValid;
+
+  useEffect(() => {
+    //@ts-ignore
+    document.addEventListener("keydown", handleEnterPress);
+
+    return () => {
+      //@ts-ignore
+      document.removeEventListener("keydown", handleEnterPress);
+    };
+  }, []);
 
   return (
     <LoginPageContainer>
-      <BubbleLayout />
-      <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
+      <Text fontSize={36} marginBottom={40}>{localized(texts.pageTitle, locale)}</Text>
       <Form>
-        <SimpleLabelContainer label={"Email address"} id={"email"}>
+        <SimpleLabelContainer label={localized(texts.emailAddressLabel, locale)} id={"email"}>
           <SimpleInput
+            required
             onChangeRaw={setEmail}
             errorTooltipText={"Please enter a correct email"}
             inputProps={{
-              placeholder: "Email",
-              type: "email"
+              placeholder: `${localized(texts.emailAddressLabel, locale)}`,
+              type: "email",
+              className: "w-full",
+              value: email
             }}
             id={"email"}
           />
         </SimpleLabelContainer>
-        <SimpleLabelContainer label={"Password"} id={"current-password"}>
+        <SimpleLabelContainer label={localized(texts.passwordLabel, locale)} id={"current-password"}>
           <SimpleInput
+            required
+            // isValid={passwordValid}
             errorTooltipText={"Password should be longer than 8 characters"}
             inputProps={{
-              placeholder: "Password",
-              type: "password"
+              placeholder: `${localized(texts.passwordLabel, locale)}`,
+              type: "password",
+              className: "w-full",
+              value: password
             }}
             id={"current-password"}
             autoComplete={"current-password"}
             onChangeRaw={setPassword}
           />
         </SimpleLabelContainer>
-        {isServerError && <ErrorMessage message={"Something went wrong"} title={"Error signing in"}/>}
+        {
+          isServerError &&
+          <ErrorMessage message={localized(texts.somethingWentWrong, locale)} title={localized(texts.errorSignIn, locale)}/>
+        }
         <Button
           marginTop={20}
           type={"button"}
@@ -177,12 +199,12 @@ const Login = (props: LoginPropType) => {
             isLoading ?
               <Spinner color="white" size={25}/>
               :
-              "Sign in"
+              `${localized(texts.buttonText, locale)}`
           }
         </Button>
         <FlexLinksWrapper>
-          <TextLink to={""}>Forgot password?</TextLink>
-          <TextLink to={RouteName.REGISTRATION}>Sign up</TextLink>
+          <TextLink to={""}>{localized(texts.forgotPassword, locale)}</TextLink>
+          <TextLink to={RouteName.REGISTRATION}>{localized(texts.signUp, locale)}</TextLink>
         </FlexLinksWrapper>
       </Form>
     </LoginPageContainer>

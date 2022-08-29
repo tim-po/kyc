@@ -1,17 +1,21 @@
 import React, {useContext, useState, useRef, useEffect} from "react";
 import texts from './localization'
-import LocaleContext from "../../Standard/LocaleContext";
-import {localized} from "../../Standard/utils/localized";
-import IosStyleSegmentedControll from "../IosStyleSegmentedControll";
-import Text from "../Text";
-import VerificationTile from "../VerificationTile";
-import DocumentRulesGallery from "../DocumentRulesGallery";
+import LocaleContext from "../../../Standard/LocaleContext";
+import {localized} from "../../../Standard/utils/localized";
+import IosStyleSegmentedControll from "../../IosStyleSegmentedControll";
+import Text from "../../Text";
+import VerificationTile from "../../VerificationTile";
+import DocumentRulesGallery from "../../DocumentRulesGallery";
 import './index.css';
-import CameraIcon from '../../icons/Camera';
+import CameraIcon from '../../../icons/Camera';
 import styled from "styled-components";
-import useValidatedState, {validationFuncs} from "../../Standard/hooks/useValidatedState";
-import {API_URL} from "../../api/constants";
+import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useValidatedState";
+import {API_URL} from "../../../api/constants";
 import {useCookies} from "react-cookie";
+import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
+import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
+import SimpleInput from "../../../Standard/components/SimpleInput";
+import { Link } from "react-router-dom";
 
 type DocumentsPropType = {
   onChangeData: (data: any) => void
@@ -27,20 +31,23 @@ const FlexWrapper = styled.div`
 
 const Documents = (props: DocumentsPropType) => {
   const {locale} = useContext(LocaleContext)
-  const {onChangeData} = props
+  const {onChangeData, isSubmitted} = props
 
-  const buttonsArray = ['Passport', 'ID card', 'Driver’s License']
+  const buttonsArray = [`${localized(texts.passport, locale)}`]
+
   const [activeButton, setActiveButton] = useState<number>(0)
 
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [localStorageData, setLocalStorageData] = useState(undefined)
 
-  const [mainDoc, setMainDoc] = useState(undefined)
+  const [mainDoc, setMainDoc] = useState<any>(undefined)
   const [mainToken, setMainToken] = useState(undefined)
-  const [additionalDoc, setAdditioanlDoc] = useState(undefined)
+  const [additionalDoc, setAdditioanlDoc] = useState<any>(undefined)
   const [additionalToken, setAdditionalToken] = useState(undefined)
 
   const [cookies] = useCookies(['auth']);
+
+  const [[registrationPermit, setRegistrationPermit], registrationPermitValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
   const isValid = !!(mainDoc || additionalDoc)
 
@@ -91,24 +98,29 @@ const Documents = (props: DocumentsPropType) => {
 
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
-      setMainDoc(event.target.files[0]);
-      uploadFiles('main', event.target.files[0]).then(token => setMainToken(token))
+      uploadFiles('main', event.target.files[0]).then(token => {
+        setMainDoc(`${API_URL}/api/images/additional/main/${cookies.auth}?${new Date().getTime()}`)
+        setMainToken(token)
+      })
     }
   }
 
   const handleAdditionalFileChange = (event: any) => {
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
-      setAdditioanlDoc(event.target.files[0]);
-      uploadFiles('additional', event.target.files[0]).then(token => setAdditionalToken(token))
+      uploadFiles('additional', event.target.files[0]).then(token => {
+        setAdditioanlDoc(`${API_URL}/api/images/additional/additional/${cookies.auth}?${new Date().getTime()}`)
+        setAdditionalToken(token)
+      })
     }
   }
 
-  // useEffect(() => {
-  //   if (!isFirstRender) {
-  //     localStorage.setItem('documents', JSON.stringify(localStorageData))
-  //   }
-  // }, [isFirstRender])
+  useEffect(() => {
+    if (isSubmitted) {
+      setMainDoc(`${API_URL}/api/images/additional/main/${cookies.auth}?${new Date().getTime()}`)
+      setAdditioanlDoc(`${API_URL}/api/images/additional/additional/${cookies.auth}?${new Date().getTime()}`)
+    }
+  }, [isSubmitted])
 
   function setDocumentsInner(documents: { data: {}, isValid: boolean }) {
     if (!isFirstRender) {
@@ -128,7 +140,7 @@ const Documents = (props: DocumentsPropType) => {
 
   return (
     <VerificationTile isValid={!!mainToken && (activeButton !== 0 || !!additionalToken)}>
-      <Text fontSize={24} color={'#000'}>Document</Text>
+      <Text fontSize={24} color={'#000'}>{localized(texts.tileTitle, locale)}</Text>
       <IosStyleSegmentedControll
         width={400}
         buttons={buttonsArray}
@@ -141,11 +153,11 @@ const Documents = (props: DocumentsPropType) => {
           <div className="select-button">
             {
               mainDoc ?
-                <img src={URL.createObjectURL(mainDoc)} alt="preview image"/>
+                <img src={mainDoc} alt="preview image"/>
                 :
                 <>
                   <CameraIcon/>
-                  Upload main page
+                  {localized(texts.uploadMainPage, locale)}
                 </>
             }
           </div>
@@ -157,11 +169,11 @@ const Documents = (props: DocumentsPropType) => {
             <div className="select-button">
               {
                 additionalDoc ?
-                  <img src={URL.createObjectURL(additionalDoc)} alt="preview image"/>
+                  <img src={additionalDoc} alt="preview image"/>
                   :
                   <>
                     <CameraIcon/>
-                    Upload registration page
+                    {localized(texts.uploadRegistrationPage, locale)}
                   </>
               }
             </div>
