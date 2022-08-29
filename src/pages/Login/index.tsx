@@ -14,6 +14,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import Spinner from "../../Standard/components/Spinner";
 import SimpleInput from "../../Standard/components/SimpleInput";
 import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
+import BubbleLayout from "../../Standard/components/BubbleLayout";
 
 interface ButtonProps {
   background: string;
@@ -138,6 +139,7 @@ const Login = (props: LoginPropType) => {
 
   return (
     <LoginPageContainer>
+      <BubbleLayout />
       <Text fontSize={36} marginBottom={40}>Sign in to your account</Text>
       <Form>
         <SimpleLabelContainer label={"Email address"} id={"email"}>
