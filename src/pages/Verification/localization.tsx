@@ -31,8 +31,8 @@ export default {
     en: "Verify personal data",
     ja: "個人情報の確認"
   },
-  buttonTextEdit: {
-    en: "Edit",
-    ja: "編集"
+  buttonTextCheck: {
+    en: "We check your personal data",
+    ja: "私たちはあなたの個人データをチェックします"
   }
 }

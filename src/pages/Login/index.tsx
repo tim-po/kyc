@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import texts from "./localization";
 import LocaleContext from "../../Standard/LocaleContext";
 import {localized} from "../../Standard/utils/localized";
@@ -121,7 +121,6 @@ const Login = (props: LoginPropType) => {
   }
 
   async function login() {
-
     if (!isValid) return;
 
     setIsLoading(true);
@@ -132,7 +131,23 @@ const Login = (props: LoginPropType) => {
     history.push(RouteName.VERIFICATION);
   }
 
+  const handleEnterPress = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if ((event.code === "Enter" || event.code === "NumpadEnter")) {
+      login()
+    }
+  }
+
   const isValid = emailValid && passwordValid;
+
+  useEffect(() => {
+    //@ts-ignore
+    document.addEventListener("keydown", handleEnterPress);
+
+    return () => {
+      //@ts-ignore
+      document.removeEventListener("keydown", handleEnterPress);
+    };
+  }, []);
 
   return (
     <LoginPageContainer>
@@ -140,21 +155,28 @@ const Login = (props: LoginPropType) => {
       <Form>
         <SimpleLabelContainer label={localized(texts.emailAddressLabel, locale)} id={"email"}>
           <SimpleInput
+            required
             onChangeRaw={setEmail}
             errorTooltipText={"Please enter a correct email"}
             inputProps={{
               placeholder: `${localized(texts.emailAddressLabel, locale)}`,
-              type: "email"
+              type: "email",
+              className: "w-full",
+              value: email
             }}
             id={"email"}
           />
         </SimpleLabelContainer>
         <SimpleLabelContainer label={localized(texts.passwordLabel, locale)} id={"current-password"}>
           <SimpleInput
+            required
+            // isValid={passwordValid}
             errorTooltipText={"Password should be longer than 8 characters"}
             inputProps={{
               placeholder: `${localized(texts.passwordLabel, locale)}`,
-              type: "password"
+              type: "password",
+              className: "w-full",
+              value: password
             }}
             id={"current-password"}
             autoComplete={"current-password"}

@@ -54,7 +54,9 @@ const Button = styled.button<{ isValid: boolean }>`
   justify-content: center;
   text-align: center;
   color: ${p => p.isValid ? "#fff" : "rgba(255, 255, 255, 0.6)"};
-  width: 240px;
+  min-width: 240px;
+  width: max-content;
+  padding: 10px;
   height: 50px;
   background: ${p => p.isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"};
   border-radius: 10px;
@@ -128,7 +130,6 @@ const Verification = (props: VerificationPropType) => {
 
     setIsForceValid(true)
     if (!isValid) {
-      console.log(documents.data.token)
       return;
     }
 
@@ -227,7 +228,7 @@ const Verification = (props: VerificationPropType) => {
           </RowFlexWrapper>
           <FlexEndWrapper>
             {isSubmitted &&
-            <Button isValid onClick={() => setIsSubmitted(false)}>{localized(texts.buttonTextEdit, locale)}</Button>
+            <Button isValid={false}>{localized(texts.buttonTextCheck, locale)}</Button>
             }
             {!isSubmitted &&
             <Button isValid={isValid || !isForceValid} onClick={setVerification}>{localized(texts.buttonTextVerify, locale)}</Button>

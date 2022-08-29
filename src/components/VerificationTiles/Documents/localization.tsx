@@ -24,5 +24,8 @@ export default {
   uploadRegistrationPage: {
     en: "Upload registration page",
     ja: "登録ページをアップロード"
+  },
+  registrationPermit: {
+    en: "Registration permit"
   }
 }

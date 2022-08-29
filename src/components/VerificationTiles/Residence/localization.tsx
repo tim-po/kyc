@@ -16,8 +16,16 @@ export default {
     en: "Postal code",
     ja: "郵便番号"
   },
-  addressLabel: {
-    en: "Address",
-    ja: "住所"
-  }
+  mainAddressLabel: {
+    en: "Address №1",
+    ja: "住所№1"
+  },
+  additionalAddressLabel: {
+    en: "Address №2",
+    ja: "住所№2"
+  },
+  region: {
+    en: "Region",
+    ja: "地域"
+  },
 }

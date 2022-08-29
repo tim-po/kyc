@@ -7,7 +7,11 @@ import VerificationTile from "../../VerificationTile";
 import Text from "../../Text";
 import styled from "styled-components";
 import SimpleValidatedInput from "../../../Standard/components/SimpleInput";
-import useValidatedState, { validationFuncs, validationFuncsFactory } from "../../../Standard/hooks/useValidatedState";
+import useValidatedState, {
+  validationDateFuncs,
+  validationFuncs,
+  validationFuncsFactory
+} from "../../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../../Standard/components/SimpleInput";
 import {DatePicker} from "antd";
 import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
@@ -45,7 +49,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   const [[lastName, setLastName], lastNameValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [middleName, setMiddleName] = useState<string>("");
   const [[nationality, setNationality], nationalityValid] = useValidatedState<string>("", validationFuncsFactory.inArray<string>(countries.map(ctr => ctr.name)));
-  const [[bDate, setBDate], bDateValid] = useValidatedState<string>("", validationFuncs.hasValue);
+  const [[bDate, setBDate], bDateValid] = useValidatedState<string>("", validationDateFuncs.dateIsNotGreaterThanToday);
 
   const forceValidateSoft = () => {
     // if(!forceValidate){
@@ -133,11 +137,14 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
             id="firstname"
           >
             <SimpleInput
+              onlyEmmitOnBlur
               onChangeRaw={setFirstName}
               required
+              isValid={firstNameValid}
               displayAsLabel={isSubmitted}
               inputProps={{
-                placeholder: `${localized(texts.nationalityLabel, locale)}`,
+                className: "w-full",
+                placeholder: `${localized(texts.firstNameLabel, locale)}`,
                 value: firstName
               }}
               autoComplete={"firstname"}
@@ -150,6 +157,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               displayAsLabel={isSubmitted}
               required
               inputProps={{
+                className: "w-full",
                 placeholder: `${localized(texts.lastNameLabel, locale)}`,
                 value: lastName
               }}
@@ -163,6 +171,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               onChangeRaw={setMiddleName}
               displayAsLabel={isSubmitted}
               inputProps={{
+                className: "w-full",
                 placeholder: `${localized(texts.middleNameLabel, locale)}`,
                 value: middleName
               }}

@@ -12,6 +12,9 @@ import styled from "styled-components";
 import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useValidatedState";
 import {API_URL} from "../../../api/constants";
 import {useCookies} from "react-cookie";
+import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
+import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
+import SimpleInput from "../../../Standard/components/SimpleInput";
 
 type DocumentsPropType = {
   onChangeData: (data: any) => void
@@ -27,13 +30,9 @@ const FlexWrapper = styled.div`
 
 const Documents = (props: DocumentsPropType) => {
   const {locale} = useContext(LocaleContext)
-  const {onChangeData} = props
+  const {onChangeData, isSubmitted} = props
 
-  const buttonsArray = [
-    `${localized(texts.passport, locale)}`,
-    `${localized(texts.idCard, locale)}`,
-    `${localized(texts.driverLicense, locale)}`
-  ]
+  const buttonsArray = [`${localized(texts.passport, locale)}`]
 
   const [activeButton, setActiveButton] = useState<number>(0)
 
@@ -46,6 +45,8 @@ const Documents = (props: DocumentsPropType) => {
   const [additionalToken, setAdditionalToken] = useState(undefined)
 
   const [cookies] = useCookies(['auth']);
+
+  const [[registrationPermit, setRegistrationPermit], registrationPermitValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
   const isValid = !!(mainDoc || additionalDoc)
 

@@ -3,3 +3,7 @@
 .ant-select-selector:hover{
     border: none !important;
 }
+
+.ant-select-dropdown {
+    border-radius: 10px;
+}
