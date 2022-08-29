@@ -17,8 +17,8 @@ const HeaderDefaultProps = {
   logoHref: 'https://marketmaking.pro/'
 }
 
-const Header = (props: { logoHref?: string, hideWalletConnector?: boolean, locales: string[], pages?: { title: string, url: string }[] }) => {
-  const {locales, pages, logoHref, hideWalletConnector} = props
+const Header = (props: { headerButtons?: React.ReactElement[], logoHref?: string, hideWalletConnector?: boolean, locales: string[], pages?: { title: string, url: string }[] }) => {
+  const {locales, pages, logoHref, hideWalletConnector, headerButtons} = props
   const [selectedPage, setSelectedPage] = useState(pages ? pages[0].url : '')
 
   useEffect(() => {
@@ -66,12 +66,9 @@ const Header = (props: { logoHref?: string, hideWalletConnector?: boolean, local
           </div>
 
           <div className={'control-strip'}>
-            <a
-              className={'user-manual'}
-              href="presentations/UserManual.pdf"
-              target={'_blank'}>
-              ?
-            </a>
+            {headerButtons &&
+              headerButtons.map(button => button)
+            }
             {locales.length > 1 &&
             <LocaleSelector locales={locales}/>
             }

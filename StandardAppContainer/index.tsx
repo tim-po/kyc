@@ -11,7 +11,7 @@ import LocaleContext from "../LocaleContext";
 import NotificationContext from "../utils/NotificationContext";
 import "./index.css";
 import "../styles.scss";
-import { ConfigProvider } from "antd";
+import {ConfigProvider} from "antd";
 import WalletConnectorBubbleContext from "Standard/WalletConnectorBubbleContext";
 import styled, {css} from "styled-components";
 
@@ -27,8 +27,8 @@ const TitleWrapper = styled.div`
   margin-bottom: 10px;
 `
 
-const StandardAppContainer = (props: { logoHref?: string, hideWalletConnector?: boolean, children: any, locales: string[], isDarkBG?: boolean, version: string, pages?: { title: string, url: string }[] }) => {
-  const {locales, isDarkBG, version, pages, logoHref, hideWalletConnector} = props;
+const StandardAppContainer = (props: { headerButtons?: React.ReactElement[], logoHref?: string, hideWalletConnector?: boolean, children: any, locales: string[], isDarkBG?: boolean, version: string, pages?: { title: string, url: string }[] }) => {
+  const {locales, isDarkBG, version, pages, logoHref, hideWalletConnector, headerButtons} = props;
 
   let forcedLocale;
   if (locales.length === 1) {
@@ -48,20 +48,20 @@ const StandardAppContainer = (props: { logoHref?: string, hideWalletConnector?: 
   const [accentedControlButton, setAccentedControlButton] = useState(-1);
 
   const changeAccentedButton = (newIndex: number) => {
-    if(accentedControlButton === newIndex){
+    if (accentedControlButton === newIndex) {
       setAccentedControlButton(-1)
-    }else {
+    } else {
       setAccentedControlButton(newIndex)
     }
   }
 
   useEffect(() => {
-        injected.isAuthorized().then((isAuthorized) => {
-            if (isAuthorized && !active && !networkError) {
-                activate(injected);
-            }
-        });
-    }, [activate, networkError]);
+    injected.isAuthorized().then((isAuthorized) => {
+      if (isAuthorized && !active && !networkError) {
+        activate(injected);
+      }
+    });
+  }, [activate, networkError]);
 
   const displayNotification = (title: string, subtitle: string, icon: ReactNode) => {
     setNotificationIcon(icon)
@@ -73,38 +73,50 @@ const StandardAppContainer = (props: { logoHref?: string, hideWalletConnector?: 
     }, 2500);
   };
 
+  return (
     // @ts-ignore
-    return (<ConfigProvider getPopupContainer={trigger => trigger.parentElement}>
-            <LocaleContext.Provider value={{ setLocale, locale }}>
-                <WalletConnectorBubbleContext.Provider value={{setBubbleValue: setBubbleValue, bubbleValue: bubbleValue, setAccentedControlButton: changeAccentedButton, accentedControlButton: accentedControlButton}}>
-                  <NotificationContext.Provider
-                    value={{
-                      displayNotification
-                    }}
-                  >
-                    <div className={`main-content-container ${isDarkBG ? "main-gradient" : "main-gradient-light"}`}>
-                      <div className={`notification ${shouldDisplayNotification ? "shown" : ""}`}>
-                        <TitleWrapper>
-                          {notificationIcon}
-                          <div className={"notification-title"}>
-                            {notificationTitle}
-                          </div>
-                        </TitleWrapper>
-                        <div className={"notification-body"}>
-                          {notificationSubtitle}
-                        </div>
-                      </div>
-                      <Header logoHref={logoHref} hideWalletConnector={hideWalletConnector} pages={pages} locales={locales}/>
-                      <div className={"children-container"} id='main-scroll-container'>
-                        {props.children}
-                        <Footer version={version}/>
-                      </div>
-                    </div>
-                  </NotificationContext.Provider>
-                </WalletConnectorBubbleContext.Provider>
-            </LocaleContext.Provider>
-        </ConfigProvider>
-    );
+    <ConfigProvider getPopupContainer={trigger => trigger.parentElement}>
+      <LocaleContext.Provider value={{setLocale, locale}}>
+        <WalletConnectorBubbleContext.Provider value={{
+          setBubbleValue: setBubbleValue,
+          bubbleValue: bubbleValue,
+          setAccentedControlButton: changeAccentedButton,
+          accentedControlButton: accentedControlButton
+        }}>
+          <NotificationContext.Provider
+            value={{
+              displayNotification
+            }}
+          >
+            <div className={`main-content-container ${isDarkBG ? "main-gradient" : "main-gradient-light"}`}>
+              <div className={`notification ${shouldDisplayNotification ? "shown" : ""}`}>
+                <TitleWrapper>
+                  {notificationIcon}
+                  <div className={"notification-title"}>
+                    {notificationTitle}
+                  </div>
+                </TitleWrapper>
+                <div className={"notification-body"}>
+                  {notificationSubtitle}
+                </div>
+              </div>
+              <Header
+                logoHref={logoHref}
+                hideWalletConnector={hideWalletConnector}
+                pages={pages}
+                locales={locales}
+                headerButtons={headerButtons}
+              />
+              <div className={"children-container"}>
+                {props.children}
+                <Footer version={version}/>
+              </div>
+            </div>
+          </NotificationContext.Provider>
+        </WalletConnectorBubbleContext.Provider>
+      </LocaleContext.Provider>
+    </ConfigProvider>
+  );
 };
 
 StandardAppContainer.defaultProps = defaultProps;
