@@ -5,8 +5,8 @@ export default {
   },
 
   checkBSCNetwork: {
-    en: "Please enter the address in Binance Smart Chain (BSC) network.",
-    ja: "Binance Smart Chain (BSC) ネットワークのアドレスを入力してください。"
+    en: "I confirm that this address is in Binance Smart Chain (BSC) network.",
+    ja: "このアドレスが Binance Smart Chain (BSC) ネットワークにあることを確認しました。"
   },
 
   walletPlaceholder: {

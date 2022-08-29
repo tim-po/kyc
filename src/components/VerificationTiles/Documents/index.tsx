@@ -15,6 +15,7 @@ import {useCookies} from "react-cookie";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
 import SimpleInput from "../../../Standard/components/SimpleInput";
+import { Link } from "react-router-dom";
 
 type DocumentsPropType = {
   onChangeData: (data: any) => void
@@ -39,9 +40,9 @@ const Documents = (props: DocumentsPropType) => {
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [localStorageData, setLocalStorageData] = useState(undefined)
 
-  const [mainDoc, setMainDoc] = useState(undefined)
+  const [mainDoc, setMainDoc] = useState<any>(undefined)
   const [mainToken, setMainToken] = useState(undefined)
-  const [additionalDoc, setAdditioanlDoc] = useState(undefined)
+  const [additionalDoc, setAdditioanlDoc] = useState<any>(undefined)
   const [additionalToken, setAdditionalToken] = useState(undefined)
 
   const [cookies] = useCookies(['auth']);
@@ -97,24 +98,29 @@ const Documents = (props: DocumentsPropType) => {
 
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
-      setMainDoc(event.target.files[0]);
-      uploadFiles('main', event.target.files[0]).then(token => setMainToken(token))
+      uploadFiles('main', event.target.files[0]).then(token => {
+        setMainDoc(`${API_URL}/api/images/additional/main/${cookies.auth}?${new Date().getTime()}`)
+        setMainToken(token)
+      })
     }
   }
 
   const handleAdditionalFileChange = (event: any) => {
     if (event.target.files && event.target.files[0]) {
       // @ts-ignore
-      setAdditioanlDoc(event.target.files[0]);
-      uploadFiles('additional', event.target.files[0]).then(token => setAdditionalToken(token))
+      uploadFiles('additional', event.target.files[0]).then(token => {
+        setAdditioanlDoc(`${API_URL}/api/images/additional/additional/${cookies.auth}?${new Date().getTime()}`)
+        setAdditionalToken(token)
+      })
     }
   }
 
-  // useEffect(() => {
-  //   if (!isFirstRender) {
-  //     localStorage.setItem('documents', JSON.stringify(localStorageData))
-  //   }
-  // }, [isFirstRender])
+  useEffect(() => {
+    if (isSubmitted) {
+      setMainDoc(`${API_URL}/api/images/additional/main/${cookies.auth}?${new Date().getTime()}`)
+      setAdditioanlDoc(`${API_URL}/api/images/additional/additional/${cookies.auth}?${new Date().getTime()}`)
+    }
+  }, [isSubmitted])
 
   function setDocumentsInner(documents: { data: {}, isValid: boolean }) {
     if (!isFirstRender) {
@@ -147,7 +153,7 @@ const Documents = (props: DocumentsPropType) => {
           <div className="select-button">
             {
               mainDoc ?
-                <img src={URL.createObjectURL(mainDoc)} alt="preview image"/>
+                <img src={mainDoc} alt="preview image"/>
                 :
                 <>
                   <CameraIcon/>
@@ -163,7 +169,7 @@ const Documents = (props: DocumentsPropType) => {
             <div className="select-button">
               {
                 additionalDoc ?
-                  <img src={URL.createObjectURL(additionalDoc)} alt="preview image"/>
+                  <img src={additionalDoc} alt="preview image"/>
                   :
                   <>
                     <CameraIcon/>
