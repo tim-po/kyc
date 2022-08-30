@@ -29,7 +29,6 @@ const Tile = styled.div`
   border-radius: 20px;
   margin-bottom: 50px;
   overflow: hidden;
-  gap: 14px;
 `
 
 const Strip = styled.div<StripProps>`

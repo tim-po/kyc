@@ -11,6 +11,7 @@ import styled from "styled-components";
 import {Checkbox} from "antd";
 import {CheckboxChangeEvent} from "antd/lib/checkbox";
 import {FieldStatus} from "../../../types";
+import {setInputStatus} from "../../../utils/common";
 
 type WalletVerificationPropType = {
   onChangeData: (data: any) => void,
@@ -68,7 +69,6 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     }
     if (localStorageData.isBSCNetwork) {
       setCheckboxChecked(localStorageData.isBSCNetwork)
-      console.log()
     }
   }, [isFirstRender, localStorageData.wallet])
 
@@ -81,15 +81,13 @@ const WalletVerification = (props: WalletVerificationPropType) => {
       <FlexWrapper>
         <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       </FlexWrapper>
-      <SimpleLabelContainer>
+      <SimpleLabelContainer
+        displayAsLabel={setInputStatus(isSubmitted, fieldStatus?.valid, fieldStatus?.blocked)}
+        label={localized(texts.tileTitle, locale)}
+      >
         <SimpleInput
           onlyEmmitOnBlur
-          displayAsLabel={
-            (isSubmitted && (fieldStatus && fieldStatus.valid)) ?
-              (fieldStatus && (fieldStatus.blocked))
-              :
-              false
-          }
+          displayAsLabel={setInputStatus(isSubmitted, fieldStatus?.valid, fieldStatus?.blocked)}
           required
           isValid={transferAddressValid}
           onChangeRaw={setTransferAddress}

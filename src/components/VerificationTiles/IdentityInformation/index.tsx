@@ -6,18 +6,17 @@ import "./index.css";
 import VerificationTile from "../../VerificationTile";
 import Text from "../../Text";
 import styled from "styled-components";
-import SimpleValidatedInput from "../../../Standard/components/SimpleInput";
 import useValidatedState, {
   validationDateFuncs,
   validationFuncs,
   validationFuncsFactory
 } from "../../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../../Standard/components/SimpleInput";
-import {DatePicker} from "antd";
 import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete";
 import {Country, FieldStatus} from "../../../types";
+import {setInputStatus} from "../../../utils/common";
 
 type IdentityInformationPropType = {
   onChangeData: (data: any) => void
@@ -125,7 +124,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           <SimpleAutocomplete
               isValid={nationalityValid}
               onChangeRaw={setNationality}
-              displayAsLabel={isSubmitted}
+              displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.nationality?.value, fieldsStatus.nationality?.blocked)}
               errorTooltipText={"Please select valid country"}
               required
               placeholder={localized(texts.nationalityLabel, locale)}
@@ -140,12 +139,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
         </SimpleLabelContainer>
         <FlexWrapper>
           <SimpleLabelContainer
-            displayAsLabel={
-              (isSubmitted && (fieldsStatus.firstName && fieldsStatus.firstName.valid)) ?
-                (fieldsStatus.firstName.blocked)
-                :
-                false
-            }
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.firstName?.value, fieldsStatus.firstName?.blocked)}
             label={localized(texts.firstNameLabel, locale)}
             id="firstname"
           >
@@ -154,12 +148,7 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               onChangeRaw={setFirstName}
               required
               isValid={firstNameValid}
-              displayAsLabel={
-                (isSubmitted && (fieldsStatus.firstName && fieldsStatus.firstName.valid)) ?
-                  (fieldsStatus.firstName.blocked)
-                  :
-                  false
-              }
+              displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.firstName?.value, fieldsStatus.firstName?.blocked)}
               inputProps={{
                 className: "w-full",
                 placeholder: `${localized(texts.firstNameLabel, locale)}`,
@@ -170,23 +159,13 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
             />
           </SimpleLabelContainer>
           <SimpleLabelContainer
-            displayAsLabel={
-              (isSubmitted && (fieldsStatus.lastName && fieldsStatus.lastName.valid)) ?
-                (fieldsStatus.lastName.blocked)
-                :
-                false
-            }
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.lastName?.value, fieldsStatus.lastName?.blocked)}
             label={localized(texts.lastNameLabel, locale)}
             id={"lastname"}
           >
             <SimpleInput
               onChangeRaw={setLastName}
-              displayAsLabel={
-                (isSubmitted && (fieldsStatus.lastName && fieldsStatus.lastName.valid)) ?
-                  (fieldsStatus.lastName.blocked)
-                  :
-                  false
-              }
+              displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.lastName?.value, fieldsStatus.lastName?.blocked)}
               required
               inputProps={{
                 className: "w-full",
@@ -199,23 +178,13 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
         </FlexWrapper>
         <FlexWrapper>
           <SimpleLabelContainer
-            displayAsLabel={
-              (isSubmitted && (fieldsStatus.middleName && fieldsStatus.middleName.valid)) ?
-                (fieldsStatus.middleName.blocked)
-                :
-                false
-            }
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.middleName?.value, fieldsStatus.middleName?.blocked)}
             label={localized(texts.middleNameLabel, locale)}
             id={"middlename"}
           >
             <SimpleInput
               onChangeRaw={setMiddleName}
-              displayAsLabel={
-                (isSubmitted && (fieldsStatus.middleName && fieldsStatus.middleName.valid)) ?
-                  (fieldsStatus.middleName.blocked)
-                  :
-                  false
-              }
+              displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.middleName?.value, fieldsStatus.middleName?.blocked)}
               inputProps={{
                 className: "w-full",
                 placeholder: `${localized(texts.middleNameLabel, locale)}`,
@@ -225,10 +194,14 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               id={"middlename"}
             />
           </SimpleLabelContainer>
-          <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.birthDateLabel, locale)} id={"birthdate"}>
+          <SimpleLabelContainer
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.bDate?.value, fieldsStatus.bDate?.blocked)}
+            label={localized(texts.birthDateLabel, locale)}
+            id={"birthdate"}
+          >
             <SimpleDatePicker
               value={bDate}
-              displayAsLabel={isSubmitted}
+              displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.bDate?.value, fieldsStatus.bDate?.blocked)}
               onChangeRaw={setBDate}
               isValid={bDateValid}
               required
