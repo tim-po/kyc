@@ -8,12 +8,14 @@ import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useVal
 import SimpleInput from "../../../Standard/components/SimpleInput";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import styled from "styled-components";
-import { Checkbox } from "antd";
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
+import {Checkbox} from "antd";
+import {CheckboxChangeEvent} from "antd/lib/checkbox";
+import {FieldStatus} from "../../../types";
 
 type WalletVerificationPropType = {
   onChangeData: (data: any) => void,
   isSubmitted: boolean
+  fieldStatus: FieldStatus | undefined
 }
 
 const WalletVerificationDefaultProps = {};
@@ -26,13 +28,15 @@ const FlexWrapper = styled.div`
 
 const WalletVerification = (props: WalletVerificationPropType) => {
   const {locale} = useContext(LocaleContext);
-  const {onChangeData, isSubmitted} = props;
-
+  const {onChangeData, isSubmitted, fieldStatus} = props;
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [[wallet, setTransferAddress], transferAddressValid] = useValidatedState<string>("", validationFuncs.isAddress);
-  const [localStorageData, setLocalStorageData] = useState({wallet: ''})
   const [checkboxChecked, setCheckboxChecked] = useState<boolean>(false);
 
+  const [localStorageData, setLocalStorageData] = useState({
+    wallet: '',
+    isBSCNetwork: checkboxChecked
+  })
 
   useEffect(() => {
     if (!isFirstRender) {
@@ -50,24 +54,27 @@ const WalletVerification = (props: WalletVerificationPropType) => {
   }
 
   useEffect(() => {
-    setWalletInner({data: {wallet}, isValid: (checkboxChecked && transferAddressValid)});
+    setWalletInner({data: {wallet, isBSCNetwork: checkboxChecked}, isValid: (checkboxChecked && transferAddressValid)});
   }, [wallet, transferAddressValid, checkboxChecked]);
 
   useEffect(() => {
     const wallet = localStorage.getItem("wallet");
     const parsed = JSON.parse(`${wallet}`)
-    if(parsed){
+    if (parsed) {
       setLocalStorageData(parsed);
     }
-    if(localStorageData.wallet) {
+    if (localStorageData.wallet) {
       setTransferAddress(localStorageData.wallet)
+    }
+    if (localStorageData.isBSCNetwork) {
+      setCheckboxChecked(localStorageData.isBSCNetwork)
+      console.log()
     }
   }, [isFirstRender, localStorageData.wallet])
 
   const onChange = (e: CheckboxChangeEvent) => {
     setCheckboxChecked(e.target.checked)
   };
-
 
   return (
     <VerificationTile isValid={transferAddressValid && checkboxChecked}>
@@ -77,7 +84,12 @@ const WalletVerification = (props: WalletVerificationPropType) => {
       <SimpleLabelContainer>
         <SimpleInput
           onlyEmmitOnBlur
-          displayAsLabel={isSubmitted}
+          displayAsLabel={
+            (isSubmitted && (fieldStatus && fieldStatus.valid)) ?
+              (fieldStatus && (fieldStatus.blocked))
+              :
+              false
+          }
           required
           isValid={transferAddressValid}
           onChangeRaw={setTransferAddress}
@@ -89,8 +101,7 @@ const WalletVerification = (props: WalletVerificationPropType) => {
           }}
         />
       </SimpleLabelContainer>
-      <Checkbox onChange={onChange}>{localized(texts.checkBSCNetwork, locale)}</Checkbox>
-      {/*<Text fontWeight={400} fontSize={14} color={'#000'} marginTop={-20}>{localized(texts.checkBSCNetwork, locale)}</Text>*/}
+      <Checkbox onChange={onChange} checked={checkboxChecked}>{localized(texts.checkBSCNetwork, locale)}</Checkbox>
     </VerificationTile>
   );
 };

@@ -47,8 +47,6 @@ const Documents = (props: DocumentsPropType) => {
 
   const [cookies] = useCookies(['auth']);
 
-  const [[registrationPermit, setRegistrationPermit], registrationPermitValid] = useValidatedState<string>("", validationFuncs.hasValue);
-
   const isValid = !!(mainDoc || additionalDoc)
 
   const handleActiveButton = (index: number) => {
@@ -134,12 +132,12 @@ const Documents = (props: DocumentsPropType) => {
   useEffect(() => {
     setDocumentsInner({
       data: {mainToken, additionalToken, type: buttonsArray[activeButton]},
-      isValid: !!mainToken && (activeButton !== 0 || !!additionalToken)
+      isValid
     });
-  }, [mainToken, additionalToken, activeButton]);
+  }, [mainToken, additionalToken, activeButton, isValid]);
 
   return (
-    <VerificationTile isValid={!!mainToken && (activeButton !== 0 || !!additionalToken)}>
+    <VerificationTile isValid={isValid}>
       <Text fontSize={24} color={'#000'}>{localized(texts.tileTitle, locale)}</Text>
       <IosStyleSegmentedControll
         width={400}
