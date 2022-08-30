@@ -17,12 +17,19 @@ import {DatePicker} from "antd";
 import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete";
-import { Country } from "../../../types";
+import {Country, FieldStatus} from "../../../types";
 
 type IdentityInformationPropType = {
   onChangeData: (data: any) => void
   isSubmitted: boolean
-  countries: Country[]
+  countries: Country[],
+  fieldsStatus: {
+    firstName: FieldStatus | undefined,
+    lastName: FieldStatus | undefined,
+    nationality: FieldStatus | undefined,
+    middleName: FieldStatus | undefined,
+    bDate: FieldStatus | undefined
+  }
 }
 
 const IdentityInformationDefaultProps = {};
@@ -34,7 +41,7 @@ const FlexWrapper = styled.div`
 
 const IdentityInformation = (props: IdentityInformationPropType) => {
   const {locale} = useContext(LocaleContext);
-  const {onChangeData, countries, isSubmitted} = props;
+  const {onChangeData, countries, isSubmitted, fieldsStatus} = props;
 
   const [isFirstRender, setIsFirstRender] = useState(true)
   const [localStorageData, setLocalStorageData] = useState({
@@ -133,7 +140,12 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
         </SimpleLabelContainer>
         <FlexWrapper>
           <SimpleLabelContainer
-              displayAsLabel={isSubmitted}
+            displayAsLabel={
+              (isSubmitted && (fieldsStatus.firstName && fieldsStatus.firstName.valid)) ?
+                (fieldsStatus.firstName.blocked)
+                :
+                false
+            }
             label={localized(texts.firstNameLabel, locale)}
             id="firstname"
           >
@@ -142,7 +154,12 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               onChangeRaw={setFirstName}
               required
               isValid={firstNameValid}
-              displayAsLabel={isSubmitted}
+              displayAsLabel={
+                (isSubmitted && (fieldsStatus.firstName && fieldsStatus.firstName.valid)) ?
+                  (fieldsStatus.firstName.blocked)
+                  :
+                  false
+              }
               inputProps={{
                 className: "w-full",
                 placeholder: `${localized(texts.firstNameLabel, locale)}`,
@@ -152,10 +169,24 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
               id="firstname"
             />
           </SimpleLabelContainer>
-          <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.lastNameLabel, locale)} id={"lastname"}>
+          <SimpleLabelContainer
+            displayAsLabel={
+              (isSubmitted && (fieldsStatus.lastName && fieldsStatus.lastName.valid)) ?
+                (fieldsStatus.lastName.blocked)
+                :
+                false
+            }
+            label={localized(texts.lastNameLabel, locale)}
+            id={"lastname"}
+          >
             <SimpleInput
               onChangeRaw={setLastName}
-              displayAsLabel={isSubmitted}
+              displayAsLabel={
+                (isSubmitted && (fieldsStatus.lastName && fieldsStatus.lastName.valid)) ?
+                  (fieldsStatus.lastName.blocked)
+                  :
+                  false
+              }
               required
               inputProps={{
                 className: "w-full",
@@ -167,10 +198,24 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
           </SimpleLabelContainer>
         </FlexWrapper>
         <FlexWrapper>
-          <SimpleLabelContainer displayAsLabel={isSubmitted} label={localized(texts.middleNameLabel, locale)} id={"middlename"}>
+          <SimpleLabelContainer
+            displayAsLabel={
+              (isSubmitted && (fieldsStatus.middleName && fieldsStatus.middleName.valid)) ?
+                (fieldsStatus.middleName.blocked)
+                :
+                false
+            }
+            label={localized(texts.middleNameLabel, locale)}
+            id={"middlename"}
+          >
             <SimpleInput
               onChangeRaw={setMiddleName}
-              displayAsLabel={isSubmitted}
+              displayAsLabel={
+                (isSubmitted && (fieldsStatus.middleName && fieldsStatus.middleName.valid)) ?
+                  (fieldsStatus.middleName.blocked)
+                  :
+                  false
+              }
               inputProps={{
                 className: "w-full",
                 placeholder: `${localized(texts.middleNameLabel, locale)}`,

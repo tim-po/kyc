@@ -11,7 +11,7 @@ import VerificationIcon from "../../icons/Verified";
 import Residence from "../../components/VerificationTiles/Residence";
 import useValidatedState, {ControlledValidationState, validationFuncs} from "../../Standard/hooks/useValidatedState";
 import {API_URL} from "../../api/constants";
-import {Country} from "../../types";
+import {Country, UserData} from "../../types";
 import Info from "../../icons/Info/index";
 import {useCookies} from "react-cookie";
 import ForceValidateContext from "Standard/ForceValidateContext";
@@ -101,6 +101,7 @@ const Verification = (props: VerificationPropType) => {
   }, validationFuncs.controlled);
 
   const [countries, setCountries] = useState<Country[]>([]);
+  const [userData, setUserData] = useState<UserData | undefined>(undefined)
 
   const [isSubmitted, setIsSubmitted] = useState(true);
   const [isForceValid, setIsForceValid] = useState(false)
@@ -112,7 +113,7 @@ const Verification = (props: VerificationPropType) => {
     identityInformationValid &&
     residenceValid &&
     walletValid;
-
+  console.log(documentsValid,identityInformationValid,residenceValid,walletValid)
   const getCountries = () => {
     const registrationUrl = `${API_URL}/api/countries`;
     const requestOptions = {
@@ -127,17 +128,18 @@ const Verification = (props: VerificationPropType) => {
   async function setVerification() {
 
     setIsForceValid(true)
+
     if (!isValid) {
       return;
     }
 
     const userData = {
+      wallet: wallet.data.wallet,
       ...identityInformation.data,
       ...residence.data,
-      ...wallet.data,
       ...documents.data
     };
-
+    console.log('sent', userData)
     const verificationUrl = `${API_URL}/api/validation`;
 
     const requestOptions = {
@@ -150,7 +152,6 @@ const Verification = (props: VerificationPropType) => {
     };
 
     fetch(verificationUrl, requestOptions).then(res => {
-      console.log(res)
       if (res.status === 201) {
         setIsSubmitted(true);
       }
@@ -172,24 +173,27 @@ const Verification = (props: VerificationPropType) => {
       .then(res => res.json())
       .then(userData => {
         if (userData && userData.data) {
+          setUserData(userData.data);
           setIsSubmitted(userData.data.isSubmitted);
-          console.log(userData)
           const data = userData.data
           localStorage.setItem("identityInformation", JSON.stringify({
-            nationality: data.nationality,
-            firstName: data.firstName,
-            middleName: data.middleName,
-            lastName: data.lastName,
-            bDate: data.bDate
+            nationality: data.nationality.value,
+            firstName: data.firstName.value,
+            middleName: data.middleName.value,
+            lastName: data.lastName.value,
+            bDate: data.bDate.value
           }));
           localStorage.setItem("residence", JSON.stringify({
-            country: data.country,
-            city: data.city,
-            zip: data.zip,
-            street: data.street,
+            country: data.country.value,
+            city: data.city.value,
+            zip: data.zip.value,
+            mainStreet: data.mainStreet.value,
+            additionalStreet: data.additionalStreet.value,
+            region: data.region.value
           }));
           localStorage.setItem("wallet", JSON.stringify({
-            wallet: data.wallet
+            wallet: data.wallet.value,
+            isBSCNetwork: !!data.wallet.value
           }));
         }
       });
@@ -215,9 +219,19 @@ const Verification = (props: VerificationPropType) => {
             <Info/>
             <Text fontWeight={400} fontSize={16}>{localized(texts.automaticallySave, locale)}</Text>
           </RowFlexWrapper>
-          <Wallet onChangeData={setWallet} isSubmitted={isSubmitted}/>
-          <IdentityInformation countries={countries} onChangeData={setIdentityInformation}
-                               isSubmitted={isSubmitted}/>
+          <Wallet onChangeData={setWallet} isSubmitted={isSubmitted} fieldStatus={userData && userData.wallet}/>
+          <IdentityInformation
+            countries={countries}
+            onChangeData={setIdentityInformation}
+            isSubmitted={isSubmitted}
+            fieldsStatus={{
+              firstName: userData?.firstName,
+              lastName: userData?.lastName,
+              middleName: userData?.middleName,
+              bDate: userData?.bDate,
+              nationality: userData?.nationality,
+            }}
+          />
           <Residence countries={countries} onChangeData={setResidence} isSubmitted={isSubmitted}/>
           <Documents onChangeData={setDocuments} isSubmitted={isSubmitted}/>
           <RowFlexWrapper>
