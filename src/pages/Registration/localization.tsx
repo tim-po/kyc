@@ -12,6 +12,10 @@ export default {
     en: "Forgot password?",
     ja: "パスワードをお忘れですか？"
   },
+  Code: {
+    en: "One time code",
+    ja: "ワンタイムコード"
+  },
   alreadyRegistered: {
     en: "Already registered?",
     ja: "すでに登録？"

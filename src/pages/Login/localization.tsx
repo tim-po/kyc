@@ -17,6 +17,11 @@ export default {
     ja: "サインアップ"
   },
 
+  Code: {
+    en: "One time code",
+    ja: "ワンタイムコード"
+  },
+
   somethingWentWrong: {
     en: "Something went wrong",
     ja: "エラーが発生しました"

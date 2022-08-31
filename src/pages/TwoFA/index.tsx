@@ -105,19 +105,18 @@ const TwoFA = (props: TwoFAPropType) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  async function sendCode() {
-    // const TwoFAUrl = `${API_URL}/api/auth/TwoFA`;
-    // const requestOptions = {
-    //   method: "PUT",
-    //   headers: {"Content-Type": "application/json"},
-    //   body: JSON.stringify({
-    //     login: email,
-    //   })
-    // };
-    // return fetch(TwoFAUrl, requestOptions)
-    //   .then(res => res.json());
-    alert(code)
-  }
+  // async function sendCode() {
+  //   const TwoFAUrl = `${API_URL}/login/code`;
+  //   const requestOptions = {
+  //     method: "PUT",
+  //     headers: {"Content-Type": "application/json"},
+  //     body: JSON.stringify({
+  //       login: email,
+  //     })
+  //   };
+  //   return fetch(TwoFAUrl, requestOptions)
+  //     .then(res => res.json());
+  // }
 
   return (
     <LoginPageContainer>
@@ -144,7 +143,7 @@ const TwoFA = (props: TwoFAPropType) => {
           marginTop={0}
           textColor={"#fff"}
           background={"#33CC66"}
-          onClick={sendCode}
+          // onClick={sendCode}
         >
           {
             isLoading ?
