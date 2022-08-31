@@ -5,7 +5,7 @@ import {localized} from "../../../Standard/utils/localized";
 import "./index.css";
 import VerificationTile from "../../VerificationTile";
 import Text from "../../Text";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 import SimpleValidatedInput from "../../../Standard/components/SimpleInput";
 import useValidatedState, {validationFuncs, validationFuncsFactory} from "../../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../../Standard/components/SimpleInput";
@@ -15,6 +15,7 @@ import {AutoComplete} from "antd";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete";
 import {setInputStatus} from "../../../utils/common";
+import CheckMark from "../../../icons/CheckMark";
 
 type ResidencePropType = {
   onChangeData: (data: any) => void,
@@ -32,10 +33,21 @@ type ResidencePropType = {
 
 const ResidenceDefaultProps = {};
 
-const FlexWrapper = styled.div`
+const FlexWrapper = styled.div<{ isValid: boolean | undefined }>`
   display: flex;
   gap: 14px;
+
+  ${({isValid}) => {
+    return css`
+      flex-direction: ${isValid ? "column" : "row"};
+    `;
+  }};
 `;
+
+const InputFlexWrapper = styled.div`
+  display: flex;
+  width: 50%;
+`
 
 const Residence = (props: ResidencePropType) => {
   const {onChangeData, countries, isSubmitted, fieldsStatus} = props;
@@ -55,7 +67,7 @@ const Residence = (props: ResidencePropType) => {
   const [[city, setCity], cityValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[zip, setZip], zipValid] = useValidatedState<string>("", validationFuncs.hasValue);
   const [[mainStreet, setMainStreet], mainStreetValid] = useValidatedState<string>("", validationFuncs.hasValue);
-  const [[additionalStreet, setAdditionalStreet], additionalStreetValid] = useValidatedState<string>("", validationFuncs.hasValue);
+  const [[additionalStreet, setAdditionalStreet], additionalStreetValid] = useValidatedState<string>("", (newValue) => true);
   const [[region, setRegion], regionValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
   function setResidenceInner(residence: { data: {}, isValid: boolean }) {
@@ -111,122 +123,156 @@ const Residence = (props: ResidencePropType) => {
     <VerificationTile isValid={countryValid && cityValid && zipValid && (mainStreetValid || additionalStreetValid)}>
       <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       <div className={"mb-4"}/>
-      <FlexWrapper>
-        <SimpleLabelContainer
-          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.country?.valid, fieldsStatus.country?.blocked)}
-          label={localized(texts.residenceLabel, locale)}
-          id={"country-name"}
-        >
-          <SimpleAutocomplete
-            isValid={countryValid}
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.country?.valid, fieldsStatus.country?.blocked)}
-            onChangeRaw={setCountry}
-            errorTooltipText={"Please select valid country"}
-            required
-            placeholder={localized(texts.residenceLabel, locale)}
-            autoComplete={"country-name"}
+      <FlexWrapper isValid={
+        (fieldsStatus && fieldsStatus.country?.valid && fieldsStatus.country?.blocked)
+        ||
+        (fieldsStatus && fieldsStatus.region?.valid && fieldsStatus.region?.blocked)
+      }>
+        <InputFlexWrapper>
+          <SimpleLabelContainer
+            displayAsLabel={setInputStatus(fieldsStatus.country?.valid, fieldsStatus.country?.blocked)}
+            label={localized(texts.residenceLabel, locale)}
             id={"country-name"}
-            name={"country-name"}
-            options={countries.map(ctr => {
-              return ({value: ctr.name});
-            })}
-            value={country}
-          />
-        </SimpleLabelContainer>
-        <SimpleLabelContainer
-          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.region?.valid, fieldsStatus.region?.blocked)}
-          label={localized(texts.region, locale)}
-          id={"region-name"}
-        >
-          <SimpleInput
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.region?.valid, fieldsStatus.region?.blocked)}
-            onChangeRaw={setRegion}
-            required
-            inputProps={{
-              className: "w-full",
-              placeholder: `${localized(texts.region, locale)}`,
-              value: region
-            }}
+          >
+            <SimpleAutocomplete
+              isValid={countryValid}
+              displayAsLabel={setInputStatus(fieldsStatus.country?.valid, fieldsStatus.country?.blocked)}
+              onChangeRaw={setCountry}
+              errorTooltipText={"Please select valid country"}
+              required
+              placeholder={localized(texts.residenceLabel, locale)}
+              autoComplete={"country-name"}
+              id={"country-name"}
+              name={"country-name"}
+              options={countries.map(ctr => {
+                return ({value: ctr.name});
+              })}
+              value={country}
+            />
+          </SimpleLabelContainer>
+          {fieldsStatus && fieldsStatus.country?.valid && fieldsStatus.country?.blocked && <CheckMark/>}
+        </InputFlexWrapper>
+        <InputFlexWrapper>
+          <SimpleLabelContainer
+            displayAsLabel={setInputStatus(fieldsStatus.region?.valid, fieldsStatus.region?.blocked)}
+            label={localized(texts.region, locale)}
             id={"region-name"}
-            autoComplete={"shipping region-name"}
-          />
-        </SimpleLabelContainer>
+          >
+            <SimpleInput
+              displayAsLabel={setInputStatus(fieldsStatus.region?.valid, fieldsStatus.region?.blocked)}
+              onChangeRaw={setRegion}
+              required
+              inputProps={{
+                className: "w-full",
+                placeholder: `${localized(texts.region, locale)}`,
+                value: region
+              }}
+              id={"region-name"}
+              autoComplete={"shipping region-name"}
+            />
+          </SimpleLabelContainer>
+          {fieldsStatus && fieldsStatus.region?.valid && fieldsStatus.region?.blocked && <CheckMark/>}
+        </InputFlexWrapper>
       </FlexWrapper>
-      <FlexWrapper>
-        <SimpleLabelContainer
-          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.city?.valid, fieldsStatus.city?.blocked)}
-          label={localized(texts.cityLabel, locale)}
-          id={"city-name"}
-        >
-          <SimpleInput
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.city?.valid, fieldsStatus.city?.blocked)}
-            onChangeRaw={setCity}
-            required
-            inputProps={{
-              className: "w-full",
-              placeholder: `${localized(texts.cityLabel, locale)}`,
-              value: city
-            }}
+      <FlexWrapper isValid={
+        (fieldsStatus && fieldsStatus.city?.valid && fieldsStatus.city?.blocked)
+        ||
+        (fieldsStatus && fieldsStatus.zip?.valid && fieldsStatus.zip?.blocked)
+      }>
+        <InputFlexWrapper>
+          <SimpleLabelContainer
+            displayAsLabel={setInputStatus(fieldsStatus.city?.valid, fieldsStatus.city?.blocked)}
+            label={localized(texts.cityLabel, locale)}
             id={"city-name"}
-            autoComplete={"shipping city-name"}
-          />
-        </SimpleLabelContainer>
-        <SimpleLabelContainer
-          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.zip?.valid, fieldsStatus.zip?.blocked)}
-          label={localized(texts.postalCodeLabel, locale)}
-          id={"zip-code"}
-        >
-          <SimpleInput
-            onChangeRaw={setZip}
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.zip?.valid, fieldsStatus.zip?.blocked)}
-            required
-            inputProps={{
-              className: "w-full",
-              placeholder: `${localized(texts.postalCodeLabel, locale)}`,
-              value: zip
-            }}
+          >
+            <SimpleInput
+              displayAsLabel={setInputStatus(fieldsStatus.city?.valid, fieldsStatus.city?.blocked)}
+              onChangeRaw={setCity}
+              required
+              inputProps={{
+                className: "w-full",
+                placeholder: `${localized(texts.cityLabel, locale)}`,
+                value: city
+              }}
+              id={"city-name"}
+              autoComplete={"shipping city-name"}
+            />
+          </SimpleLabelContainer>
+        </InputFlexWrapper>
+        <InputFlexWrapper>
+          <SimpleLabelContainer
+            displayAsLabel={setInputStatus(fieldsStatus.zip?.valid, fieldsStatus.zip?.blocked)}
+            label={localized(texts.postalCodeLabel, locale)}
             id={"zip-code"}
-            autoComplete={"shipping zip-code"}
-          />
-        </SimpleLabelContainer>
+          >
+            <SimpleInput
+              onChangeRaw={setZip}
+              displayAsLabel={setInputStatus(fieldsStatus.zip?.valid, fieldsStatus.zip?.blocked)}
+              required
+              inputProps={{
+                className: "w-full",
+                placeholder: `${localized(texts.postalCodeLabel, locale)}`,
+                value: zip
+              }}
+              id={"zip-code"}
+              autoComplete={"shipping zip-code"}
+            />
+          </SimpleLabelContainer>
+        </InputFlexWrapper>
       </FlexWrapper>
-      <FlexWrapper>
-        <SimpleLabelContainer
-          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.mainStreet?.valid, fieldsStatus.mainStreet?.blocked)}
-          label={localized(texts.mainAddressLabel, locale)}
-          id={"shipping address"}
-        >
-          <SimpleInput
-            onChangeRaw={setMainStreet}
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.mainStreet?.valid, fieldsStatus.mainStreet?.blocked)}
-            required
-            inputProps={{
-              className: "w-full",
-              placeholder: `${localized(texts.mainAddressLabel, locale)}`,
-              value: mainStreet
-            }}
+      <FlexWrapper isValid={
+        (fieldsStatus && fieldsStatus.mainStreet?.valid && fieldsStatus.mainStreet?.blocked)
+        ||
+        (fieldsStatus && fieldsStatus.additionalStreet?.valid && fieldsStatus.additionalStreet?.blocked)
+      }>
+        <InputFlexWrapper>
+          <SimpleLabelContainer
+            displayAsLabel={setInputStatus(fieldsStatus.mainStreet?.valid, fieldsStatus.mainStreet?.blocked)}
+            label={localized(texts.mainAddressLabel, locale)}
             id={"shipping address"}
-            autoComplete={"shipping address"}
-          />
-        </SimpleLabelContainer>
-        <SimpleLabelContainer
-          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.additionalStreet?.valid, fieldsStatus.additionalStreet?.blocked)}
-          label={localized(texts.additionalAddressLabel, locale)}
-          id={"shipping address"}
-        >
-          <SimpleInput
-            onChangeRaw={setAdditionalStreet}
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.additionalStreet?.valid, fieldsStatus.additionalStreet?.blocked)}
-            required
-            inputProps={{
-              className: "w-full",
-              placeholder: `${localized(texts.additionalAddressLabel, locale)}`,
-              value: additionalStreet
-            }}
+          >
+            <SimpleInput
+              onChangeRaw={setMainStreet}
+              displayAsLabel={setInputStatus(fieldsStatus.mainStreet?.valid, fieldsStatus.mainStreet?.blocked)}
+              required
+              inputProps={{
+                className: "w-full",
+                placeholder: `${localized(texts.mainAddressLabel, locale)}`,
+                value: mainStreet
+              }}
+              id={"shipping address"}
+              autoComplete={"shipping address"}
+            />
+          </SimpleLabelContainer>
+        </InputFlexWrapper>
+        <InputFlexWrapper>
+          <SimpleLabelContainer
+            displayAsLabel={
+              setInputStatus(fieldsStatus.additionalStreet?.valid, fieldsStatus.additionalStreet?.blocked)
+              ||
+              (fieldsStatus.additionalStreet?.blocked && !localStorageData.additionalStreet)
+            }
+            label={localized(texts.additionalAddressLabel, locale)}
             id={"shipping address"}
-            autoComplete={"shipping address"}
-          />
-        </SimpleLabelContainer>
+          >
+            <SimpleInput
+              onChangeRaw={setAdditionalStreet}
+              displayAsLabel={
+                setInputStatus(fieldsStatus.additionalStreet?.valid, fieldsStatus.additionalStreet?.blocked)
+                ||
+                (fieldsStatus.additionalStreet?.blocked && !localStorageData.additionalStreet)
+              }
+              required
+              inputProps={{
+                className: "w-full",
+                placeholder: `${localized(texts.additionalAddressLabel, locale)}`,
+                value: additionalStreet
+              }}
+              id={"shipping address"}
+              autoComplete={"shipping address"}
+            />
+          </SimpleLabelContainer>
+        </InputFlexWrapper>
       </FlexWrapper>
     </VerificationTile>
   );

@@ -26,6 +26,11 @@ const FlexWrapper = styled.div`
   display: flex;
 `
 
+const InputFlexWrapper = styled.div`
+  display: flex;
+  width: 70%;
+`
+
 const WalletVerification = (props: WalletVerificationPropType) => {
   const {locale} = useContext(LocaleContext);
   const {onChangeData, isSubmitted, fieldStatus} = props;
@@ -79,24 +84,30 @@ const WalletVerification = (props: WalletVerificationPropType) => {
     <VerificationTile isValid={transferAddressValid && checkboxChecked}>
       <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       <FlexWrapper>
-        <SimpleLabelContainer>
-          <SimpleInput
-            onlyEmmitOnBlur
-            displayAsLabel={setInputStatus(isSubmitted, fieldStatus?.valid, fieldStatus?.blocked)}
-            required
-            isValid={transferAddressValid}
-            onChangeRaw={setTransferAddress}
-            errorTooltipText={"Please enter a correct address"}
-            inputProps={{
-              className: "w-full",
-              placeholder: `${localized(texts.walletPlaceholder, locale)}`,
-              value: wallet
-            }}
-          />
+        <InputFlexWrapper>
+          <SimpleLabelContainer>
+            <SimpleInput
+              onlyEmmitOnBlur
+              displayAsLabel={setInputStatus(fieldStatus?.valid, fieldStatus?.blocked)}
+              required
+              isValid={transferAddressValid}
+              onChangeRaw={setTransferAddress}
+              errorTooltipText={"Please enter a correct address"}
+              inputProps={{
+                className: "w-full",
+                placeholder: `${localized(texts.walletPlaceholder, locale)}`,
+                value: wallet
+              }}
+            />
+          </SimpleLabelContainer>
           {fieldStatus && fieldStatus.valid && fieldStatus.blocked && <CheckMark/>}
-        </SimpleLabelContainer>
+        </InputFlexWrapper>
       </FlexWrapper>
-      <Checkbox onChange={onChange} checked={checkboxChecked}>{localized(texts.checkBSCNetwork, locale)}</Checkbox>
+      <Checkbox
+        onChange={onChange}
+        checked={checkboxChecked}
+        disabled={setInputStatus(fieldStatus?.valid, fieldStatus?.blocked)}
+      >{localized(texts.checkBSCNetwork, locale)}</Checkbox>
     </VerificationTile>
   );
 };

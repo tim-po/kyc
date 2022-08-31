@@ -21,6 +21,7 @@ const IconWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   gap: 8px;
+  margin-top: 16px;
 `
 
 const DocumentRulesGallery = () => {

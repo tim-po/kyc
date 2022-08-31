@@ -41,10 +41,10 @@ const RowFlexWrapper = styled.div<{ marginBottom?: number }>`
   gap: 10px;
   align-items: center;
   ${({marginBottom}) => {
-  return css`
+    return css`
       margin-bottom: ${marginBottom}px;
     `;
-}};
+  }};
 `;
 
 const Button = styled.button<{ isValid: boolean }>`
@@ -64,6 +64,7 @@ const Button = styled.button<{ isValid: boolean }>`
   cursor: pointer;
   margin-top: 40px;
   transition: background 0.3s ease;
+
   &:focus,
   &:active {
     outline: none;
@@ -113,7 +114,7 @@ const Verification = (props: VerificationPropType) => {
     identityInformationValid &&
     residenceValid &&
     walletValid;
-  console.log(documentsValid,identityInformationValid,residenceValid,walletValid)
+
   const getCountries = () => {
     const registrationUrl = `${API_URL}/api/countries`;
     const requestOptions = {
@@ -153,7 +154,7 @@ const Verification = (props: VerificationPropType) => {
 
     fetch(verificationUrl, requestOptions).then(res => {
       if (res.status === 201) {
-        setIsSubmitted(true);
+        checkIsUserDataSubmitted()
       }
     });
   }
@@ -173,10 +174,24 @@ const Verification = (props: VerificationPropType) => {
       .then(res => res.json())
       .then(userData => {
         if (userData && userData.data) {
+
+          const copiedUserData = {...userData.data}
+          delete copiedUserData.isSubmitted
+          delete copiedUserData.isVerified
+
+          const isAllFieldsBlocked = Object.values(copiedUserData)
+            .map((value: any) => value.blocked)
+            .every(value => value === true)
+
+          const isAllFieldsNotValid = Object.values(copiedUserData)
+            .map((value: any) => value.valid)
+            .every(value => value === true)
+
+          setIsSubmitted(isAllFieldsBlocked || isAllFieldsNotValid);
           setUserData(userData.data);
-          setIsSubmitted(userData.data.isSubmitted);
+
           const data = userData.data
-          console.log(data)
+
           localStorage.setItem("identityInformation", JSON.stringify({
             nationality: data.nationality.value,
             firstName: data.firstName.value,
@@ -256,7 +271,8 @@ const Verification = (props: VerificationPropType) => {
               <Button isValid={false}>{localized(texts.buttonTextCheck, locale)}</Button>
             }
             {!isSubmitted &&
-              <Button isValid={isValid || !isForceValid} onClick={setVerification}>{localized(texts.buttonTextVerify, locale)}</Button>
+              <Button isValid={isValid || !isForceValid}
+                      onClick={setVerification}>{localized(texts.buttonTextVerify, locale)}</Button>
             }
           </FlexEndWrapper>
         </FlexWrapper>

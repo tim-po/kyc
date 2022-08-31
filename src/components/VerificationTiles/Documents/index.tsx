@@ -9,13 +9,8 @@ import DocumentRulesGallery from "../../DocumentRulesGallery";
 import './index.css';
 import CameraIcon from '../../../icons/Camera';
 import styled from "styled-components";
-import useValidatedState, {validationFuncs} from "../../../Standard/hooks/useValidatedState";
 import {API_URL} from "../../../api/constants";
 import {useCookies} from "react-cookie";
-import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
-import SimpleDatePicker from "../../../Standard/components/SimpleDatePicker";
-import SimpleInput from "../../../Standard/components/SimpleInput";
-import { Link } from "react-router-dom";
 
 type DocumentsPropType = {
   onChangeData: (data: any) => void
@@ -27,6 +22,24 @@ const DocumentsDefaultProps = {}
 const FlexWrapper = styled.div`
   display: flex;
   gap: 20px;
+  margin-top: 16px;
+`
+
+const LoaderBlockWrapper = styled.div`
+  position: relative;
+  width: 190px;
+  height: 103px;
+  border-radius: 10px;
+`
+
+const BlurSquare = styled.div`
+  background: rgba(0, 0, 0, .5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 190px;
+  height: 103px;
+  border-radius: 10px;
 `
 
 const Documents = (props: DocumentsPropType) => {
@@ -38,7 +51,6 @@ const Documents = (props: DocumentsPropType) => {
   const [activeButton, setActiveButton] = useState<number>(0)
 
   const [isFirstRender, setIsFirstRender] = useState(true)
-  const [localStorageData, setLocalStorageData] = useState(undefined)
 
   const [mainDoc, setMainDoc] = useState<any>(undefined)
   const [mainToken, setMainToken] = useState(undefined)
@@ -77,7 +89,7 @@ const Documents = (props: DocumentsPropType) => {
     body.append('attachment', file);
     body.append('type', documentImportantType);
 
-    switch (documentImportantType){
+    switch (documentImportantType) {
       case "additional":
         if (additionalToken)
           body.append('token', additionalToken);
@@ -131,7 +143,7 @@ const Documents = (props: DocumentsPropType) => {
 
   useEffect(() => {
     setDocumentsInner({
-      data: {mainToken, additionalToken, type: buttonsArray[activeButton]},
+      data: {mainToken, additionalToken, type: "Passport"},
       isValid
     });
   }, [mainToken, additionalToken, activeButton, isValid]);
@@ -139,30 +151,33 @@ const Documents = (props: DocumentsPropType) => {
   return (
     <VerificationTile isValid={isValid}>
       <Text fontSize={24} color={'#000'}>{localized(texts.tileTitle, locale)}</Text>
-      <IosStyleSegmentedControll
-        width={400}
-        buttons={buttonsArray}
-        firstSelectedIndex={0}
-        onChange={handleActiveButton}
-      />
+      {/*<IosStyleSegmentedControll*/}
+      {/*  width={400}*/}
+      {/*  buttons={buttonsArray}*/}
+      {/*  firstSelectedIndex={0}*/}
+      {/*  onChange={handleActiveButton}*/}
+      {/*/>*/}
       <DocumentRulesGallery/>
       <FlexWrapper>
-        <label className="file-select">
-          <div className="select-button">
-            {
-              mainDoc ?
-                <img src={mainDoc} alt="preview image"/>
-                :
-                <>
-                  <CameraIcon/>
-                  {localized(texts.uploadMainPage, locale)}
-                </>
-            }
-          </div>
-          <input type="file" onChange={handleMainFileChange}/>
-        </label>
-        {
-          activeButton === 0 &&
+        <LoaderBlockWrapper>
+          {mainDoc && <BlurSquare/>}
+          <label className="file-select">
+            <div className="select-button">
+              {
+                mainDoc ?
+                  <img src={mainDoc} alt="preview image"/>
+                  :
+                  <>
+                    <CameraIcon/>
+                    {localized(texts.uploadMainPage, locale)}
+                  </>
+              }
+            </div>
+            <input type="file" onChange={handleMainFileChange}/>
+          </label>
+        </LoaderBlockWrapper>
+        <LoaderBlockWrapper>
+          {additionalDoc && <BlurSquare/>}
           <label className="file-select">
             <div className="select-button">
               {
@@ -177,7 +192,7 @@ const Documents = (props: DocumentsPropType) => {
             </div>
             <input type="file" onChange={handleAdditionalFileChange}/>
           </label>
-        }
+        </LoaderBlockWrapper>
       </FlexWrapper>
     </VerificationTile>
   )

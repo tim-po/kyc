@@ -1,7 +1,7 @@
 export default {
   tileTitle: {
-    en: "Document",
-    ja: "書類"
+    en: "Passport",
+    ja: "パスポート"
   },
 
   passport: {

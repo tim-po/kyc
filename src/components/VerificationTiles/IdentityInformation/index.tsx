@@ -34,7 +34,7 @@ type IdentityInformationPropType = {
 
 const IdentityInformationDefaultProps = {};
 
-const FlexWrapper = styled.div<{isValid: boolean | undefined}>`
+const FlexWrapper = styled.div<{ isValid: boolean | undefined }>`
   display: flex;
   gap: 14px;
 
@@ -93,26 +93,26 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
   useEffect(() => {
     const identityInformation = localStorage.getItem("identityInformation");
     const parsed = JSON.parse(`${identityInformation}`)
-    if(parsed){
+    if (parsed) {
       setLocalStorageData(parsed);
     }
-    if(localStorageData.firstName){
+    if (localStorageData.firstName) {
       setFirstName(localStorageData.firstName)
       forceValidateSoft()
     }
-    if(localStorageData.lastName) {
+    if (localStorageData.lastName) {
       setLastName(localStorageData.lastName)
       forceValidateSoft()
     }
-    if(localStorageData.middleName) {
+    if (localStorageData.middleName) {
       setMiddleName(localStorageData.middleName)
       forceValidateSoft()
     }
-    if(localStorageData.nationality) {
+    if (localStorageData.nationality) {
       setNationality(localStorageData.nationality)
       forceValidateSoft()
     }
-    if(localStorageData.bDate) {
+    if (localStorageData.bDate) {
       setBDate(localStorageData.bDate)
       forceValidateSoft()
     }
@@ -132,115 +132,131 @@ const IdentityInformation = (props: IdentityInformationPropType) => {
       <form autoComplete={"on"}>
         <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
         <div className={"mb-4"}/>
-       <InputFlexWrapper>
-         <SimpleLabelContainer
-           displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.nationality?.value, fieldsStatus.nationality?.blocked)}
-           label={localized(texts.nationalityLabel, locale)}
-           id="shipping country-name"
-         >
-           <SimpleAutocomplete
-             isValid={nationalityValid}
-             onChangeRaw={setNationality}
-             displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.nationality?.value, fieldsStatus.nationality?.blocked)}
-             errorTooltipText={"Please select valid country"}
-             required
-             placeholder={localized(texts.nationalityLabel, locale)}
-             autoComplete={"shipping country-name"}
-             name={"shipping country-name"}
-             id={"shipping country-name"}
-             options={countries.map(ctr => {
-               return ({value: ctr.name})
-             })}
-             value={nationality}
-           />
-         </SimpleLabelContainer>
-         {fieldsStatus && fieldsStatus.nationality?.valid && fieldsStatus.nationality?.blocked && <CheckMark/>}
-       </InputFlexWrapper>
-        <FlexWrapper isValid={fieldsStatus && fieldsStatus.nationality?.valid && fieldsStatus.nationality?.blocked}>
-         <InputFlexWrapper>
-           <SimpleLabelContainer
-             displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.firstName?.value, fieldsStatus.firstName?.blocked)}
-             label={localized(texts.firstNameLabel, locale)}
-             id="firstname"
-           >
-             <SimpleInput
-               onlyEmmitOnBlur
-               onChangeRaw={setFirstName}
-               required
-               isValid={firstNameValid}
-               displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.firstName?.value, fieldsStatus.firstName?.blocked)}
-               inputProps={{
-                 className: "w-full",
-                 placeholder: `${localized(texts.firstNameLabel, locale)}`,
-                 value: firstName
-               }}
-               autoComplete={"firstname"}
-               id="firstname"
-             />
-           </SimpleLabelContainer>
-           {fieldsStatus && fieldsStatus.firstName?.valid && fieldsStatus.firstName?.blocked && <CheckMark/>}
-         </InputFlexWrapper>
-         <InputFlexWrapper>
-           <SimpleLabelContainer
-             displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.lastName?.value, fieldsStatus.lastName?.blocked)}
-             label={localized(texts.lastNameLabel, locale)}
-             id={"lastname"}
-           >
-             <SimpleInput
-               onChangeRaw={setLastName}
-               displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.lastName?.value, fieldsStatus.lastName?.blocked)}
-               required
-               inputProps={{
-                 className: "w-full",
-                 placeholder: `${localized(texts.lastNameLabel, locale)}`,
-                 value: lastName
-               }}
-               autoComplete={"lastname"}
-             />
-           </SimpleLabelContainer>
-           {fieldsStatus && fieldsStatus.lastName?.valid && fieldsStatus.lastName?.blocked && <CheckMark/>}
-         </InputFlexWrapper>
-        </FlexWrapper>
-        <FlexWrapper isValid={fieldsStatus && fieldsStatus.nationality?.valid && fieldsStatus.nationality?.blocked}>
-         <InputFlexWrapper>
-           <SimpleLabelContainer
-             displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.middleName?.value, fieldsStatus.middleName?.blocked)}
-             label={localized(texts.middleNameLabel, locale)}
-             id={"middlename"}
-           >
-             <SimpleInput
-               onChangeRaw={setMiddleName}
-               displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.middleName?.value, fieldsStatus.middleName?.blocked)}
-               inputProps={{
-                 className: "w-full",
-                 placeholder: `${localized(texts.middleNameLabel, locale)}`,
-                 value: middleName
-               }}
-               autoComplete={"middlename"}
-               id={"middlename"}
-             />
-           </SimpleLabelContainer>
-           {fieldsStatus && fieldsStatus.middleName?.valid && fieldsStatus.middleName?.blocked && <CheckMark/>}
-         </InputFlexWrapper>
         <InputFlexWrapper>
           <SimpleLabelContainer
-            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.bDate?.value, fieldsStatus.bDate?.blocked)}
-            label={localized(texts.birthDateLabel, locale)}
-            id={"birthdate"}
+            displayAsLabel={setInputStatus(fieldsStatus.nationality?.value, fieldsStatus.nationality?.blocked)}
+            label={localized(texts.nationalityLabel, locale)}
+            id="shipping country-name"
           >
-            <SimpleDatePicker
-              value={bDate}
-              displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.bDate?.value, fieldsStatus.bDate?.blocked)}
-              onChangeRaw={setBDate}
-              isValid={bDateValid}
+            <SimpleAutocomplete
+              isValid={nationalityValid}
+              onChangeRaw={setNationality}
+              displayAsLabel={setInputStatus(fieldsStatus.nationality?.value, fieldsStatus.nationality?.blocked)}
+              errorTooltipText={"Please select valid country"}
               required
-              errorTooltipText={"Please enter a date in the past"}
-              autoComplete={"birthdate"}
-              id={"birthdate"}
+              placeholder={localized(texts.nationalityLabel, locale)}
+              autoComplete={"shipping country-name"}
+              name={"shipping country-name"}
+              id={"shipping country-name"}
+              options={countries.map(ctr => {
+                return ({value: ctr.name})
+              })}
+              value={nationality}
             />
           </SimpleLabelContainer>
-          {fieldsStatus && fieldsStatus.bDate?.valid && fieldsStatus.bDate?.blocked && <CheckMark/>}
+          {fieldsStatus && fieldsStatus.nationality?.valid && fieldsStatus.nationality?.blocked && <CheckMark/>}
         </InputFlexWrapper>
+        <FlexWrapper isValid={
+          (fieldsStatus && fieldsStatus.firstName?.valid && fieldsStatus.firstName?.blocked)
+          ||
+          (fieldsStatus && fieldsStatus.lastName?.valid && fieldsStatus.lastName?.blocked)
+        }>
+          <InputFlexWrapper>
+            <SimpleLabelContainer
+              displayAsLabel={setInputStatus(fieldsStatus.firstName?.value, fieldsStatus.firstName?.blocked)}
+              label={localized(texts.firstNameLabel, locale)}
+              id="firstname"
+            >
+              <SimpleInput
+                onlyEmmitOnBlur
+                onChangeRaw={setFirstName}
+                required
+                isValid={firstNameValid}
+                displayAsLabel={setInputStatus(fieldsStatus.firstName?.value, fieldsStatus.firstName?.blocked)}
+                inputProps={{
+                  className: "w-full",
+                  placeholder: `${localized(texts.firstNameLabel, locale)}`,
+                  value: firstName
+                }}
+                autoComplete={"firstname"}
+                id="firstname"
+              />
+            </SimpleLabelContainer>
+            {fieldsStatus && fieldsStatus.firstName?.valid && fieldsStatus.firstName?.blocked && <CheckMark/>}
+          </InputFlexWrapper>
+          <InputFlexWrapper>
+            <SimpleLabelContainer
+              displayAsLabel={setInputStatus(fieldsStatus.lastName?.value, fieldsStatus.lastName?.blocked)}
+              label={localized(texts.lastNameLabel, locale)}
+              id={"lastname"}
+            >
+              <SimpleInput
+                onChangeRaw={setLastName}
+                displayAsLabel={setInputStatus(fieldsStatus.lastName?.value, fieldsStatus.lastName?.blocked)}
+                required
+                inputProps={{
+                  className: "w-full",
+                  placeholder: `${localized(texts.lastNameLabel, locale)}`,
+                  value: lastName
+                }}
+                autoComplete={"lastname"}
+              />
+            </SimpleLabelContainer>
+            {fieldsStatus && fieldsStatus.lastName?.valid && fieldsStatus.lastName?.blocked && <CheckMark/>}
+          </InputFlexWrapper>
+        </FlexWrapper>
+        <FlexWrapper isValid={
+          (fieldsStatus && fieldsStatus.middleName?.valid && fieldsStatus.middleName?.blocked)
+          ||
+          fieldsStatus && fieldsStatus.bDate?.valid && fieldsStatus.bDate?.blocked
+        }>
+          <InputFlexWrapper>
+            <SimpleLabelContainer
+              displayAsLabel={
+                setInputStatus(fieldsStatus.middleName?.value, fieldsStatus.middleName?.blocked)
+                ||
+                (fieldsStatus.middleName?.blocked && !localStorageData.middleName)
+              }
+              label={localized(texts.middleNameLabel, locale)}
+              id={"middlename"}
+            >
+              <SimpleInput
+                onChangeRaw={setMiddleName}
+                displayAsLabel={
+                  setInputStatus(fieldsStatus.middleName?.value, fieldsStatus.middleName?.blocked)
+                  ||
+                  (fieldsStatus.middleName?.blocked && !localStorageData.middleName)
+                }
+                inputProps={{
+                  className: "w-full",
+                  placeholder: `${localized(texts.middleNameLabel, locale)}`,
+                  value: middleName
+                }}
+                autoComplete={"middlename"}
+                id={"middlename"}
+              />
+            </SimpleLabelContainer>
+            {fieldsStatus && fieldsStatus.middleName?.valid && fieldsStatus.middleName?.blocked && <CheckMark/>}
+          </InputFlexWrapper>
+          <InputFlexWrapper>
+            <SimpleLabelContainer
+              displayAsLabel={setInputStatus(fieldsStatus.bDate?.value, fieldsStatus.bDate?.blocked)}
+              label={localized(texts.birthDateLabel, locale)}
+              id={"birthdate"}
+            >
+              <SimpleDatePicker
+                value={bDate}
+                displayAsLabel={setInputStatus(fieldsStatus.bDate?.value, fieldsStatus.bDate?.blocked)}
+                onChangeRaw={setBDate}
+                isValid={bDateValid}
+                required
+                errorTooltipText={"Please enter a date in the past"}
+                autoComplete={"birthdate"}
+                id={"birthdate"}
+              />
+            </SimpleLabelContainer>
+            {fieldsStatus && fieldsStatus.bDate?.valid && fieldsStatus.bDate?.blocked && <CheckMark/>}
+          </InputFlexWrapper>
         </FlexWrapper>
       </form>
     </VerificationTile>
