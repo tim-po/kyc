@@ -108,7 +108,7 @@ const Registration = (props: RegistrationPropType) => {
   async function registration(): Promise<{ code: number, error: string }> {
     const registrationUrl = `${API_URL}/api/auth/registration`;
     const requestOptions = {
-      method: "PUT",
+      method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         login: email,

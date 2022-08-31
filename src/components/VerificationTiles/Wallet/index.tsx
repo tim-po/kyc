@@ -12,6 +12,7 @@ import {Checkbox} from "antd";
 import {CheckboxChangeEvent} from "antd/lib/checkbox";
 import {FieldStatus} from "../../../types";
 import {setInputStatus} from "../../../utils/common";
+import CheckMark from "../../../icons/CheckMark";
 
 type WalletVerificationPropType = {
   onChangeData: (data: any) => void,
@@ -23,8 +24,6 @@ const WalletVerificationDefaultProps = {};
 
 const FlexWrapper = styled.div`
   display: flex;
-  gap: 10px;
-  align-items: center;
 `
 
 const WalletVerification = (props: WalletVerificationPropType) => {
@@ -78,27 +77,25 @@ const WalletVerification = (props: WalletVerificationPropType) => {
 
   return (
     <VerificationTile isValid={transferAddressValid && checkboxChecked}>
+      <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       <FlexWrapper>
-        <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
+        <SimpleLabelContainer>
+          <SimpleInput
+            onlyEmmitOnBlur
+            displayAsLabel={setInputStatus(isSubmitted, fieldStatus?.valid, fieldStatus?.blocked)}
+            required
+            isValid={transferAddressValid}
+            onChangeRaw={setTransferAddress}
+            errorTooltipText={"Please enter a correct address"}
+            inputProps={{
+              className: "w-full",
+              placeholder: `${localized(texts.walletPlaceholder, locale)}`,
+              value: wallet
+            }}
+          />
+          {fieldStatus && fieldStatus.valid && fieldStatus.blocked && <CheckMark/>}
+        </SimpleLabelContainer>
       </FlexWrapper>
-      <SimpleLabelContainer
-        displayAsLabel={setInputStatus(isSubmitted, fieldStatus?.valid, fieldStatus?.blocked)}
-        label={localized(texts.tileTitle, locale)}
-      >
-        <SimpleInput
-          onlyEmmitOnBlur
-          displayAsLabel={setInputStatus(isSubmitted, fieldStatus?.valid, fieldStatus?.blocked)}
-          required
-          isValid={transferAddressValid}
-          onChangeRaw={setTransferAddress}
-          errorTooltipText={"Please enter a correct address"}
-          inputProps={{
-            className: "w-full",
-            placeholder: `${localized(texts.walletPlaceholder, locale)}`,
-            value: wallet
-          }}
-        />
-      </SimpleLabelContainer>
       <Checkbox onChange={onChange} checked={checkboxChecked}>{localized(texts.checkBSCNetwork, locale)}</Checkbox>
     </VerificationTile>
   );

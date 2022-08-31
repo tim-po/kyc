@@ -5,7 +5,7 @@ import {useCookies} from "react-cookie";
 
 const AppRouter = () => {
   const [cookies] = useCookies(['auth']);
-  const [isAuth, setIsAuth] = useState(false)
+  const [isAuth, setIsAuth] = useState(true)
 
   useEffect(() => {
     if (cookies.auth) {
