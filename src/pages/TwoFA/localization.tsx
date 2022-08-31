@@ -1,20 +1,16 @@
 export default {
   pageTitle: {
-    en: "Sign up to your account",
-    ja: "アカウントにサインアップ"
+    en: "Please check your email and enter code",
+    ja: "メールを確認してコードを入力してください"
   },
 
   buttonText: {
-    en: "Sign up",
+    en: "Confirm",
     ja: "サインアップ"
   },
   forgotPassword: {
     en: "Forgot password?",
     ja: "パスワードをお忘れですか？"
-  },
-  Code: {
-    en: "One time code",
-    ja: "ワンタイムコード"
   },
   alreadyRegistered: {
     en: "Already registered?",
@@ -25,9 +21,9 @@ export default {
     ja: "ログイン"
   },
 
-  emailAddressLabel: {
-    en: "Email",
-    ja: "電子メールアドレス"
+  Code: {
+    en: "One time code",
+    ja: "ワンタイムコード"
   },
   passwordLabel: {
     en: "Password",

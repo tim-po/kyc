@@ -91,11 +91,22 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 
+const Subtitle = styled.div`
+    max-width: 350px;
+    color: black;
+  font-size: 20px;
+  margin-bottom: 8px;
+`
+
 const Login = (props: LoginPropType) => {
   const {locale} = useContext(LocaleContext);
 
   const [[email, setEmail], emailValid] = useValidatedState<string>("", validationFuncs.isEmail);
   const [[password, setPassword], passwordValid] = useValidatedState<string>("", validationFuncs.validPassword);
+
+  const [isWaitingForCode, setIsWaitingForCode] = useState(false)
+  const [code, setCode] = useState<string>("");
+
   const history = useHistory();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -126,16 +137,36 @@ const Login = (props: LoginPropType) => {
 
     setIsLoading(true);
     setIsServerError(false);
-    const {data: {token}} = await setUser();
-    setCookie("auth", token, {path: window.location.pathname});
+    await setUser();
     setIsLoading(false);
-    history.push(RouteName.VERIFICATION);
+    setIsWaitingForCode(true)
   }
 
   const handleEnterPress = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if ((event.code === "Enter" || event.code === "NumpadEnter")) {
-      login()
+      if(isWaitingForCode){
+        sendCode()
+      }else {
+        login()
+      }
     }
+  }
+
+  async function sendCode() {
+    const TwoFAUrl = `${API_URL}/api/auth/login/code`;
+    const requestOptions = {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        login: email,
+        code: +code
+      })
+    };
+    fetch(TwoFAUrl, requestOptions)
+        .then(res => res.json()).then(json => {
+      setCookie("auth", json.data.token, {path: window.location.pathname});
+      history.push(RouteName.VERIFICATION);
+    });
   }
 
   const isValid = emailValid && passwordValid;
@@ -156,58 +187,96 @@ const Login = (props: LoginPropType) => {
     <LoginPageContainer>
       <Text fontSize={36} marginBottom={40}>{localized(texts.pageTitle, locale)}</Text>
       <Form>
-        <SimpleLabelContainer label={localized(texts.emailAddressLabel, locale)} id={"email"}>
-          <SimpleInput
-            required
-            onChangeRaw={setEmail}
-            errorTooltipText={"Please enter a correct email"}
-            inputProps={{
-              placeholder: `${localized(texts.emailAddressLabel, locale)}`,
-              type: "email",
-              className: "w-full",
-              value: email
-            }}
-            id={"email"}
-          />
-        </SimpleLabelContainer>
-        <SimpleLabelContainer label={localized(texts.passwordLabel, locale)} id={"current-password"}>
-          <SimpleInput
-            required
-            // isValid={passwordValid}
-            errorTooltipText={"Password should be longer than 8 characters"}
-            inputProps={{
-              placeholder: `${localized(texts.passwordLabel, locale)}`,
-              type: "password",
-              className: "w-full",
-              value: password
-            }}
-            id={"current-password"}
-            autoComplete={"current-password"}
-            onChangeRaw={setPassword}
-          />
-        </SimpleLabelContainer>
-        {
-          isServerError &&
-          <ErrorMessage message={localized(texts.somethingWentWrong, locale)} title={localized(texts.errorSignIn, locale)}/>
+        {isWaitingForCode &&
+            <>
+              <Subtitle>
+                A message with a verification code has been sent to your email. Enter the code to continue.
+              </Subtitle>
+              <SimpleLabelContainer>
+                <SimpleInput
+                    onChangeRaw={setCode}
+                    inputProps={{
+                      placeholder: `${localized(texts.Code, locale)}`,
+                      type: "one-time-code",
+                      value: code,
+                    }}
+                    id={"one-time-code"}
+                />
+              </SimpleLabelContainer>
+              {/*{isError && <ErrorMessage message={errorMessage}/>}*/}
+
+              <Button
+                  type={"button"}
+                  marginTop={0}
+                  textColor={"#fff"}
+                  background={"#33CC66"}
+                  onClick={sendCode}
+              >
+                {
+                  isLoading ?
+                      <Spinner color="white" size={25}/>
+                      :
+                      `${localized(texts.buttonText, locale)}`
+                }
+              </Button>
+            </>
         }
-        <Button
-          marginTop={20}
-          type={"button"}
-          textColor={isValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
-          background={isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
-          onClick={login}
-        >
-          {
-            isLoading ?
-              <Spinner color="white" size={25}/>
-              :
-              `${localized(texts.buttonText, locale)}`
-          }
-        </Button>
-        <FlexLinksWrapper>
-          <TextLink to={""}>{localized(texts.forgotPassword, locale)}</TextLink>
-          <TextLink to={RouteName.REGISTRATION}>{localized(texts.signUp, locale)}</TextLink>
-        </FlexLinksWrapper>
+        {!isWaitingForCode &&
+            <>
+              <SimpleLabelContainer label={localized(texts.emailAddressLabel, locale)} id={"email"}>
+                <SimpleInput
+                    required
+                    onChangeRaw={setEmail}
+                    errorTooltipText={"Please enter a correct email"}
+                    inputProps={{
+                      placeholder: `${localized(texts.emailAddressLabel, locale)}`,
+                      type: "email",
+                      className: "w-full",
+                      value: email
+                    }}
+                    id={"email"}
+                />
+              </SimpleLabelContainer>
+              <SimpleLabelContainer label={localized(texts.passwordLabel, locale)} id={"current-password"}>
+                <SimpleInput
+                    required
+                    // isValid={passwordValid}
+                    errorTooltipText={"Password should be longer than 8 characters"}
+                    inputProps={{
+                      placeholder: `${localized(texts.passwordLabel, locale)}`,
+                      type: "password",
+                      className: "w-full",
+                      value: password
+                    }}
+                    id={"current-password"}
+                    autoComplete={"current-password"}
+                    onChangeRaw={setPassword}
+                />
+              </SimpleLabelContainer>
+              {
+                  isServerError &&
+                  <ErrorMessage message={localized(texts.somethingWentWrong, locale)} title={localized(texts.errorSignIn, locale)}/>
+              }
+              <Button
+                  marginTop={20}
+                  type={"button"}
+                  textColor={isValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
+                  background={isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
+                  onClick={login}
+              >
+                {
+                  isLoading ?
+                      <Spinner color="white" size={25}/>
+                      :
+                      `${localized(texts.buttonText, locale)}`
+                }
+              </Button>
+              <FlexLinksWrapper>
+                <TextLink to={""}>{localized(texts.forgotPassword, locale)}</TextLink>
+                <TextLink to={RouteName.REGISTRATION}>{localized(texts.signUp, locale)}</TextLink>
+              </FlexLinksWrapper>
+            </>
+        }
       </Form>
     </LoginPageContainer>
   );
