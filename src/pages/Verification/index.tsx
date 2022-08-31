@@ -139,7 +139,7 @@ const Verification = (props: VerificationPropType) => {
       ...residence.data,
       ...documents.data
     };
-    console.log('sent', userData)
+
     const verificationUrl = `${API_URL}/api/validation`;
 
     const requestOptions = {
@@ -176,6 +176,7 @@ const Verification = (props: VerificationPropType) => {
           setUserData(userData.data);
           setIsSubmitted(userData.data.isSubmitted);
           const data = userData.data
+          console.log(data)
           localStorage.setItem("identityInformation", JSON.stringify({
             nationality: data.nationality.value,
             firstName: data.firstName.value,
@@ -232,7 +233,19 @@ const Verification = (props: VerificationPropType) => {
               nationality: userData?.nationality,
             }}
           />
-          <Residence countries={countries} onChangeData={setResidence} isSubmitted={isSubmitted}/>
+          <Residence
+            countries={countries}
+            onChangeData={setResidence}
+            isSubmitted={isSubmitted}
+            fieldsStatus={{
+              mainStreet: userData?.mainStreet,
+              additionalStreet: userData?.additionalStreet,
+              region: userData?.region,
+              city: userData?.city,
+              country: userData?.country,
+              zip: userData?.zip
+            }}
+          />
           <Documents onChangeData={setDocuments} isSubmitted={isSubmitted}/>
           <RowFlexWrapper>
             <VerificationIcon/>

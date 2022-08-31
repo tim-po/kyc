@@ -5,3 +5,11 @@ export const wei2eth = (val) => {
     }
     return BigInt(0);
 };
+
+export const setInputStatus = (isSubmitted, isValid, isBlocked) => {
+  if (isSubmitted && isValid) {
+    return isBlocked
+  } else {
+    return false
+  }
+}

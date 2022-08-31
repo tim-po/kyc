@@ -10,15 +10,24 @@ import SimpleValidatedInput from "../../../Standard/components/SimpleInput";
 import useValidatedState, {validationFuncs, validationFuncsFactory} from "../../../Standard/hooks/useValidatedState";
 import SimpleInput from "../../../Standard/components/SimpleInput";
 import placeholder from "lodash/fp/placeholder";
-import {Country} from "../../../types";
+import {Country, FieldStatus} from "../../../types";
 import {AutoComplete} from "antd";
 import SimpleLabelContainer from "../../../Standard/components/SimpleLabelContainer";
 import SimpleAutocomplete from "../../../Standard/components/SimpleAutocomplete";
+import {setInputStatus} from "../../../utils/common";
 
 type ResidencePropType = {
   onChangeData: (data: any) => void,
   countries: Country[]
-  isSubmitted: boolean
+  isSubmitted: boolean,
+  fieldsStatus: {
+    mainStreet: FieldStatus | undefined,
+    additionalStreet: FieldStatus | undefined,
+    region: FieldStatus | undefined,
+    city: FieldStatus | undefined,
+    country: FieldStatus | undefined,
+    zip: FieldStatus | undefined
+  }
 }
 
 const ResidenceDefaultProps = {};
@@ -29,7 +38,7 @@ const FlexWrapper = styled.div`
 `;
 
 const Residence = (props: ResidencePropType) => {
-  const {onChangeData, countries, isSubmitted} = props;
+  const {onChangeData, countries, isSubmitted, fieldsStatus} = props;
   const {locale} = useContext(LocaleContext);
 
   const [isFirstRender, setIsFirstRender] = useState(true);
@@ -79,27 +88,38 @@ const Residence = (props: ResidencePropType) => {
     if (localStorageData.additionalStreet) {
       setAdditionalStreet(localStorageData.additionalStreet);
     }
-    if(localStorageData.region) {
+    if (localStorageData.region) {
       setRegion(localStorageData.region)
     }
-  }, [isFirstRender, localStorageData.country, localStorageData.city, localStorageData.zip, localStorageData.mainStreet, localStorageData.additionalStreet, countries]);
+  }, [isFirstRender,
+    localStorageData.country,
+    localStorageData.city,
+    localStorageData.zip,
+    localStorageData.mainStreet,
+    localStorageData.additionalStreet,
+    localStorageData.region,
+    countries]);
 
   useEffect(() => {
     setResidenceInner({
       data: {country, city, zip, mainStreet, additionalStreet, region},
       isValid: countryValid && cityValid && zipValid && (mainStreetValid || additionalStreetValid) && regionValid
     });
-  }, [country, city, zip, mainStreet, additionalStreet, countryValid, cityValid, zipValid, mainStreetValid, additionalStreetValid, regionValid]);
+  }, [country, city, zip, mainStreet, additionalStreet, countryValid, cityValid, zipValid, mainStreetValid, additionalStreetValid, regionValid, region]);
 
   return (
     <VerificationTile isValid={countryValid && cityValid && zipValid && (mainStreetValid || additionalStreetValid)}>
       <Text fontSize={24} color={"#000"}>{localized(texts.tileTitle, locale)}</Text>
       <div className={"mb-4"}/>
       <FlexWrapper>
-        <SimpleLabelContainer label={localized(texts.residenceLabel, locale)} id={"country-name"}>
+        <SimpleLabelContainer
+          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.country?.valid, fieldsStatus.country?.blocked)}
+          label={localized(texts.residenceLabel, locale)}
+          id={"country-name"}
+        >
           <SimpleAutocomplete
             isValid={countryValid}
-            displayAsLabel={isSubmitted}
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.country?.valid, fieldsStatus.country?.blocked)}
             onChangeRaw={setCountry}
             errorTooltipText={"Please select valid country"}
             required
@@ -113,9 +133,13 @@ const Residence = (props: ResidencePropType) => {
             value={country}
           />
         </SimpleLabelContainer>
-        <SimpleLabelContainer label={localized(texts.region, locale)} id={"region-name"}>
+        <SimpleLabelContainer
+          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.region?.valid, fieldsStatus.region?.blocked)}
+          label={localized(texts.region, locale)}
+          id={"region-name"}
+        >
           <SimpleInput
-            displayAsLabel={isSubmitted}
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.region?.valid, fieldsStatus.region?.blocked)}
             onChangeRaw={setRegion}
             required
             inputProps={{
@@ -129,9 +153,13 @@ const Residence = (props: ResidencePropType) => {
         </SimpleLabelContainer>
       </FlexWrapper>
       <FlexWrapper>
-        <SimpleLabelContainer label={localized(texts.cityLabel, locale)} id={"city-name"}>
+        <SimpleLabelContainer
+          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.city?.valid, fieldsStatus.city?.blocked)}
+          label={localized(texts.cityLabel, locale)}
+          id={"city-name"}
+        >
           <SimpleInput
-            displayAsLabel={isSubmitted}
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.city?.valid, fieldsStatus.city?.blocked)}
             onChangeRaw={setCity}
             required
             inputProps={{
@@ -143,10 +171,14 @@ const Residence = (props: ResidencePropType) => {
             autoComplete={"shipping city-name"}
           />
         </SimpleLabelContainer>
-        <SimpleLabelContainer label={localized(texts.postalCodeLabel, locale)} id={"zip-code"}>
+        <SimpleLabelContainer
+          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.zip?.valid, fieldsStatus.zip?.blocked)}
+          label={localized(texts.postalCodeLabel, locale)}
+          id={"zip-code"}
+        >
           <SimpleInput
             onChangeRaw={setZip}
-            displayAsLabel={isSubmitted}
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.zip?.valid, fieldsStatus.zip?.blocked)}
             required
             inputProps={{
               className: "w-full",
@@ -159,10 +191,14 @@ const Residence = (props: ResidencePropType) => {
         </SimpleLabelContainer>
       </FlexWrapper>
       <FlexWrapper>
-        <SimpleLabelContainer label={localized(texts.mainAddressLabel, locale)} id={"shipping address"}>
+        <SimpleLabelContainer
+          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.mainStreet?.valid, fieldsStatus.mainStreet?.blocked)}
+          label={localized(texts.mainAddressLabel, locale)}
+          id={"shipping address"}
+        >
           <SimpleInput
             onChangeRaw={setMainStreet}
-            displayAsLabel={isSubmitted}
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.mainStreet?.valid, fieldsStatus.mainStreet?.blocked)}
             required
             inputProps={{
               className: "w-full",
@@ -173,10 +209,14 @@ const Residence = (props: ResidencePropType) => {
             autoComplete={"shipping address"}
           />
         </SimpleLabelContainer>
-        <SimpleLabelContainer label={localized(texts.additionalAddressLabel, locale)} id={"shipping address"}>
+        <SimpleLabelContainer
+          displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.additionalStreet?.valid, fieldsStatus.additionalStreet?.blocked)}
+          label={localized(texts.additionalAddressLabel, locale)}
+          id={"shipping address"}
+        >
           <SimpleInput
             onChangeRaw={setAdditionalStreet}
-            displayAsLabel={isSubmitted}
+            displayAsLabel={setInputStatus(isSubmitted, fieldsStatus.additionalStreet?.valid, fieldsStatus.additionalStreet?.blocked)}
             required
             inputProps={{
               className: "w-full",
