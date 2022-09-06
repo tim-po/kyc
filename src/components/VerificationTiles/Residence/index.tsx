@@ -198,6 +198,7 @@ const Residence = (props: ResidencePropType) => {
               autoComplete={"shipping city-name"}
             />
           </SimpleLabelContainer>
+          {fieldsStatus && fieldsStatus.city?.valid && fieldsStatus.city?.blocked && <CheckMark/>}
         </InputFlexWrapper>
         <InputFlexWrapper>
           <SimpleLabelContainer
@@ -218,6 +219,7 @@ const Residence = (props: ResidencePropType) => {
               autoComplete={"shipping zip-code"}
             />
           </SimpleLabelContainer>
+          {fieldsStatus && fieldsStatus.zip?.valid && fieldsStatus.zip?.blocked && <CheckMark/>}
         </InputFlexWrapper>
       </FlexWrapper>
       <FlexWrapper isValid={
@@ -244,6 +246,7 @@ const Residence = (props: ResidencePropType) => {
               autoComplete={"shipping address"}
             />
           </SimpleLabelContainer>
+          {fieldsStatus && fieldsStatus.mainStreet?.valid && fieldsStatus.mainStreet?.blocked && <CheckMark/>}
         </InputFlexWrapper>
         <InputFlexWrapper>
           <SimpleLabelContainer
@@ -262,7 +265,6 @@ const Residence = (props: ResidencePropType) => {
                 ||
                 (fieldsStatus.additionalStreet?.blocked && !localStorageData.additionalStreet)
               }
-              required
               inputProps={{
                 className: "w-full",
                 placeholder: `${localized(texts.additionalAddressLabel, locale)}`,
@@ -272,6 +274,7 @@ const Residence = (props: ResidencePropType) => {
               autoComplete={"shipping address"}
             />
           </SimpleLabelContainer>
+          {fieldsStatus && fieldsStatus.additionalStreet?.valid && fieldsStatus.additionalStreet?.blocked && <CheckMark/>}
         </InputFlexWrapper>
       </FlexWrapper>
     </VerificationTile>

@@ -30,6 +30,15 @@ export default {
     en: "Error signing in",
     ja: "サインイン エラー"
   },
+  incorrectCredentials: {
+    en: "Incorrect credentials",
+    ja: "資格情報が正しくありません"
+  },
+
+  codeText: {
+    en: "A message with a verification code has been sent to your email. Enter the code to continue.",
+    ja: "確認コードが記載されたメッセージがメールに送信されました。 コードを入力して続行します。"
+  },
 
   emailAddressLabel: {
     en: "Email",
@@ -38,5 +47,14 @@ export default {
   passwordLabel: {
     en: "Password",
     ja: "パスワード"
+  },
+
+  incorrectEmailWarning: {
+    en: "Please enter a correct email",
+    ja: "正しいメールアドレスを入力してください"
+  },
+  incorrectPasswordWarning: {
+    en: "Password should be longer than 8 characters",
+    ja: "パスワードは 8 文字以上にする必要があります"
   }
 }

@@ -18,11 +18,13 @@ export type UserData = {
   nationality: FieldStatus
   region: FieldStatus
   street: FieldStatus
-  zip: FieldStatus
+  zip: FieldStatus,
+  mainDocument: FieldStatus,
+  additionalDocument: FieldStatus
 }
 
 export type FieldStatus = {
-  value: string,
+  value?: string,
   blocked: boolean
   valid: boolean
 }

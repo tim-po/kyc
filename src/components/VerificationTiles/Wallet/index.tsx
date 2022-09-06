@@ -92,7 +92,7 @@ const WalletVerification = (props: WalletVerificationPropType) => {
               required
               isValid={transferAddressValid}
               onChangeRaw={setTransferAddress}
-              errorTooltipText={"Please enter a correct address"}
+              errorTooltipText={`${localized(texts.incorrectAddressWarning, locale)}`}
               inputProps={{
                 className: "w-full",
                 placeholder: `${localized(texts.walletPlaceholder, locale)}`,

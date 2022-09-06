@@ -14,7 +14,7 @@ import {useHistory} from "react-router-dom";
 import Spinner from "../../Standard/components/Spinner";
 import SimpleInput from "../../Standard/components/SimpleInput";
 import SimpleLabelContainer from "../../Standard/components/SimpleLabelContainer";
-import { useCookies } from "react-cookie";
+import {useCookies} from "react-cookie";
 
 interface ButtonProps {
   background: string;
@@ -91,8 +91,8 @@ const Button = styled.button<ButtonProps>`
 `;
 
 const Subtitle = styled.div`
-    max-width: 350px;
-    color: black;
+  max-width: 350px;
+  color: black;
   font-size: 20px;
   margin-bottom: 8px;
 `
@@ -107,13 +107,14 @@ const Registration = (props: RegistrationPropType) => {
   const [cookies, setCookie] = useCookies(["auth"]);
 
   const [isWaitingForCode, setIsWaitingForCode] = useState(false)
-  const [code, setCode] = useState<string>("");
+  const [[code, setCode], codeValid] = useValidatedState<string>("", validationFuncs.hasValue);
 
   const history = useHistory();
 
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [incorrectCodeError, setIncorrectCodeError] = useState()
 
   const isValid = emailValid && repeatedPasswordValid && passwordValid;
 
@@ -137,7 +138,9 @@ const Registration = (props: RegistrationPropType) => {
     if (!isValid) return;
 
     setIsLoading(true);
+
     const {code, error} = await registration();
+
     if (code !== (200 || 201)) {
       setIsError(true);
       setErrorMessage(error);
@@ -148,6 +151,9 @@ const Registration = (props: RegistrationPropType) => {
   }
 
   async function sendCode() {
+
+    if (!codeValid) return
+
     const TwoFAUrl = `${API_URL}/api/auth/registration/code`;
     const requestOptions = {
       method: "POST",
@@ -157,10 +163,15 @@ const Registration = (props: RegistrationPropType) => {
         code: +code
       })
     };
+
     fetch(TwoFAUrl, requestOptions)
-        .then(res => res.json()).then(json => {
-      setCookie("auth", json.data.token, {path: window.location.pathname});
-      history.push(RouteName.VERIFICATION);
+      .then(res => res.json()).then(json => {
+        if (json.code === 200) {
+          setCookie("auth", json.data.token, {path: window.location.pathname});
+          history.push(RouteName.VERIFICATION);
+        } else {
+         setIncorrectCodeError(json.error)
+        }
     });
   }
 
@@ -169,102 +180,115 @@ const Registration = (props: RegistrationPropType) => {
       <Text fontSize={36} marginBottom={40}>{localized(texts.pageTitle, locale)}</Text>
       <Form>
         {isWaitingForCode &&
-            <>
-              <Subtitle>
-                A message with a verification code has been sent to your email. Enter the code to continue.
-              </Subtitle>
-              <SimpleLabelContainer>
-                <SimpleInput
-                    onChangeRaw={setCode}
-                    inputProps={{
-                      placeholder: `${localized(texts.Code, locale)}`,
-                      type: "one-time-code",
-                      value: code,
-                    }}
-                    id={"one-time-code"}
-                />
-              </SimpleLabelContainer>
-              {/*{isError && <ErrorMessage message={errorMessage}/>}*/}
+          <>
+            <Subtitle>
+              {localized(texts.codeText, locale)}
+            </Subtitle>
+            <SimpleLabelContainer>
+              <SimpleInput
+                required
+                onChangeRaw={setCode}
+                errorTooltipText={""}
+                inputProps={{
+                  placeholder: `${localized(texts.Code, locale)}`,
+                  type: "number",
+                  value: code,
+                }}
+                id={"one-time-code"}
+              />
+            </SimpleLabelContainer>
 
-              <Button
-                  type={"button"}
-                  marginTop={0}
-                  textColor={"#fff"}
-                  background={"#33CC66"}
-                  onClick={sendCode}
-              >
-                {
-                  isLoading ?
-                      <Spinner color="white" size={25}/>
-                      :
-                      `${localized(texts.buttonText, locale)}`
-                }
-              </Button>
-            </>
+            {incorrectCodeError && <ErrorMessage message={incorrectCodeError} title={"Authentication error"}/>}
+
+            <Button
+              type={"button"}
+              marginTop={20}
+              textColor={codeValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
+              background={codeValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
+              onClick={sendCode}
+            >
+              {
+                isLoading ?
+                  <Spinner color="white" size={25}/>
+                  :
+                  `${localized(texts.buttonText, locale)}`
+              }
+            </Button>
+          </>
         }
         {!isWaitingForCode &&
-        <>
-          <SimpleLabelContainer label={localized(texts.emailAddressLabel, locale)} id={"email"}>
-            <SimpleInput
+          <>
+            <SimpleLabelContainer label={localized(texts.emailAddressLabel, locale)} id={"email"}>
+              <SimpleInput
+                required
                 isValid={emailValid}
                 onChangeRaw={setEmail}
-                errorTooltipText={"Please enter a correct email"}
+                errorTooltipText={`${localized(texts.incorrectEmailWarning, locale)}`}
                 inputProps={{
                   placeholder: `${localized(texts.emailAddressLabel, locale)}`,
-                  type: "email"
+                  type: "email",
+                  className: "w-full"
                 }}
                 id={"email"}
-            />
-          </SimpleLabelContainer>
-          <SimpleLabelContainer label={localized(texts.passwordLabel, locale)} id="new-password-text-field">
-            <SimpleInput
+              />
+            </SimpleLabelContainer>
+            <SimpleLabelContainer label={localized(texts.passwordLabel, locale)} id="new-password-text-field">
+              <SimpleInput
+                required
                 isValid={passwordValid}
-                errorTooltipText={"Password should be longer than 8 characters"}
+                errorTooltipText={`${localized(texts.incorrectPasswordWarning, locale)}`}
                 inputProps={{
                   placeholder: `${localized(texts.passwordLabel, locale)}`,
                   type: "password",
-                  name: "new-password"
+                  name: "new-password",
+                  className: "w-full"
                 }}
                 autoComplete={"new-password"}
                 id="new-password-text-field"
                 onChangeRaw={setPassword}
-            />
-          </SimpleLabelContainer>
-          <SimpleLabelContainer label={localized(texts.confirmPasswordLabel, locale)} id="confirm-password-text-field">
-            <SimpleInput
+              />
+            </SimpleLabelContainer>
+            <SimpleLabelContainer
+              label={localized(texts.confirmPasswordLabel, locale)}
+              id="confirm-password-text-field"
+            >
+              <SimpleInput
+                required
                 isValid={repeatedPasswordValid}
                 id="confirm-password-text-field"
-                errorTooltipText={"Passwords should match"}
+                errorTooltipText={`${localized(texts.passwordsNotMatchWarning, locale)}`}
                 inputProps={{
                   placeholder: `${localized(texts.confirmPasswordLabel, locale)}`,
                   type: "password",
-                  name: "new-password"
+                  name: "new-password",
+                  className: "w-full"
                 }}
                 autoComplete={"new-password"}
                 onChangeRaw={setRepeatPassword}
-            />
-          </SimpleLabelContainer>
-          {isError && <ErrorMessage message={errorMessage}/>}
+              />
+            </SimpleLabelContainer>
 
-          <Button
+            {isError && <ErrorMessage message={errorMessage}/>}
+
+            <Button
               type={"button"}
               marginTop={20}
               textColor={isValid ? "#fff" : "rgba(255, 255, 255, 0.6)"}
               background={isValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
               onClick={checkErrorsAndRegisterUser}
-          >
-            {
-              isLoading ?
+            >
+              {
+                isLoading ?
                   <Spinner color="white" size={25}/>
                   :
                   `${localized(texts.buttonText, locale)}`
-            }
-          </Button>
-          <FlexLinksWrapper>
-            <GrayText>{localized(texts.alreadyRegistered, locale)}</GrayText>
-            <TextLink to={RouteName.LOGIN}>{localized(texts.signIn, locale)}</TextLink>
-          </FlexLinksWrapper>
-        </>
+              }
+            </Button>
+            <FlexLinksWrapper>
+              <GrayText>{localized(texts.alreadyRegistered, locale)}</GrayText>
+              <TextLink to={RouteName.LOGIN}>{localized(texts.signIn, locale)}</TextLink>
+            </FlexLinksWrapper>
+          </>
         }
       </Form>
     </LoginPageContainer>

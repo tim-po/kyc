@@ -191,7 +191,7 @@ const Verification = (props: VerificationPropType) => {
           setUserData(userData.data);
 
           const data = userData.data
-
+          console.log(data)
           localStorage.setItem("identityInformation", JSON.stringify({
             nationality: data.nationality.value,
             firstName: data.firstName.value,
@@ -261,7 +261,13 @@ const Verification = (props: VerificationPropType) => {
               zip: userData?.zip
             }}
           />
-          <Documents onChangeData={setDocuments} isSubmitted={isSubmitted}/>
+          <Documents
+            mainDocumentStatus={userData && userData.mainDocument}
+            additionalDocumentStatus={userData && userData.additionalDocument}
+            onChangeData={setDocuments}
+            isSubmitted={isSubmitted}
+            getUserData={checkIsUserDataSubmitted}
+          />
           <RowFlexWrapper>
             <VerificationIcon/>
             <Text fontSize={16} fontWeight={400}>{localized(texts.termOfUse, locale)}</Text>
