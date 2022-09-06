@@ -77,6 +77,16 @@ const FlexEndWrapper = styled.div`
   width: 100%;
 `;
 
+const VerifiedBlock = styled.div`
+  background: rgba(54, 204, 102, .35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 30px;
+  margin-bottom: 50px;
+`
+
 const Verification = (props: VerificationPropType) => {
   const {locale} = useContext(LocaleContext);
 
@@ -105,6 +115,7 @@ const Verification = (props: VerificationPropType) => {
   const [userData, setUserData] = useState<UserData | undefined>(undefined)
 
   const [isSubmitted, setIsSubmitted] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
   const [isForceValid, setIsForceValid] = useState(false)
 
   const [cookies] = useCookies(["auth"]);
@@ -188,10 +199,12 @@ const Verification = (props: VerificationPropType) => {
             .every(value => value === true)
 
           setIsSubmitted(isAllFieldsBlocked || isAllFieldsNotValid);
+
+          setIsVerified(userData.data.isVerified);
           setUserData(userData.data);
 
           const data = userData.data
-          console.log(data)
+
           localStorage.setItem("identityInformation", JSON.stringify({
             nationality: data.nationality.value,
             firstName: data.firstName.value,
@@ -224,17 +237,27 @@ const Verification = (props: VerificationPropType) => {
     <ForceValidateContext.Provider value={{setForceValidate: setIsForceValid, forceValidate: isForceValid}}>
       <VerificationPageContainer>
         <Text fontWeight={700} fontSize={40} marginBottom={12}>{localized(texts.pageTitle, locale)}</Text>
-        <Text fontWeight={400} fontSize={24} marginBottom={70}>{localized(texts.pageSubtitle, locale)}</Text>
+        {isVerified ?
+          <VerifiedBlock>
+            <Text fontWeight={400} fontSize={20}>{localized(texts.accountVerified, locale)}</Text>
+          </VerifiedBlock>
+          :
+          <Text fontWeight={400} fontSize={24} marginBottom={70}>{localized(texts.pageSubtitle, locale)}</Text>
+        }
         <FlexWrapper>
-          <Text fontWeight={400} fontSize={18} marginBottom={40}>
-            {localized(texts.documentsWarning, locale)}
-            <br/>
-            {localized(texts.noChangeWarning, locale)}
-          </Text>
-          <RowFlexWrapper marginBottom={20}>
-            <Info/>
-            <Text fontWeight={400} fontSize={16}>{localized(texts.automaticallySave, locale)}</Text>
-          </RowFlexWrapper>
+          {!isVerified &&
+            <>
+              <Text fontWeight={400} fontSize={18} marginBottom={40}>
+                {localized(texts.documentsWarning, locale)}
+                <br/>
+                {localized(texts.noChangeWarning, locale)}
+              </Text>
+              <RowFlexWrapper marginBottom={20}>
+                <Info/>
+                <Text fontWeight={400} fontSize={16}>{localized(texts.automaticallySave, locale)}</Text>
+              </RowFlexWrapper>
+            </>
+          }
           <Wallet onChangeData={setWallet} isSubmitted={isSubmitted} fieldStatus={userData && userData.wallet}/>
           <IdentityInformation
             countries={countries}
@@ -272,15 +295,17 @@ const Verification = (props: VerificationPropType) => {
             <VerificationIcon/>
             <Text fontSize={16} fontWeight={400}>{localized(texts.termOfUse, locale)}</Text>
           </RowFlexWrapper>
-          <FlexEndWrapper>
-            {isSubmitted &&
-              <Button isValid={false}>{localized(texts.buttonTextCheck, locale)}</Button>
-            }
-            {!isSubmitted &&
-              <Button isValid={isValid || !isForceValid}
-                      onClick={setVerification}>{localized(texts.buttonTextVerify, locale)}</Button>
-            }
-          </FlexEndWrapper>
+          {!isVerified &&
+            <FlexEndWrapper>
+              {isSubmitted &&
+                <Button isValid={false}>{localized(texts.buttonTextCheck, locale)}</Button>
+              }
+              {!isSubmitted &&
+                <Button isValid={isValid || !isForceValid}
+                        onClick={setVerification}>{localized(texts.buttonTextVerify, locale)}</Button>
+              }
+            </FlexEndWrapper>
+          }
         </FlexWrapper>
       </VerificationPageContainer>
     </ForceValidateContext.Provider>
