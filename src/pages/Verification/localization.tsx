@@ -34,5 +34,10 @@ export default {
   buttonTextCheck: {
     en: "We check your personal data",
     ja: "私たちはあなたの個人データをチェックします"
+  },
+
+  accountVerified: {
+    en: "Congratulations! You verified your account",
+    ja: "おめでとう！ アカウントを確認しました"
   }
 }
