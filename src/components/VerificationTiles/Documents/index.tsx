@@ -209,7 +209,7 @@ const Documents = (props: DocumentsPropType) => {
       <DocumentRulesGallery/>
       <FlexWrapper>
         <LoaderBlockWrapper>
-          {(checkDocumentStatus(mainDocumentStatus?.valid, mainDocumentStatus?.blocked, mainDoc) && mainDocumentStatus?.blocked)
+          {(checkDocumentStatus(mainDocumentStatus?.valid, mainDocumentStatus?.blocked, mainDoc))
             &&
             <BlurSquare>
               {(mainDocumentStatus?.valid && mainDocumentStatus?.blocked) && <CheckMark/>}
@@ -218,7 +218,7 @@ const Documents = (props: DocumentsPropType) => {
           <label className="file-select">
             <div className="select-button">
               {
-                checkDocumentStatus(mainDocumentStatus?.valid, mainDocumentStatus?.blocked, mainDoc)
+                (checkDocumentStatus(mainDocumentStatus?.valid, mainDocumentStatus?.blocked, mainDoc) || !mainDocumentStatus?.blocked)
                   ?
                   <img src={mainDoc} alt="preview image"/>
                   :
@@ -232,7 +232,7 @@ const Documents = (props: DocumentsPropType) => {
           </label>
         </LoaderBlockWrapper>
         <LoaderBlockWrapper>
-          {(checkDocumentStatus(additionalDocumentStatus?.valid, additionalDocumentStatus?.blocked, additionalDoc) && additionalDocumentStatus?.blocked)
+          {(checkDocumentStatus(additionalDocumentStatus?.valid, additionalDocumentStatus?.blocked, additionalDoc))
             &&
             <BlurSquare>
               {(additionalDocumentStatus?.valid && additionalDocumentStatus?.blocked) && <CheckMark/>}
@@ -241,7 +241,7 @@ const Documents = (props: DocumentsPropType) => {
           <label className="file-select">
             <div className="select-button">
               {
-                checkDocumentStatus(additionalDocumentStatus?.valid, additionalDocumentStatus?.blocked, additionalDoc) ?
+                (checkDocumentStatus(additionalDocumentStatus?.valid, additionalDocumentStatus?.blocked, additionalDoc) || !additionalDocumentStatus?.blocked) ?
                   <img src={additionalDoc} alt="preview image"/>
                   :
                   <>
