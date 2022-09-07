@@ -19,6 +19,7 @@ interface ButtonProps {
   background: string;
   textColor: string;
   marginTop?: number;
+  border?: string;
 }
 
 type LoginPropType = {}
@@ -80,6 +81,7 @@ const Button = styled.button<ButtonProps>`
   font-size: 18px;
   color: ${p => p.textColor};
   background: ${p => p.background};
+  border: ${p => p.border || "none"};
   outline: none;
   transition: background 0.3s ease;
   margin-top: ${p => p.marginTop}px;
@@ -206,6 +208,12 @@ const Login = (props: LoginPropType) => {
     }
   }, [email, password]);
 
+  useEffect(() => {
+    if(isWaitingForCode && code.length === 4){
+      sendCode()
+    }
+  }, [isWaitingForCode, code])
+
   return (
     <LoginPageContainer>
       <Text fontSize={36} marginBottom={40}>{localized(texts.pageTitle, locale)}</Text>
@@ -216,35 +224,35 @@ const Login = (props: LoginPropType) => {
               {localized(texts.codeText, locale)}
             </Subtitle>
             <SimpleLabelContainer>
-              <SimpleInput
-                required
-                isValid={codeValid}
-                onChangeRaw={setCode}
-                errorTooltipText={""}
-                inputProps={{
-                  placeholder: `${localized(texts.Code, locale)}`,
-                  type: "one-time-code",
-                  value: code,
-                  className: "w-full"
-                }}
-                id={"one-time-code"}
-              />
+            <SimpleInput
+              required
+              isValid={codeValid}
+              onChangeRaw={setCode}
+              errorTooltipText={""}
+              inputProps={{
+                placeholder: `${localized(texts.Code, locale)}`,
+                type: "one-time-code",
+                inputMode: 'numeric',
+                value: code,
+                className: "w-full"
+              }}
+              id={"one-time-code"}
+            />
             </SimpleLabelContainer>
+
 
             {incorrectCodeError && <ErrorMessage message={incorrectCodeError} title={"Authentication error"}/>}
 
             <Button
-              type={"button"}
-              marginTop={20}
-              textColor={codeValid ? "#fff" : "rgba(0, 0, 0, 0.6)"}
-              background={codeValid ? "#33CC66" : "rgba(0, 0, 0, 0.2)"}
-              onClick={sendCode}
+                type={"button"}
+                marginTop={0}
+                textColor={"rgba(0,0,0,0.6)"}
+                background={"#fff"}
+                // border={"2px solid rgba(0,0,0,0.6)"}
+                onClick={() => setIsWaitingForCode(false)}
             >
               {
-                isLoading ?
-                  <Spinner color="white" size={25}/>
-                  :
-                  `${localized(texts.buttonText, locale)}`
+                `${localized(texts.cancel, locale)}`
               }
             </Button>
           </>

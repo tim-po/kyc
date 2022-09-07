@@ -16,6 +16,10 @@ export default {
     en: "One time code",
     ja: "ワンタイムコード"
   },
+  cancel: {
+    en: "Cancel",
+    ja: "キャンセル"
+  },
   alreadyRegistered: {
     en: "Already registered?",
     ja: "すでに登録？"

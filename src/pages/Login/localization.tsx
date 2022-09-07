@@ -8,6 +8,10 @@ export default {
     en: "Sign in",
     ja: "ログイン"
   },
+  cancel: {
+    en: "Cancel",
+    ja: "キャンセル"
+  },
   forgotPassword: {
     en: "Forgot password?",
     ja: "パスワードをお忘れですか？"

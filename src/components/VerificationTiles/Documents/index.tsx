@@ -69,6 +69,8 @@ const Documents = (props: DocumentsPropType) => {
   const [additionalToken, setAdditionalToken] = useState(undefined)
 
   const [cookies] = useCookies(['auth']);
+  console.log(mainDoc, mainToken)
+  console.log(additionalDoc, additionalToken)
 
   const isValid = mainDoc !== "" && additionalDoc !== ""
 
@@ -183,7 +185,7 @@ const Documents = (props: DocumentsPropType) => {
       data: {mainToken, additionalToken, type: "Passport"},
       isValid
     });
-  }, [mainToken, additionalToken, activeButton, isValid]);
+  }, [mainDoc, additionalDoc, mainToken, additionalToken, activeButton, isValid]);
 
   const checkDocumentStatus = (valid: boolean | undefined, blocked: boolean | undefined, doc: string) => {
     if (doc !== "") {
@@ -207,7 +209,7 @@ const Documents = (props: DocumentsPropType) => {
       <DocumentRulesGallery/>
       <FlexWrapper>
         <LoaderBlockWrapper>
-          {checkDocumentStatus(mainDocumentStatus?.valid, mainDocumentStatus?.blocked, mainDoc)
+          {(checkDocumentStatus(mainDocumentStatus?.valid, mainDocumentStatus?.blocked, mainDoc) && mainDocumentStatus?.blocked)
             &&
             <BlurSquare>
               {(mainDocumentStatus?.valid && mainDocumentStatus?.blocked) && <CheckMark/>}
@@ -230,7 +232,7 @@ const Documents = (props: DocumentsPropType) => {
           </label>
         </LoaderBlockWrapper>
         <LoaderBlockWrapper>
-          {checkDocumentStatus(additionalDocumentStatus?.valid, additionalDocumentStatus?.blocked, additionalDoc)
+          {(checkDocumentStatus(additionalDocumentStatus?.valid, additionalDocumentStatus?.blocked, additionalDoc) && additionalDocumentStatus?.blocked)
             &&
             <BlurSquare>
               {(additionalDocumentStatus?.valid && additionalDocumentStatus?.blocked) && <CheckMark/>}
